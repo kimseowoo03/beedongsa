@@ -1,0 +1,40 @@
+* {
+  box-sizing: border-box;
+  padding: 0;
+  margin: 0;
+}
+
+html,
+body {
+  max-width: 100vw;
+  overflow-x: hidden;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+:root {
+  --gap: 24px;
+
+  --border-radius: 10px;
+
+  --font-color-1: #1b1b1b;
+  --font-color-2: #303030;
+  --gray-sub1: #d1d1d1;
+  --gray-sub2: #6e6e6e;
+
+  --font-size-xxl: 40px;
+  --font-size-xl: 36px;
+  --font-size-l: 32px;
+  --font-size-m: 24px;
+  --font-size-s: 20px;
+  --font-size-xs: 16px;
+  --font-size-xxs: 14px;
+  --font-size-xxx: 12px;
+
+  --font-weight-bold: 700;
+  --font-weight-medium: 500;
+  --font-weight-regular: 400;
+}
