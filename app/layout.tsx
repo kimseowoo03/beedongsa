@@ -1,8 +1,16 @@
-import ReactQueryConfigs from "@/configs/ReactQueryConfigs";
 import type { Metadata } from "next";
-import { Inter } from "next/font/google";
+import { Noto_Sans_KR } from "next/font/google";
 
-const inter = Inter({ subsets: ["latin"] });
+import ReactQueryConfigs from "@/configs/ReactQueryConfigs";
+
+import Header from "@/components/layout/Header";
+
+import "./globals.css";
+
+const notoSansKR = Noto_Sans_KR({
+  weight: ["300", "400", "500", "700"],
+  subsets: ["latin"],
+});
 
 export const metadata: Metadata = {
   title: "Beedongsa",
@@ -16,8 +24,11 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body className={inter.className}>
-        <ReactQueryConfigs> {children}</ReactQueryConfigs>
+      <body className={notoSansKR.className}>
+        <ReactQueryConfigs>
+          <Header />
+          {children}
+        </ReactQueryConfigs>
       </body>
     </html>
   );
