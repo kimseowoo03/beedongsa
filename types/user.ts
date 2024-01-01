@@ -6,7 +6,7 @@ interface User {
   email: string;
   phoneNumber: number;
   password: string;
-  eventEnabled: boolean;
+  eventEnabled?: boolean;
 }
 
 export interface EducatorUser extends User {
