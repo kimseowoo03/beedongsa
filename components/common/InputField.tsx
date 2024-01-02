@@ -46,7 +46,7 @@ const CheckboxWrap = styled.div`
     fill: var(--gray-sub1);
   }
 
-  input {
+  .checkboxInput {
     display: none;
   }
 
@@ -72,7 +72,7 @@ const CheckboxWrap = styled.div`
 
 interface InputBoxProps {
   isRequire?: boolean;
-  label: string;
+  label?: string;
   name: string;
   type: React.HTMLInputTypeAttribute;
   placeholder?: string;
@@ -80,6 +80,7 @@ interface InputBoxProps {
   handleChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
   checked?: boolean;
   id?: string;
+  children?: React.ReactNode;
 }
 
 const InputField = ({
@@ -92,12 +93,14 @@ const InputField = ({
   handleChange,
   checked,
   id,
+  children,
 }: InputBoxProps) => {
   // 체크박스일 때
   if (type === "checkbox") {
     return (
       <CheckboxWrap>
         <input
+          className="checkboxInput"
           type="checkbox"
           id={id}
           name={name}
@@ -109,6 +112,7 @@ const InputField = ({
           <CheckIcon className="checkbox-icon" />
           {label}
         </label>
+        {children}
       </CheckboxWrap>
     );
   }

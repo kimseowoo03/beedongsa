@@ -8,7 +8,9 @@ interface useFormProps<T> {
 const useForm = <T extends {}>({ initialValues }: useFormProps<T>) => {
   const [values, setValues] = useState(initialValues);
 
-  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleChange = (
+    event: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
+  ) => {
     const { name, value } = event.target;
     console.log(name, value);
     setValues((prevValues) => {
