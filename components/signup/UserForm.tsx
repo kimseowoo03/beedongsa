@@ -6,6 +6,7 @@ import type { UserType } from "@/types/user";
 
 /**style */
 import styled from "@emotion/styled";
+import { Hr } from "@/styles/htmlStyles";
 
 /**hooks */
 import useForm from "@/hooks/useForm";
@@ -75,10 +76,12 @@ const EtcInput = styled.input`
 export const UserForm = ({ type }: UserFormProps) => {
   const submitHandler = () => {};
 
+  const [allAgreed, setAllAgreed] = useState(false);
+
   const [etcLectureTopic, setEtcLectureTopic] = useState("");
 
   //강사/컨설턴트인 경우
-  const { values, handleChange } = useForm({
+  const { values, setValues, handleChange } = useForm({
     initialValues: {
       type: "educator",
       name: "",
@@ -88,9 +91,27 @@ export const UserForm = ({ type }: UserFormProps) => {
       educatorType: ["lecture"],
       lectureTopic: [],
       experience: undefined,
+      serviceTermsAccepted: false,
+      privacyPolicyAgreed: false,
+      eventEnabled: false,
     },
   });
-  console.log(values.lectureTopic, "lectureTopic");
+
+  const AllAgreedHandler = () => {
+    //TODO: 만약 하나라도 false면 전체동의 false로 변경하기
+    setAllAgreed(!allAgreed);
+    setValues((prev) => ({
+      ...prev,
+      serviceTermsAccepted: !allAgreed,
+      privacyPolicyAgreed: !allAgreed,
+      eventEnabled: !allAgreed,
+    }));
+  };
+
+  //TODO: 추후에 인풋값에 따라 조건 추가하기
+  const signupDisabled =
+    values.serviceTermsAccepted && values.privacyPolicyAgreed;
+
   return (
     <Wrap>
       <Form onSubmit={submitHandler}>
@@ -287,7 +308,48 @@ export const UserForm = ({ type }: UserFormProps) => {
           value={values.experience}
           handleChange={(event) => handleChange(event)}
         />
-        <Button text="가입하기" type="submit" disabled={false} />
+        <div>
+          <InputField
+            label="전체동의"
+            type="checkbox"
+            name="serviceTermsAccepted"
+            id="전체동의"
+            value=""
+            handleChange={AllAgreedHandler}
+            checked={allAgreed}
+          />
+          <Hr />
+          <div>
+            <InputField
+              label="이용약관 동의 (필수)"
+              type="checkbox"
+              name="serviceTermsAccepted"
+              id="이용약관 동의"
+              value=""
+              handleChange={(event) => handleChange(event)}
+              checked={values.serviceTermsAccepted}
+            />
+            <InputField
+              label="개인 정보 제 3자 제공 동의 (필수)"
+              type="checkbox"
+              name="privacyPolicyAgreed"
+              id="개인 정보 제 3자 제공 동의"
+              value=""
+              handleChange={(event) => handleChange(event)}
+              checked={values.privacyPolicyAgreed}
+            />
+            <InputField
+              label="서비스명 알람 수신 동의 (선택)"
+              type="checkbox"
+              name="eventEnabled"
+              id="서비스명 알람 수신 동의"
+              value=""
+              handleChange={(event) => handleChange(event)}
+              checked={values.eventEnabled}
+            />
+          </div>
+        </div>
+        <Button text="가입하기" type="submit" disabled={!signupDisabled} />
       </Form>
     </Wrap>
   );
