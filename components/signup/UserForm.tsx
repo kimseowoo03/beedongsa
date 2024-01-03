@@ -12,6 +12,7 @@ import useForm from "@/hooks/useForm";
 
 /**components */
 import InputField from "../common/InputField";
+import Button from "../common/Button";
 
 interface UserFormProps {
   type: UserType;
@@ -42,6 +43,7 @@ const EducatorTypeOptions = styled.div`
     color: var(--primary-color-r);
   }
 `;
+
 const LectureTopicOptions = styled.div`
   .label {
     color: var(--font-color-1);
@@ -55,6 +57,18 @@ const LectureTopicOptions = styled.div`
     top: -2px;
     content: "*";
     color: var(--primary-color-r);
+  }
+`;
+
+const EtcInput = styled.input`
+  width: 80px;
+  box-sizing: border-box;
+  padding: 4px;
+  border: none;
+  border-bottom: 1px solid var(--gray-sub1);
+
+  &:focus {
+    outline: none;
   }
 `;
 
@@ -254,11 +268,13 @@ export const UserForm = ({ type }: UserFormProps) => {
               handleChange={(event) => handleChange(event)}
               checked={values.lectureTopic.includes(etcLectureTopic)}
             >
-              <input
+              <EtcInput
                 type="text"
+                placeholder="입력 후 체크"
                 name="etcLectureTopic"
                 value={etcLectureTopic}
                 onChange={(e) => setEtcLectureTopic(e.target.value)}
+                disabled={values.lectureTopic.includes(etcLectureTopic)}
               />
             </InputField>
           </div>
@@ -271,6 +287,7 @@ export const UserForm = ({ type }: UserFormProps) => {
           value={values.experience}
           handleChange={(event) => handleChange(event)}
         />
+        <Button text="가입하기" type="submit" disabled={false} />
       </Form>
     </Wrap>
   );

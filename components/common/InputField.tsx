@@ -40,7 +40,7 @@ const Wrap = styled.div<{ isRequire: boolean }>`
 `;
 
 const CheckboxWrap = styled.div`
-  display: inline;
+  display: inline-flex;
 
   path {
     fill: var(--gray-sub1);
@@ -56,10 +56,10 @@ const CheckboxWrap = styled.div`
 
   label {
     display: inline-flex;
-    gap: 8px;
+    gap: 6px;
     align-items: center;
     font-size: var(--font-size-xxs);
-    margin-right: var(--gap);
+    margin-right: 20px;
     cursor: pointer;
   }
 
