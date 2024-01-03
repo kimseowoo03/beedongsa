@@ -10,7 +10,14 @@ const ButtonWrap = styled.button`
 
   font-size: var(--font-size-xs);
   color: var(--font-color-1);
-  font-weight: var(--font-weight-medium);
+  font-weight: var(--font-weight-bold);
+  cursor: pointer;
+
+  &:disabled {
+    color: #fff;
+    background: var(--gray-sub1);
+    cursor: not-allowed;
+  }
 `;
 
 interface ButtonProps {
@@ -22,7 +29,7 @@ interface ButtonProps {
 const Button = ({ text, type, disabled }: ButtonProps) => {
   return (
     <ButtonWrap type={type} disabled={disabled}>
-      <span>{text}</span>
+      {text}
     </ButtonWrap>
   );
 };
