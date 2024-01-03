@@ -6,6 +6,8 @@ interface User {
   email: string;
   phoneNumber: number;
   password: string;
+  serviceTermsAccepted?: boolean;
+  privacyPolicyAgreed?: boolean;
   eventEnabled?: boolean;
 }
 
