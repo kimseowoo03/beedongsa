@@ -16,12 +16,11 @@ export interface EducatorUser extends User {
   educatorType: Array<"lecture" | "consulting">;
   lectureTopic: Array<string>;
   experience: number;
-  phoneNumber: number;
 }
 
 export interface ClientUser extends User {
   type: "client";
   managerName: string;
-  managerPhoneNumber: string;
   managerEmail: string;
+  managerPhoneNumber: string;
 }
