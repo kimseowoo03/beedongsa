@@ -1,8 +1,9 @@
 /**react, next */
 import { useState } from "react";
+import { useMutation } from "react-query";
 
 /**type */
-import type { UserType } from "@/types/user";
+import type { ClientUser, EducatorUser, UserType } from "@/types/user";
 
 /**style */
 import styled from "@emotion/styled";
@@ -79,9 +80,21 @@ const EtcInput = styled.input`
   }
 `;
 
-export const UserForm = ({ type }: UserFormProps) => {
-  const submitHandler = () => {};
+const submitSignUpForm = async (
+  formData: EducatorUser | ClientUser
+): Promise<any> => {
+  const response = await fetch("/api/signup", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(formData),
+  });
 
+  return response.json();
+};
+
+export const UserForm = ({ type }: UserFormProps) => {
   const [allAgreed, setAllAgreed] = useState(false);
 
   const [etcLectureTopic, setEtcLectureTopic] = useState("");
@@ -128,6 +141,14 @@ export const UserForm = ({ type }: UserFormProps) => {
   const { values, setValues, handleChange } = useForm({
     initialValues: getInitialValues(type),
   });
+
+  const { mutate, isLoading, error } = useMutation(submitSignUpForm);
+
+  const submitHandler = (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+
+    mutate(values as EducatorUser | ClientUser);
+  };
 
   const AllAgreedHandler = () => {
     //TODO: 만약 하나라도 false면 전체동의 false로 변경하기
