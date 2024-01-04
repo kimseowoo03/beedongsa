@@ -411,7 +411,7 @@ export const UserForm = ({ type }: UserFormProps) => {
             <InputField
               label="담당자 이메일"
               type="text"
-              name="email"
+              name="managerEmail"
               placeholder="담당자 이메일을 입력해주세요."
               value={values.managerEmail}
               handleChange={(event) => handleChange(event)}
@@ -419,7 +419,7 @@ export const UserForm = ({ type }: UserFormProps) => {
             <InputField
               label="담당자 직통 번호"
               type="number"
-              name="phoneNumber"
+              name="managerPhoneNumbers"
               placeholder="ex) 01012345678"
               value={values.managerPhoneNumber}
               handleChange={(event) => handleChange(event)}
