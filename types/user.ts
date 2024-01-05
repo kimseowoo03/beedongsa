@@ -22,5 +22,5 @@ export interface ClientUser extends User {
   type: "client";
   managerName: string;
   managerEmail: string;
-  managerPhoneNumber: string;
+  managerPhoneNumber: number;
 }

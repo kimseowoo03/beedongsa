@@ -11,7 +11,7 @@ const useForm = <T extends {}>({ initialValues }: useFormProps<T>) => {
     event: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
   ) => {
     // 'checkbox' 타입의 경우, 'checked'는 boolean 값이며, 이 경우 'value'는 빈 문자열로 설정합니다.
-    const { name, value, checked } = event.target as HTMLInputElement;
+    const { name, value, type, checked } = event.target as HTMLInputElement;
 
     setValues((prevValues) => {
       // 배열로 값을 관리하는 경우
@@ -24,10 +24,12 @@ const useForm = <T extends {}>({ initialValues }: useFormProps<T>) => {
         };
       }
 
+      const newValue = type === "number" ? Number(value) : value;
+
       // 일반적인 input 값 업데이트
       return {
         ...prevValues,
-        [name]: value || checked,
+        [name]: newValue || checked,
       };
     });
 
