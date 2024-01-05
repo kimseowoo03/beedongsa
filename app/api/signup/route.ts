@@ -5,10 +5,19 @@ export async function POST(request: Request) {
 
   try {
     //회원가입
-    const { email, password } = data;
+    const {
+      type,
+      name,
+      email,
+      phoneNumber,
+      password,
+      serviceTermsAccepted,
+      privacyPolicyAgreed,
+      eventEnabled,
+    } = data;
 
     const firebaseSignupRes = await fetch(
-      `https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=AIzaSyBkZrKQK9k1rHIEPjzs9Cd59o-pnWtt6dY`,
+      `https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=${process.env.NEXT_PUBLIC_FIREBASE_API_KEY}`,
       {
         method: "POST",
         headers: {
@@ -22,28 +31,70 @@ export async function POST(request: Request) {
       }
     );
     const firebaseAuthData = await firebaseSignupRes.json();
-    console.log(firebaseAuthData, "firebaseAuthData");
     const idToken = firebaseAuthData.idToken;
 
-    const firestoreData = {
-      fields: {
-        fieldName1: { stringValue: "some tesdwqwxt" },
-      },
-    };
+    //TODO: 회원가입 유저 생성 실패시, 해당 에러 문구 return
 
-    console.log(idToken, "토큰 챙김");
+    const firestoreClientData =
+      type === "educator"
+        ? {
+            fields: {
+              type: { stringValue: type },
+              name: { stringValue: name },
+              email: { stringValue: email },
+              phoneNumber: { integerValue: phoneNumber },
+              serviceTermsAccepted: { booleanValue: serviceTermsAccepted },
+              privacyPolicyAgreed: { booleanValue: privacyPolicyAgreed },
+              eventEnabled: { booleanValue: eventEnabled },
+              educatorType: {
+                arrayValue: {
+                  values: data.educatorType.map((value) => ({
+                    stringValue: value,
+                  })),
+                },
+              },
+              lectureTopic: {
+                arrayValue: {
+                  values: data.lectureTopic.map((value) => ({
+                    stringValue: value,
+                  })),
+                },
+              },
+              experience: { integerValue: data.experience.toString() },
+            },
+          }
+        : {
+            fields: {
+              type: { stringValue: type },
+              name: { stringValue: name },
+              email: { stringValue: email },
+              phoneNumber: { integerValue: phoneNumber },
+              serviceTermsAccepted: { booleanValue: serviceTermsAccepted },
+              privacyPolicyAgreed: { booleanValue: privacyPolicyAgreed },
+              eventEnabled: { booleanValue: eventEnabled },
+              managerName: { stringValue: data.managerName },
+              managerEmail: { stringValue: data.managerEmail },
+              managerPhoneNumber: {
+                integerValue: data.managerPhoneNumber,
+              },
+            },
+          };
+
     const firestoreRes = await fetch(
-      `https://firestore.googleapis.com/v1/projects/beedongsa/databases/(default)/documents/users/${email}`,
+      `https://firestore.googleapis.com/v1beta1/projects/${process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID}/databases/(default)/documents/Users/${email}`,
       {
-        method: "POST",
+        method: "PATCH",
         headers: {
           "Content-Type": "application/json",
           Authorization: "Bearer " + idToken,
         },
-        body: JSON.stringify(firestoreData),
+        body: JSON.stringify(firestoreClientData),
       }
     );
-    const res = await firestoreRes.json();
-    console.log(res, "firestoreRes");
+
+    const responseData = await firestoreRes.json();
+    console.log(responseData, "응답");
+
+    //TODO: 회원가입 정보 저장 실패시, 에러처리 고민
   } catch (error) {}
 }

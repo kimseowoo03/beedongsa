@@ -419,7 +419,7 @@ export const UserForm = ({ type }: UserFormProps) => {
             <InputField
               label="담당자 직통 번호"
               type="number"
-              name="managerPhoneNumbers"
+              name="managerPhoneNumber"
               placeholder="ex) 01012345678"
               value={values.managerPhoneNumber}
               handleChange={(event) => handleChange(event)}
