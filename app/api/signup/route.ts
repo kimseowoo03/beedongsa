@@ -30,10 +30,15 @@ export async function POST(request: Request) {
         }),
       }
     );
+
     const firebaseAuthData = await firebaseSignupRes.json();
     const idToken = firebaseAuthData.idToken;
 
-    //TODO: 회원가입 유저 생성 실패시, 해당 에러 문구 return
+    if (firebaseAuthData.error) {
+      throw new Error(firebaseAuthData.error.message);
+    }
+
+    //TODO: 회원가입 유저 생성 실패 실패시 return
 
     const firestoreClientData =
       type === "educator"
@@ -92,9 +97,23 @@ export async function POST(request: Request) {
       }
     );
 
-    const responseData = await firestoreRes.json();
-    console.log(responseData, "응답");
+    const firestoreUserDataRes = await firestoreRes.json();
+
+    if (firestoreUserDataRes.error) {
+      throw new Error(firestoreUserDataRes.error.message);
+    }
 
     //TODO: 회원가입 정보 저장 실패시, 에러처리 고민
-  } catch (error) {}
+    // 어차피 유효성 테스트할거기때문에, 에러가 터졌을 상황에  "다시 시도해주세요." 라는 문구로 노출시키자
+    return new Response(JSON.stringify({ message: "회원가입성공" }), {
+      status: 200,
+    });
+  } catch (error) {
+    console.log("---------------------------");
+    console.log(error.message);
+    console.log("---------------------------");
+    return new Response(JSON.stringify({ errorMessage: error.message }), {
+      status: 500,
+    });
+  }
 }

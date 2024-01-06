@@ -80,6 +80,11 @@ const EtcInput = styled.input`
   }
 `;
 
+/**
+ *
+ * @param {EducatorUser | ClientUser} formData - 강사/컨설턴트 또는 클라이언트 FormData 객체를 받습니다.
+ * @returns
+ */
 const submitSignUpForm = async (
   formData: EducatorUser | ClientUser
 ): Promise<any> => {
@@ -91,6 +96,11 @@ const submitSignUpForm = async (
     body: JSON.stringify(formData),
   });
 
+  if (!response.ok) {
+    const errorData = await response.json();
+    console.log(errorData.errorMessage, "Server Error");
+    throw new Error(errorData.errorMessage);
+  }
   return response.json();
 };
 
@@ -142,7 +152,12 @@ export const UserForm = ({ type }: UserFormProps) => {
     initialValues: getInitialValues(type),
   });
 
-  const { mutate, isLoading, error } = useMutation(submitSignUpForm);
+  const { mutate, isLoading } = useMutation(submitSignUpForm, {
+    onError: (error) => {
+      //TODO: 에러 모달로 바꾸기
+      alert(`Error: ${error}`);
+    },
+  });
 
   const submitHandler = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -163,7 +178,7 @@ export const UserForm = ({ type }: UserFormProps) => {
 
   //TODO: 추후에 인풋값에 따라 조건 추가하기
   const signupDisabled =
-    values.serviceTermsAccepted && values.privacyPolicyAgreed;
+    values.serviceTermsAccepted && values.privacyPolicyAgreed && !isLoading;
 
   return (
     <Wrap>
@@ -467,7 +482,11 @@ export const UserForm = ({ type }: UserFormProps) => {
             />
           </div>
         </div>
-        <Button text="가입하기" type="submit" disabled={!signupDisabled} />
+        <Button
+          text={isLoading ? "로딩중" : "가입하기"}
+          type="submit"
+          disabled={!signupDisabled}
+        />
       </Form>
     </Wrap>
   );
