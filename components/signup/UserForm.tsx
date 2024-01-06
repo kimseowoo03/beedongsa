@@ -1,6 +1,5 @@
 /**react, next */
-import { useState } from "react";
-import { useMutation } from "react-query";
+import { useEffect, useState } from "react";
 
 /**type */
 import type { ClientUser, EducatorUser, UserType } from "@/types/user";
@@ -15,6 +14,7 @@ import useForm from "@/hooks/useForm";
 /**components */
 import InputField from "../common/InputField";
 import Button from "../common/Button";
+import { useMutation, useQuery } from "@tanstack/react-query";
 
 interface UserFormProps {
   type: UserType;
@@ -98,7 +98,6 @@ const submitSignUpForm = async (
 
   if (!response.ok) {
     const errorData = await response.json();
-    console.log(errorData.errorMessage, "Server Error");
     throw new Error(errorData.errorMessage);
   }
   return response.json();
@@ -152,18 +151,19 @@ export const UserForm = ({ type }: UserFormProps) => {
     initialValues: getInitialValues(type),
   });
 
-  const { mutate, isLoading } = useMutation(submitSignUpForm, {
-    onError: (error) => {
-      //TODO: 에러 모달로 바꾸기
-      alert(`Error: ${error}`);
-    },
+  const mutation = useMutation({
+    mutationFn: submitSignUpForm,
   });
 
   const submitHandler = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-
-    mutate(values as EducatorUser | ClientUser);
+    mutation.mutate(values as EducatorUser | ClientUser);
   };
+
+  if (mutation.isError) {
+    alert(`Error___>!>: ${mutation.error.message}`);
+    mutation.reset(); // 상태 초기화
+  }
 
   const AllAgreedHandler = () => {
     //TODO: 만약 하나라도 false면 전체동의 false로 변경하기
@@ -178,7 +178,9 @@ export const UserForm = ({ type }: UserFormProps) => {
 
   //TODO: 추후에 인풋값에 따라 조건 추가하기
   const signupDisabled =
-    values.serviceTermsAccepted && values.privacyPolicyAgreed && !isLoading;
+    values.serviceTermsAccepted &&
+    values.privacyPolicyAgreed &&
+    !mutation.isPending;
 
   return (
     <Wrap>
@@ -483,7 +485,7 @@ export const UserForm = ({ type }: UserFormProps) => {
           </div>
         </div>
         <Button
-          text={isLoading ? "로딩중" : "가입하기"}
+          text={mutation.isPending ? "로딩중" : "가입하기"}
           type="submit"
           disabled={!signupDisabled}
         />
