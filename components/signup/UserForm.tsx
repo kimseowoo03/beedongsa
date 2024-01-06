@@ -1,5 +1,5 @@
 /**react, next */
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 
 /**type */
 import type { ClientUser, EducatorUser, UserType } from "@/types/user";
@@ -114,8 +114,9 @@ export const UserForm = ({ type }: UserFormProps) => {
    * @param {UserType} selectedType - 선택된 사용자 타입 ('client' 또는 'educator')
    * @returns 초기값 객체를 반환합니다.
    */
-  const getInitialValues = (selectedType: UserType) => {
-    if (selectedType === "educator") {
+
+  const initialValues = useMemo(() => {
+    if (type === "educator") {
       return {
         type: "educator",
         name: "",
@@ -129,7 +130,7 @@ export const UserForm = ({ type }: UserFormProps) => {
         privacyPolicyAgreed: false,
         eventEnabled: false,
       };
-    } else if (selectedType === "client") {
+    } else if (type === "client") {
       return {
         type: "client",
         name: "",
@@ -144,11 +145,11 @@ export const UserForm = ({ type }: UserFormProps) => {
         eventEnabled: false,
       };
     }
-  };
+  }, [type]);
 
   // useForm 훅에 초기값을 설정
   const { values, setValues, handleChange } = useForm({
-    initialValues: getInitialValues(type),
+    initialValues,
   });
 
   const mutation = useMutation({
