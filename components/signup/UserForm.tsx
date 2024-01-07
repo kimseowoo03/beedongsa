@@ -1,5 +1,6 @@
 /**react, next */
-import { useEffect, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
+import { useMutation, useQuery } from "@tanstack/react-query";
 
 /**type */
 import type { ClientUser, EducatorUser, UserType } from "@/types/user";
@@ -13,72 +14,11 @@ import useForm from "@/hooks/useForm";
 
 /**components */
 import InputField from "../common/InputField";
-import Button from "../common/Button";
-import { useMutation, useQuery } from "@tanstack/react-query";
+import SubmitButton from "../common/Button";
 
 interface UserFormProps {
   type: UserType;
 }
-
-const Wrap = styled.div`
-  max-width: 360px;
-  height: 100%;
-`;
-
-const Form = styled.form`
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-  > .typeForm {
-    display: flex;
-    flex-direction: column;
-    gap: 16px;
-  }
-`;
-
-const EducatorTypeOptions = styled.div`
-  .label {
-    color: var(--font-color-1);
-    font-size: var(--font-size-xxs);
-    font-weight: var(--font-weight-medium);
-    margin-bottom: 8px;
-  }
-  .label::after {
-    position: relative;
-    left: 2px;
-    top: -2px;
-    content: "*";
-    color: var(--primary-color-r);
-  }
-`;
-
-const LectureTopicOptions = styled.div`
-  .label {
-    color: var(--font-color-1);
-    font-size: var(--font-size-xxs);
-    font-weight: var(--font-weight-medium);
-    margin-bottom: 8px;
-  }
-  .label::after {
-    position: relative;
-    left: 2px;
-    top: -2px;
-    content: "*";
-    color: var(--primary-color-r);
-  }
-`;
-
-const EtcInput = styled.input`
-  width: 80px;
-  box-sizing: border-box;
-  padding: 4px;
-  border: none;
-  border-bottom: 1px solid var(--gray-sub1);
-
-  &:focus {
-    outline: none;
-  }
-`;
 
 /**
  *
@@ -485,7 +425,7 @@ export const UserForm = ({ type }: UserFormProps) => {
             />
           </div>
         </div>
-        <Button
+        <SubmitButton
           text={mutation.isPending ? "로딩중" : "가입하기"}
           type="submit"
           disabled={!signupDisabled}
@@ -494,3 +434,63 @@ export const UserForm = ({ type }: UserFormProps) => {
     </Wrap>
   );
 };
+
+const Wrap = styled.div`
+  max-width: 360px;
+  height: 100%;
+`;
+
+const Form = styled.form`
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  > .typeForm {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+`;
+
+const EducatorTypeOptions = styled.div`
+  .label {
+    color: var(--font-color-1);
+    font-size: var(--font-size-xxs);
+    font-weight: var(--font-weight-medium);
+    margin-bottom: 8px;
+  }
+  .label::after {
+    position: relative;
+    left: 2px;
+    top: -2px;
+    content: "*";
+    color: var(--primary-color-r);
+  }
+`;
+
+const LectureTopicOptions = styled.div`
+  .label {
+    color: var(--font-color-1);
+    font-size: var(--font-size-xxs);
+    font-weight: var(--font-weight-medium);
+    margin-bottom: 8px;
+  }
+  .label::after {
+    position: relative;
+    left: 2px;
+    top: -2px;
+    content: "*";
+    color: var(--primary-color-r);
+  }
+`;
+
+const EtcInput = styled.input`
+  width: 80px;
+  box-sizing: border-box;
+  padding: 4px;
+  border: none;
+  border-bottom: 1px solid var(--gray-sub1);
+
+  &:focus {
+    outline: none;
+  }
+`;
