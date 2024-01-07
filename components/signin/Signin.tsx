@@ -11,6 +11,8 @@ import useForm from "@/hooks/useForm";
 /**components */
 import InputField from "../common/InputField";
 import SubmitButton from "../common/Button";
+import { useAtom } from "jotai";
+import { idTokenAtom } from "@/atoms/auth/idTokenAtom";
 
 /**
  *
@@ -54,9 +56,14 @@ export const Signin = () => {
     mutation.reset(); // 상태 초기화
   }
 
-  const submitHandler = (event: React.FormEvent<HTMLFormElement>) => {
+  const [, setIdToken] = useAtom(idTokenAtom);
+
+  const submitHandler = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    mutation.mutate(values);
+    const data: { idToken: string; message: string } =
+      await mutation.mutateAsync(values);
+
+    setIdToken(() => data.idToken); // 성공 시 idToken 상태 업데이트
   };
 
   const signinDisabled = values.email && values.password && !mutation.isPending;
