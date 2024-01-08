@@ -6,6 +6,7 @@ import ReactQueryConfigs from "@/configs/ReactQueryConfigs";
 import Header from "@/components/layout/Header";
 
 import "./globals.css";
+import AuthManager from "@/configs/AuthConfigs";
 
 const notoSansKR = Noto_Sans_KR({
   weight: ["300", "400", "500", "700"],
@@ -26,6 +27,7 @@ export default function RootLayout({
     <html lang="en">
       <body className={notoSansKR.className}>
         <ReactQueryConfigs>
+          <AuthManager />
           <Header />
           {children}
         </ReactQueryConfigs>

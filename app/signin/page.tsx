@@ -1,6 +1,20 @@
 "use client";
-import { Signin } from "@/components/signin/Signin";
+
+/**style */
 import styled from "@emotion/styled";
+
+/**components */
+import { Signin } from "@/components/signin/Signin";
+
+function SigninPage() {
+  return (
+    <SigninSectionWrap>
+      <Signin />
+    </SigninSectionWrap>
+  );
+}
+
+export default SigninPage;
 
 const SigninSectionWrap = styled.section`
   height: calc(100vh - 60px);
@@ -19,13 +33,3 @@ const SigninSectionWrap = styled.section`
     }
   }
 `;
-
-function SigninPage() {
-  return (
-    <SigninSectionWrap>
-      <Signin />
-    </SigninSectionWrap>
-  );
-}
-
-export default SigninPage;
