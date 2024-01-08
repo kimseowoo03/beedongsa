@@ -7,6 +7,7 @@ import Header from "@/components/layout/Header";
 
 import "./globals.css";
 import AuthManager from "@/configs/AuthConfigs";
+import { cookies } from "next/headers";
 
 const notoSansKR = Noto_Sans_KR({
   weight: ["300", "400", "500", "700"],
@@ -18,16 +19,41 @@ export const metadata: Metadata = {
   description: "비동사 프로젝트",
 };
 
-export default function RootLayout({
+async function fetchData() {
+  try {
+    const cookieStore = cookies();
+    const refreshToken = cookieStore.get("refreshToken").value;
+    console.log("--------------------------------------------------------");
+    console.log("re>>>>>>", refreshToken);
+    console.log("--------------------------------------------------------");
+    const response = await fetch("http://localhost:3000/api/refresh-token", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ refreshToken }),
+      cache: "no-store",
+      credentials: "include",
+    });
+
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.log("roootdata", error);
+  }
+}
+
+export default async function RootLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
+  const data = await fetchData();
+
   return (
     <html lang="en">
       <body className={notoSansKR.className}>
         <ReactQueryConfigs>
-          <AuthManager />
           <Header />
           {children}
         </ReactQueryConfigs>

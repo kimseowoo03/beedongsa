@@ -1,10 +1,8 @@
-import { cookies } from "next/headers";
-
-export async function POST() {
+export async function POST(request: Request) {
   try {
     //TODO: Firebase에 refreshToken을 사용하여 새 idToken 요청
-    const cookieStore = cookies();
-    const refreshToken = cookieStore.get("refreshToken").value;
+    const { refreshToken } = await request.json();
+    console.log("---------->>>>>>>>>>>>>>", refreshToken);
 
     const firebaseResponse = await fetch(
       `https://securetoken.googleapis.com/v1/token?key=${process.env.NEXT_PUBLIC_FIREBASE_API_KEY}`,
@@ -33,7 +31,11 @@ export async function POST() {
       JSON.stringify({ idToken, message: "idToken 재발급 성공" }),
       {
         status: 200,
-        headers: { "Set-Cookie": `refreshToken=${newRefreshToken}` },
+        headers: {
+          "Set-Cookie": `refreshToken=${newRefreshToken}; Max-Age=${
+            7 * 24 * 60 * 60
+          }; Path=/;`,
+        },
       }
     );
   } catch (error) {

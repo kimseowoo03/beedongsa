@@ -34,7 +34,11 @@ export async function POST(request: Request) {
     const idToken = firebaseAuthData.idToken;
     return new Response(JSON.stringify({ idToken, message: "로그인 성공" }), {
       status: 200,
-      headers: { "Set-Cookie": `refreshToken=${refreshToken}` },
+      headers: {
+        "Set-Cookie": `refreshToken=${refreshToken}; Max-Age=${
+          7 * 24 * 60 * 60
+        }; Path=/;`,
+      },
     });
   } catch (error) {
     console.log("---------------------------");
