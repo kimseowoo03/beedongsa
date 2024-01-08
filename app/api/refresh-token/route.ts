@@ -1,22 +1,47 @@
-// export async function POST(request: Request) {
-//   const newHeaders = new Headers(request.headers);
-//   // const refreshToken = request.cookies["refreshToken"];
+import { cookies } from "next/headers";
 
-// Firebase에 refreshToken을 사용하여 새 idToken 요청
-// const firebaseResponse = await fetch(
-//   `https://securetoken.googleapis.com/v1/token?key=${process.env.NEXT_PUBLIC_FIREBASE_API_KEY}`,
-//   {
-//     method: "POST",
-//     headers: {
-//       "Content-Type": "application/json",
-//     },
-//     body: JSON.stringify({ refreshToken }),
-//   }
-// );
+export async function POST() {
+  try {
+    //TODO: Firebase에 refreshToken을 사용하여 새 idToken 요청
+    const cookieStore = cookies();
+    const refreshToken = cookieStore.get("refreshToken").value;
 
-// const firebaseData = await firebaseResponse.json();
+    const firebaseResponse = await fetch(
+      `https://securetoken.googleapis.com/v1/token?key=${process.env.NEXT_PUBLIC_FIREBASE_API_KEY}`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ grant_type: "refresh_token", refreshToken }),
+      }
+    );
 
-//   return new Response(JSON.stringify({ idToken: firebaseData.idToken }), {
-//     status: 200,
-//   });
-// }
+    const refreshResponseData = await firebaseResponse.json();
+    console.log("-------------firebaseRefreshData--------------");
+    console.log(refreshResponseData);
+    console.log("------------firebaseRefreshData---------------");
+
+    if (refreshResponseData.error) {
+      throw new Error(refreshResponseData.error.message);
+    }
+
+    const newRefreshToken = refreshResponseData.refresh_token;
+    const idToken = refreshResponseData.id_token;
+
+    return new Response(
+      JSON.stringify({ idToken, message: "idToken 재발급 성공" }),
+      {
+        status: 200,
+        headers: { "Set-Cookie": `refreshToken=${newRefreshToken}` },
+      }
+    );
+  } catch (error) {
+    console.log("---------------------------");
+    console.log(error.message);
+    console.log("---------------------------");
+    return new Response(JSON.stringify({ errorMessage: error.message }), {
+      status: 500,
+    });
+  }
+}
