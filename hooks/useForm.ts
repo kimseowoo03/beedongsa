@@ -10,7 +10,7 @@ const useForm = <T extends {}>({ initialValues }: useFormProps<T>) => {
   const handleChange = (
     event: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
   ) => {
-    // 'checkbox' 타입의 경우, 'checked'는 boolean 값이며, 이 경우 'value'는 빈 문자열로 설정합니다.
+    // 'checkbox' 타입의 경우, 'checked'는 boolean 값이며, 해당 값은 배열 또는 boolean을 가집니다.
     const { name, value, type, checked } = event.target as HTMLInputElement;
 
     setValues((prevValues) => {
@@ -18,9 +18,12 @@ const useForm = <T extends {}>({ initialValues }: useFormProps<T>) => {
       if (Array.isArray(prevValues[name])) {
         return {
           ...prevValues,
-          [name]: prevValues[name].includes(value)
-            ? prevValues[name].filter((item: string) => item !== value) // 값 제거
-            : [...prevValues[name], value], // 값 추가
+          [name]:
+            value === ""
+              ? []
+              : prevValues[name].includes(value)
+              ? prevValues[name].filter((item: string) => item !== value)
+              : [...prevValues[name], value],
         };
       }
 
@@ -29,11 +32,9 @@ const useForm = <T extends {}>({ initialValues }: useFormProps<T>) => {
       // 일반적인 input 값 업데이트
       return {
         ...prevValues,
-        [name]: newValue || checked,
+        [name]: type !== "checkbox" ? newValue : checked,
       };
     });
-
-    //TODO: 유효성 검사에 따라 error 로직 추가
   };
 
   // 추가적인 로직 (예: 폼 제출 처리,  등)

@@ -108,7 +108,7 @@ export const UserForm = ({ type }: UserFormProps) => {
 
   const AllAgreedHandler = () => {
     //TODO: 만약 하나라도 false면 전체동의 false로 변경하기
-    setAllAgreed(!allAgreed);
+    setAllAgreed(() => !allAgreed);
     setValues((prev) => ({
       ...prev,
       serviceTermsAccepted: !allAgreed,
@@ -390,7 +390,7 @@ export const UserForm = ({ type }: UserFormProps) => {
             type="checkbox"
             name="serviceTermsAccepted"
             id="전체동의"
-            value=""
+            value={undefined}
             handleChange={AllAgreedHandler}
             checked={allAgreed}
           />
@@ -401,7 +401,7 @@ export const UserForm = ({ type }: UserFormProps) => {
               type="checkbox"
               name="serviceTermsAccepted"
               id="이용약관 동의"
-              value=""
+              value={undefined}
               handleChange={(event) => handleChange(event)}
               checked={values.serviceTermsAccepted}
             />
@@ -410,7 +410,7 @@ export const UserForm = ({ type }: UserFormProps) => {
               type="checkbox"
               name="privacyPolicyAgreed"
               id="개인 정보 제 3자 제공 동의"
-              value=""
+              value={undefined}
               handleChange={(event) => handleChange(event)}
               checked={values.privacyPolicyAgreed}
             />
@@ -419,7 +419,7 @@ export const UserForm = ({ type }: UserFormProps) => {
               type="checkbox"
               name="eventEnabled"
               id="서비스명 알람 수신 동의"
-              value=""
+              value={undefined}
               handleChange={(event) => handleChange(event)}
               checked={values.eventEnabled}
             />
