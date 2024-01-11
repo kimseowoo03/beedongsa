@@ -1,12 +1,35 @@
 "use client";
+/**react, next */
+import { ReactElement } from "react";
 
 /**style */
 import styled from "@emotion/styled";
 
+/**상태관리 */
+import { useAtomValue } from "jotai";
+import {
+  RESET_PASSWORD_PAGE_VALUES,
+  resetPasswordPageAtom,
+} from "@/atoms/reset-password/state";
+
 /**components */
+import { SendEmail } from "@/components/reset-password/SendEmail";
 
 function ResetPasswordPage() {
-  return <ResetPasswordSectionWrap></ResetPasswordSectionWrap>;
+  const page = useAtomValue(resetPasswordPageAtom);
+
+  let content: ReactElement<any>;
+
+  switch (page) {
+    case RESET_PASSWORD_PAGE_VALUES.COMPLETED_PAGE:
+      content = <div>완료 화면</div>;
+      break;
+
+    default:
+      content = <SendEmail />;
+      break;
+  }
+  return <ResetPasswordSectionWrap>{content}</ResetPasswordSectionWrap>;
 }
 
 export default ResetPasswordPage;
