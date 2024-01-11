@@ -5,14 +5,16 @@ import { useMutation } from "@tanstack/react-query";
 /**style */
 import styled from "@emotion/styled";
 
+/**상태관리 */
+import { useAtom } from "jotai";
+import { idTokenAtom } from "@/atoms/auth/idTokenAtom";
+
 /**hooks */
 import useForm from "@/hooks/useForm";
 
 /**components */
 import InputField from "../common/InputField";
 import SubmitButton from "../common/Button";
-import { useAtom } from "jotai";
-import { idTokenAtom } from "@/atoms/auth/idTokenAtom";
 
 /**
  *
