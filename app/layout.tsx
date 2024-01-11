@@ -26,7 +26,13 @@ async function fetchData() {
     console.log("--------------------------------------------------------");
     console.log("re>>>>>>", refreshToken);
     console.log("--------------------------------------------------------");
-    const response = await fetch("http://localhost:3000/api/refresh-token", {
+
+    if (!refreshToken) {
+      // 리프레시 토큰이 없는 경우
+      return null;
+    }
+
+    const response = await fetch("http://localhost:3001/api/refresh-token", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -49,6 +55,7 @@ export default async function RootLayout({
   children: React.ReactNode;
 }) {
   const data = await fetchData();
+  console.log(data, "<<<<fetch Data");
 
   return (
     <html lang="en">
