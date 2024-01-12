@@ -13,7 +13,8 @@ import {
 } from "@/atoms/reset-password/state";
 
 /**components */
-import { SendEmail } from "@/components/reset-password/SendEmail";
+import { ResetPasswordRequest } from "@/components/reset-password/ResetPasswordRequest";
+import { ResetPasswordConfirmation } from "@/components/reset-password/ResetPasswordConfirmation";
 
 function ResetPasswordPage() {
   const page = useAtomValue(resetPasswordPageAtom);
@@ -22,11 +23,11 @@ function ResetPasswordPage() {
 
   switch (page) {
     case RESET_PASSWORD_PAGE_VALUES.COMPLETED_PAGE:
-      content = <div>완료 화면</div>;
+      content = <ResetPasswordConfirmation />;
       break;
 
     default:
-      content = <SendEmail />;
+      content = <ResetPasswordRequest />;
       break;
   }
   return <ResetPasswordSectionWrap>{content}</ResetPasswordSectionWrap>;

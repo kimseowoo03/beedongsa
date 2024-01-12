@@ -29,7 +29,7 @@ const sendEmailPost = async (email: string): Promise<any> => {
   return response.json();
 };
 
-export const SendEmail = () => {
+export const ResetPasswordRequest = () => {
   const { values, handleChange } = useForm({
     initialValues: {
       email: "",
