@@ -22,16 +22,15 @@ const ButtonWrap = styled.button`
 
 interface ButtonProps {
   text: string;
-  type: "submit";
-  disabled: boolean;
+  type: "submit" | "button";
+  disabled?: boolean;
+  onClick?: (event: React.MouseEvent<HTMLButtonElement>) => void;
 }
 
-const Button = ({ text, type, disabled }: ButtonProps) => {
+export default function Button({ text, type, disabled, onClick }: ButtonProps) {
   return (
-    <ButtonWrap type={type} disabled={disabled}>
+    <ButtonWrap type={type} disabled={disabled} onClick={onClick}>
       {text}
     </ButtonWrap>
   );
-};
-
-export default Button;
+}
