@@ -1,5 +1,4 @@
 import styled from "@emotion/styled";
-
 import CheckIcon from "@/public/icon/check.svg";
 
 const Wrap = styled.div<{ isRequire: boolean }>`
@@ -83,7 +82,7 @@ interface InputBoxProps {
   children?: React.ReactNode;
 }
 
-const InputField = ({
+export default function InputField({
   isRequire = true,
   label,
   type,
@@ -94,7 +93,7 @@ const InputField = ({
   checked,
   id,
   children,
-}: InputBoxProps) => {
+}: InputBoxProps) {
   // 체크박스일 때
   if (type === "checkbox") {
     return (
@@ -131,5 +130,4 @@ const InputField = ({
       />
     </Wrap>
   );
-};
-export default InputField;
+}
