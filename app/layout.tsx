@@ -5,7 +5,7 @@ import { cookies } from "next/headers";
 import "./globals.css";
 
 import ReactQueryConfigs from "@/configs/ReactQueryConfigs";
-import AuthManager from "@/configs/AuthTokenManager";
+import AuthHydrateAtoms from "@/configs/AuthHydrateAtoms";
 
 import Header from "@/components/layout/Header";
 
@@ -59,9 +59,10 @@ export default async function RootLayout({
     <html lang="en">
       <body className={notoSansKR.className}>
         <ReactQueryConfigs>
-          <AuthManager newIDToken={newIDToken} />
-          <Header />
-          {children}
+          <AuthHydrateAtoms newIDToken={newIDToken}>
+            <Header />
+            {children}
+          </AuthHydrateAtoms>
         </ReactQueryConfigs>
       </body>
     </html>
