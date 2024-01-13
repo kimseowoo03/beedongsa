@@ -44,11 +44,16 @@ const ResetPasswordSectionWrap = styled.section`
   > div {
     width: 100%;
     margin: 0 auto;
-    .title {
-      text-align: center;
-      color: var(--font-color-1);
-      font-size: var(--font-size-m);
-      font-weight: var(--font-weight-bold);
-    }
+  }
+  .title {
+    text-align: center;
+    color: var(--font-color-1);
+    font-size: var(--font-size-m);
+    font-weight: var(--font-weight-bold);
+  }
+  .description {
+    text-align: center;
+    color: var(--gray-sub2);
+    font-size: var(--font-size-xs);
   }
 `;

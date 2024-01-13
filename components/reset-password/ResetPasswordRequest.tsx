@@ -1,6 +1,9 @@
 /**react, next */
 import { useMutation } from "@tanstack/react-query";
 
+/**style */
+import styled from "@emotion/styled";
+
 /**hooks */
 import useForm from "@/hooks/useForm";
 
@@ -11,6 +14,12 @@ import InputField from "../common/InputField";
 /**상태관리 */
 import { useSetAtom } from "jotai";
 import { resetPasswordPageNextAtom } from "@/atoms/reset-password/action";
+
+const Form = styled.form`
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+`;
 
 const sendEmailPost = async (email: string): Promise<any> => {
   const response = await fetch("/api/reset-password", {
@@ -56,9 +65,11 @@ export const ResetPasswordRequest = () => {
   };
 
   return (
-    <form onSubmit={sendEmailHandler}>
+    <Form onSubmit={sendEmailHandler}>
       <p className="title">비밀번호 재설정</p>
-      <p>이메일을 입력하시며 비밀번호 재설정 안내 메일이 전송됩니다.</p>
+      <p className="description">
+        이메일을 입력하시며 비밀번호 재설정 안내 메일이 전송됩니다.
+      </p>
       <InputField
         label="이메일"
         type="text"
@@ -70,8 +81,8 @@ export const ResetPasswordRequest = () => {
       <SubmitButton
         text={mutation.isPending ? "로딩중" : "전송하기"}
         type="submit"
-        disabled={!values.email}
+        disabled={!values.email || mutation.isPending}
       />
-    </form>
+    </Form>
   );
 };
