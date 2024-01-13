@@ -1,13 +1,13 @@
 import type { Metadata } from "next";
 import { Noto_Sans_KR } from "next/font/google";
-
-import ReactQueryConfigs from "@/configs/ReactQueryConfigs";
-
-import Header from "@/components/layout/Header";
+import { cookies } from "next/headers";
 
 import "./globals.css";
-import AuthManager from "@/configs/AuthConfigs";
-import { cookies } from "next/headers";
+
+import ReactQueryConfigs from "@/configs/ReactQueryConfigs";
+import AuthManager from "@/configs/AuthTokenManager";
+
+import Header from "@/components/layout/Header";
 
 const notoSansKR = Noto_Sans_KR({
   weight: ["300", "400", "500", "700"],
@@ -19,20 +19,18 @@ export const metadata: Metadata = {
   description: "비동사 프로젝트",
 };
 
-async function fetchData() {
+async function refreshTokenFetch() {
   try {
     const cookieStore = cookies();
     const refreshToken = cookieStore.get("refreshToken").value;
-    console.log("--------------------------------------------------------");
-    console.log("re>>>>>>", refreshToken);
-    console.log("--------------------------------------------------------");
 
     if (!refreshToken) {
       // 리프레시 토큰이 없는 경우
       return null;
     }
 
-    const response = await fetch("http://localhost:3001/api/refresh-token", {
+    //TODO: 로컬, 배포 url에 따라 설정
+    const response = await fetch("http://localhost:3000/api/refresh-token", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -54,13 +52,14 @@ export default async function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
-  const data = await fetchData();
-  console.log(data, "<<<<fetch Data");
+  const { idToken: newIDToken } = await refreshTokenFetch();
+  console.log(newIDToken, "<<<<fetch Data");
 
   return (
     <html lang="en">
       <body className={notoSansKR.className}>
         <ReactQueryConfigs>
+          <AuthManager newIDToken={newIDToken} />
           <Header />
           {children}
         </ReactQueryConfigs>

@@ -1,3 +1,5 @@
+import { cookies } from "next/headers";
+
 export async function POST(request: Request) {
   try {
     //TODO: Firebase에 refreshToken을 사용하여 새 idToken 요청
