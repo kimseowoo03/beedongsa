@@ -16,7 +16,7 @@ import {
 import { ResetPasswordRequest } from "@/components/reset-password/ResetPasswordRequest";
 import { ResetPasswordConfirmation } from "@/components/reset-password/ResetPasswordConfirmation";
 
-function ResetPasswordPage() {
+export default function ResetPasswordPage() {
   const page = useAtomValue(resetPasswordPageAtom);
 
   let content: ReactElement<any>;
@@ -32,8 +32,6 @@ function ResetPasswordPage() {
   }
   return <ResetPasswordSectionWrap>{content}</ResetPasswordSectionWrap>;
 }
-
-export default ResetPasswordPage;
 
 const ResetPasswordSectionWrap = styled.section`
   height: calc(100vh - 60px);

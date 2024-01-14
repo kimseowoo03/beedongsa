@@ -6,15 +6,13 @@ import styled from "@emotion/styled";
 /**components */
 import { Signin } from "@/components/signin/Signin";
 
-function SigninPage() {
+export default function SigninPage() {
   return (
     <SigninSectionWrap>
       <Signin />
     </SigninSectionWrap>
   );
 }
-
-export default SigninPage;
 
 const SigninSectionWrap = styled.section`
   height: calc(100vh - 60px);

@@ -42,7 +42,7 @@ const SignupSectionWrap = styled.section`
   }
 `;
 
-function SignupPage() {
+export default function SignupPage() {
   const page = useAtomValue(signupPageAtom);
 
   const [userType, setUserType] = useState<UserType>("client");
@@ -64,5 +64,3 @@ function SignupPage() {
   }
   return <SignupSectionWrap>{content}</SignupSectionWrap>;
 }
-
-export default SignupPage;
