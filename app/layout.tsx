@@ -6,6 +6,7 @@ import "./globals.css";
 
 import ReactQueryConfigs from "@/configs/ReactQueryConfigs";
 import AuthHydrateAtoms from "@/configs/AuthHydrateAtoms";
+import JotaiConfigs from "@/configs/JotaiConfigs";
 
 import Header from "@/components/layout/Header";
 
@@ -52,17 +53,20 @@ export default async function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
-  const { idToken: newIDToken } = await refreshTokenFetch();
-  console.log(newIDToken, "<<<<fetch Data");
+  const { idToken: newIDToken } = (await refreshTokenFetch()) ?? {
+    idToken: null,
+  };
 
   return (
     <html lang="en">
       <body className={notoSansKR.className}>
         <ReactQueryConfigs>
-          <AuthHydrateAtoms newIDToken={newIDToken}>
-            <Header />
-            {children}
-          </AuthHydrateAtoms>
+          <JotaiConfigs>
+            <AuthHydrateAtoms newIDToken={newIDToken}>
+              <Header />
+              {children}
+            </AuthHydrateAtoms>
+          </JotaiConfigs>
         </ReactQueryConfigs>
       </body>
     </html>
