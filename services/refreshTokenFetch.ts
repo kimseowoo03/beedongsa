@@ -11,7 +11,7 @@ export async function refreshTokenFetch() {
     }
 
     //TODO: 로컬, 배포 url에 따라 설정
-    const response = await fetch("http://localhost:3001/api/refresh-token", {
+    const response = await fetch("http://localhost:3000/api/refresh-token", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

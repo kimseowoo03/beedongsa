@@ -13,8 +13,8 @@ import { idTokenAtom } from "@/atoms/auth/idTokenAtom";
 import useForm from "@/hooks/useForm";
 
 /**components */
-import InputField from "../common/InputField";
 import SubmitButton from "../Atoms/Button";
+import InputLabel from "../Molecules/InputLabel";
 
 /**
  *
@@ -75,7 +75,7 @@ export const Signin = () => {
       <Form onSubmit={submitHandler}>
         <p className="title">로그인</p>
         <div>
-          <InputField
+          <InputLabel
             label="이메일"
             type="text"
             name="email"
@@ -83,7 +83,7 @@ export const Signin = () => {
             value={values.email}
             handleChange={(event) => handleChange(event)}
           />
-          <InputField
+          <InputLabel
             label="비밀번호"
             type="text"
             name="password"

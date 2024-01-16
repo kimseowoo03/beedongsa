@@ -1,5 +1,4 @@
 import styled from "@emotion/styled";
-import CheckIcon from "@/public/icon/check.svg";
 
 const Wrap = styled.div<{ isRequire: boolean }>`
   display: flex;
@@ -38,85 +37,25 @@ const Wrap = styled.div<{ isRequire: boolean }>`
   }
 `;
 
-const CheckboxWrap = styled.div`
-  display: inline-flex;
-
-  path {
-    fill: var(--gray-sub1);
-  }
-
-  .checkboxInput {
-    display: none;
-  }
-
-  input[type="checkbox"]:checked + label path {
-    fill: var(--primary-color-y);
-  }
-
-  label {
-    display: inline-flex;
-    gap: 6px;
-    align-items: center;
-    font-size: var(--font-size-xxs);
-    margin-right: 20px;
-    cursor: pointer;
-  }
-
-  &:hover {
-    path {
-      fill: var(--primary-color-y);
-    }
-  }
-`;
-
-interface InputBoxProps {
+interface InputLabelProps {
   isRequire?: boolean;
-  label?: string;
+  label: string;
   name: string;
   type: React.HTMLInputTypeAttribute;
   placeholder?: string;
   value: string | number;
   handleChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
-  checked?: boolean;
-  id?: string;
-  children?: React.ReactNode;
 }
 
-export default function InputField({
+export default function InputLabel({
   isRequire = true,
   label,
-  type,
   name,
+  type,
   placeholder,
   value,
   handleChange,
-  checked,
-  id,
-  children,
-}: InputBoxProps) {
-  // 체크박스일 때
-  if (type === "checkbox") {
-    return (
-      <CheckboxWrap>
-        <input
-          className="checkboxInput"
-          type="checkbox"
-          id={id}
-          name={name}
-          value={value}
-          checked={checked}
-          onChange={handleChange}
-        />
-        <label htmlFor={id}>
-          <CheckIcon className="checkbox-icon" />
-          {label}
-        </label>
-        {children}
-      </CheckboxWrap>
-    );
-  }
-
-  // 체크박스가 아닐 때
+}: InputLabelProps) {
   return (
     <Wrap isRequire={isRequire}>
       <label htmlFor={name}>{label}</label>

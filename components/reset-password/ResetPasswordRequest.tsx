@@ -9,7 +9,7 @@ import useForm from "@/hooks/useForm";
 
 /**components */
 import SubmitButton from "../Atoms/Button";
-import InputField from "../common/InputField";
+import InputLabel from "../Molecules/InputLabel";
 
 /**상태관리 */
 import { useSetAtom } from "jotai";
@@ -70,7 +70,7 @@ export const ResetPasswordRequest = () => {
       <p className="description">
         이메일을 입력하시며 비밀번호 재설정 안내 메일이 전송됩니다.
       </p>
-      <InputField
+      <InputLabel
         label="이메일"
         type="text"
         name="email"

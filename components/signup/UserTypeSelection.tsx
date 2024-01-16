@@ -4,8 +4,8 @@ import { signupPageNextAtom } from "@/atoms/signup/action";
 
 /**style */
 import styled from "@emotion/styled";
-import ClientSVG from "@/public/signup/client.svg";
-import EducatorSVG from "@/public/signup/educator.svg";
+import ClientSVG from "@/public/image/client.svg";
+import EducatorSVG from "@/public/image/educator.svg";
 
 /**type */
 import type { UserType } from "@/types/user";
