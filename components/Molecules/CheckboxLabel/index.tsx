@@ -32,8 +32,7 @@ const CheckboxWrap = styled.div`
   }
 `;
 
-interface InputBoxProps {
-  isRequire?: boolean;
+interface CheckboxLabelProps {
   label?: string;
   name: string;
   type: React.HTMLInputTypeAttribute;
@@ -46,17 +45,14 @@ interface InputBoxProps {
 }
 
 export default function CheckboxLabel({
-  isRequire = true,
   label,
-  type,
   name,
-  placeholder,
   value,
   handleChange,
   checked,
   id,
   children,
-}: InputBoxProps) {
+}: CheckboxLabelProps) {
   return (
     <CheckboxWrap>
       <input
