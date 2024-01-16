@@ -11,8 +11,8 @@ import { SIGNUP_PAGE_VALUES, signupPageAtom } from "@/atoms/signup/state";
 import styled from "@emotion/styled";
 
 /**components */
-import { UserTypeSelection } from "@/components/Templates/SignupUserTypeSelection";
-import { UserForm } from "@/components/Templates/SignupUserForm";
+import { SignupUserTypeSelection } from "@/components/Templates/SignupUserTypeSelection";
+import { SignupUserForm } from "@/components/Templates/SignupUserForm";
 
 /**type */
 import { UserType } from "@/types/user";
@@ -51,12 +51,12 @@ export default function SignupPage() {
 
   switch (page) {
     case SIGNUP_PAGE_VALUES.EMAIL_PAGE:
-      content = <UserForm type={userType} />;
+      content = <SignupUserForm type={userType} />;
       break;
 
     default:
       content = (
-        <UserTypeSelection
+        <SignupUserTypeSelection
           updateUserType={(userType) => setUserType(() => userType)}
         />
       );
