@@ -7,7 +7,7 @@ import ReactQueryConfigs from "@/configs/ReactQueryConfigs";
 import AuthHydrateAtoms from "@/configs/AuthHydrateAtoms";
 import JotaiConfigs from "@/configs/JotaiConfigs";
 
-import Header from "@/components/layout/Header";
+import Header from "@/components/Organisms/Header";
 
 import { refreshTokenFetch } from "@/services/refreshTokenFetch";
 
