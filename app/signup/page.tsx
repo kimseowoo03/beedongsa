@@ -11,8 +11,8 @@ import { SIGNUP_PAGE_VALUES, signupPageAtom } from "@/atoms/signup/state";
 import styled from "@emotion/styled";
 
 /**components */
-import { UserTypeSelection } from "@/components/signup/UserTypeSelection";
-import { UserForm } from "@/components/signup/UserForm";
+import { UserTypeSelection } from "@/components/Templates/SignupUserTypeSelection";
+import { UserForm } from "@/components/Templates/SignupUserForm";
 
 /**type */
 import { UserType } from "@/types/user";

@@ -6,7 +6,7 @@ import styled from "@emotion/styled";
 import CompletedSVG from "@/public/image/completed.svg";
 
 /**components */
-import Button from "../Atoms/Button";
+import Button from "../../Atoms/Button";
 
 const Wrap = styled.div`
   max-width: 360px;

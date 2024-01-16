@@ -8,8 +8,8 @@ import styled from "@emotion/styled";
 import useForm from "@/hooks/useForm";
 
 /**components */
-import SubmitButton from "../Atoms/Button";
-import InputLabel from "../Molecules/InputLabel";
+import SubmitButton from "../../Atoms/Button";
+import InputLabel from "../../Molecules/InputLabel";
 
 /**상태관리 */
 import { useSetAtom } from "jotai";

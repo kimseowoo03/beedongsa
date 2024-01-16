@@ -4,7 +4,7 @@
 import styled from "@emotion/styled";
 
 /**components */
-import { Signin } from "@/components/signin/Signin";
+import { Signin } from "@/components/Templates/Signin";
 
 export default function SigninPage() {
   return (

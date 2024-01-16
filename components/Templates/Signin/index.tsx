@@ -13,8 +13,8 @@ import { idTokenAtom } from "@/atoms/auth/idTokenAtom";
 import useForm from "@/hooks/useForm";
 
 /**components */
-import SubmitButton from "../Atoms/Button";
-import InputLabel from "../Molecules/InputLabel";
+import SubmitButton from "../../Atoms/Button";
+import InputLabel from "../../Molecules/InputLabel";
 
 /**
  *

@@ -56,7 +56,7 @@ const TypeCard = styled.div`
   }
 `;
 
-export const UserTypeSelection = ({
+export const SignupUserTypeSelection = ({
   updateUserType,
 }: {
   updateUserType: (userType: UserType) => void;

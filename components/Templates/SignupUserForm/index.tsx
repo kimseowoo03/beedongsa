@@ -13,9 +13,9 @@ import { Hr } from "@/styles/htmlStyles";
 import useForm from "@/hooks/useForm";
 
 /**components */
-import SubmitButton from "../Atoms/Button";
-import InputLabel from "../Molecules/InputLabel";
-import CheckboxLabel from "../Molecules/CheckboxLabel";
+import SubmitButton from "../../Atoms/Button";
+import InputLabel from "../../Molecules/InputLabel";
+import CheckboxLabel from "../../Molecules/CheckboxLabel";
 
 interface UserFormProps {
   type: UserType;
@@ -44,7 +44,7 @@ const submitSignUpForm = async (
   return response.json();
 };
 
-export const UserForm = ({ type }: UserFormProps) => {
+export const SignupUserForm = ({ type }: UserFormProps) => {
   const [allAgreed, setAllAgreed] = useState(false);
 
   const [etcLectureTopic, setEtcLectureTopic] = useState("");

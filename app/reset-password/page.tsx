@@ -13,8 +13,8 @@ import {
 } from "@/atoms/reset-password/state";
 
 /**components */
-import { ResetPasswordRequest } from "@/components/reset-password/ResetPasswordRequest";
-import { ResetPasswordConfirmation } from "@/components/reset-password/ResetPasswordConfirmation";
+import { ResetPasswordRequest } from "@/components/Templates/ResetPasswordRequest";
+import { ResetPasswordConfirmation } from "@/components/Templates/ResetPasswordConfirmation";
 
 export default function ResetPasswordPage() {
   const page = useAtomValue(resetPasswordPageAtom);
