@@ -14,7 +14,7 @@ import useForm from "@/hooks/useForm";
 
 /**components */
 import InputField from "../common/InputField";
-import SubmitButton from "../common/Button";
+import SubmitButton from "../Atoms/Button";
 
 /**
  *

@@ -8,7 +8,7 @@ import styled from "@emotion/styled";
 import useForm from "@/hooks/useForm";
 
 /**components */
-import SubmitButton from "../common/Button";
+import SubmitButton from "../Atoms/Button";
 import InputField from "../common/InputField";
 
 /**상태관리 */
