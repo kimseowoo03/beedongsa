@@ -1,15 +1,33 @@
-export const ProfileBasicInfo = ({ children }) => {
+interface ProfileBasicInfoMainProps {
+  children: React.ReactNode;
+}
+const ProfileBasicInfoMain = ({ children }: ProfileBasicInfoMainProps) => {
   return <div>{children}</div>;
 };
 
-ProfileBasicInfo.Photo = function Photo({ children }) {
+interface ProfilePhotoProps {
+  children: React.ReactNode;
+}
+const ProfilePhoto = ({ children }: ProfilePhotoProps) => {
   return <div>{children}</div>;
 };
 
-ProfileBasicInfo.Name = function Name({ children }) {
+interface ProfileNameProps {
+  children: React.ReactNode;
+}
+const ProfileName = ({ children }: ProfileNameProps) => {
   return <div>{children}</div>;
 };
 
-ProfileBasicInfo.MoreInfo = function MoreInfo({ children }) {
+interface ProfileMoreInfoProps {
+  children: React.ReactNode;
+}
+const ProfileMoreInfo = ({ children }: ProfileMoreInfoProps) => {
   return <p>{children}</p>;
 };
+
+export const ProfileBasicInfo = Object.assign(ProfileBasicInfoMain, {
+  Photo: ProfilePhoto,
+  Name: ProfileName,
+  MoreInfo: ProfileMoreInfo,
+});
