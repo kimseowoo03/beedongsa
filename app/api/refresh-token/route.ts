@@ -18,9 +18,9 @@ export async function POST(request: Request) {
     );
 
     const refreshResponseData = await firebaseResponse.json();
-    console.log("-------------firebaseRefreshData--------------");
+    console.log("-------------refreshResponseData--------------");
     console.log(refreshResponseData);
-    console.log("------------firebaseRefreshData---------------");
+    console.log("------------refreshResponseData---------------");
 
     if (refreshResponseData.error) {
       throw new Error(refreshResponseData.error.message);
@@ -29,8 +29,23 @@ export async function POST(request: Request) {
     const newRefreshToken = refreshResponseData.refresh_token;
     const idToken = refreshResponseData.id_token;
 
+    // 새로운 토큰으로 유저 정보 불러오기
+    const accountInfoResponse = await fetch(
+      `https://identitytoolkit.googleapis.com/v1/accounts:lookup?key=${process.env.NEXT_PUBLIC_FIREBASE_API_KEY}`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ idToken }),
+      }
+    );
+
+    const accountInfoData = await accountInfoResponse.json();
+    const email = accountInfoData.users[0].email;
+
     return new Response(
-      JSON.stringify({ idToken, message: "idToken 재발급 성공" }),
+      JSON.stringify({ idToken, email, message: "idToken 재발급 성공" }),
       {
         status: 200,
         headers: {
