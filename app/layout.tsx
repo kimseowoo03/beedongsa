@@ -4,12 +4,9 @@ import { Noto_Sans_KR } from "next/font/google";
 import "./globals.css";
 
 import ReactQueryConfigs from "@/configs/ReactQueryConfigs";
-import AuthHydrateAtoms from "@/configs/AuthHydrateAtoms";
 import JotaiConfigs from "@/configs/JotaiConfigs";
 
 import Header from "@/components/Organisms/Header";
-
-import { refreshTokenFetch } from "@/services/refreshTokenFetch";
 
 const notoSansKR = Noto_Sans_KR({
   weight: ["300", "400", "500", "700"],
@@ -26,19 +23,13 @@ export default async function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
-  const { idToken: newIDToken } = (await refreshTokenFetch()) ?? {
-    idToken: null,
-  };
-
   return (
     <html lang="en">
       <body className={notoSansKR.className}>
         <ReactQueryConfigs>
           <JotaiConfigs>
-            <AuthHydrateAtoms newIDToken={newIDToken}>
-              <Header />
-              {children}
-            </AuthHydrateAtoms>
+            <Header />
+            {children}
           </JotaiConfigs>
         </ReactQueryConfigs>
       </body>
