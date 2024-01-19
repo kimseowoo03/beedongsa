@@ -1,13 +1,12 @@
 /**react, next */
 import Link from "next/link";
 import { useMutation } from "@tanstack/react-query";
+import { useRouter } from "next/navigation";
 
 /**style */
 import styled from "@emotion/styled";
 
 /**상태관리 */
-import { useAtom } from "jotai";
-import { idTokenAtom } from "@/atoms/auth/idTokenAtom";
 
 /**hooks */
 import useForm from "@/hooks/useForm";
@@ -42,6 +41,8 @@ const submitSigninForm = async (formData: {
 };
 
 export const Signin = () => {
+  const router = useRouter();
+
   const { values, setValues, handleChange } = useForm({
     initialValues: {
       email: "",
@@ -53,19 +54,12 @@ export const Signin = () => {
     mutationFn: submitSigninForm,
   });
 
-  if (mutation.isError) {
-    alert(`Error___>!>: ${mutation.error.message}`);
-    mutation.reset(); // 상태 초기화
-  }
-
-  const [, setIdToken] = useAtom(idTokenAtom);
-
   const submitHandler = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const data: { idToken: string; message: string } =
       await mutation.mutateAsync(values);
 
-    setIdToken(() => data.idToken); // 성공 시 idToken 상태 업데이트
+    router.push("/");
   };
 
   const signinDisabled = values.email && values.password && !mutation.isPending;
