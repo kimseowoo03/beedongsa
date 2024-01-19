@@ -44,8 +44,10 @@ export default async function Page() {
 
   const { fields } = await getBasicUserData({ idToken, email });
 
-  const data = transformFirestoreDocument<EducatorUser | ClientUser>(fields);
-  console.log(data, "<<<<<<<<<<<<<<<<<fetched data");
+  const userData = transformFirestoreDocument<EducatorUser | ClientUser>(
+    fields
+  );
+  console.log("-------------page.tsx-----------");
 
-  return <ProfilePage />;
+  return <ProfilePage userData={userData} />;
 }
