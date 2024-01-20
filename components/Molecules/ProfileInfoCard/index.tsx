@@ -1,7 +1,7 @@
 interface ProfileBasicInfoMainProps {
   children: React.ReactNode;
 }
-const ProfileBasicInfoMain = ({ children }: ProfileBasicInfoMainProps) => {
+const ProfileInfoCardMain = ({ children }: ProfileBasicInfoMainProps) => {
   return <div>{children}</div>;
 };
 
@@ -26,7 +26,7 @@ const ProfileMoreInfo = ({ children }: ProfileMoreInfoProps) => {
   return <p>{children}</p>;
 };
 
-export const ProfileBasicInfo = Object.assign(ProfileBasicInfoMain, {
+export const ProfileInfoCard = Object.assign(ProfileInfoCardMain, {
   Photo: ProfilePhoto,
   Name: ProfileName,
   MoreInfo: ProfileMoreInfo,
