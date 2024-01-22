@@ -23,4 +23,5 @@ export interface ClientUser extends User {
   managerName: string;
   managerEmail: string;
   managerPhoneNumber: number;
+  AnnouncementList: Array<string>;
 }
