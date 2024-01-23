@@ -12,7 +12,6 @@ const useForm = <T extends {}>({ initialValues }: useFormProps<T>) => {
   ) => {
     // 'checkbox' 타입의 경우, 'checked'는 boolean 값이며, 해당 값은 배열 또는 boolean을 가집니다.
     const { name, value, type, checked } = event.target as HTMLInputElement;
-
     setValues((prevValues) => {
       // 배열로 값을 관리하는 경우
       if (Array.isArray(prevValues[name])) {
@@ -37,9 +36,20 @@ const useForm = <T extends {}>({ initialValues }: useFormProps<T>) => {
     });
   };
 
+  /**
+   * input이 아닌, 클릭으로 변경될 때 사용하는 함수입니다.
+   */
+  const handleClick = ({ value, name }: { value: string; name: string }) => {
+    console.log(value, name, "<<<");
+    setValues((prevValues) => ({
+      ...prevValues,
+      [name]: value,
+    }));
+  };
+
   // 추가적인 로직 (예: 폼 제출 처리,  등)
 
-  return { values, setValues, handleChange };
+  return { values, setValues, handleClick, handleChange };
 };
 
 export default useForm;
