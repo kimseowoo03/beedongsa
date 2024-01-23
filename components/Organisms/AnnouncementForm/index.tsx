@@ -9,6 +9,7 @@ import styled from "@emotion/styled";
 
 import useForm from "@/hooks/useForm";
 import { SelectBox } from "@/components/Molecules/SelectBox";
+import DateTimeInput from "@/components/Molecules/DateTimeInput";
 
 const CITYS = [
   "서울특별시",
@@ -307,7 +308,9 @@ export const AnnouncementForm = () => {
     registeredEmail: "",
     title: "",
     category: [],
-    locationOrPlace: "시/도,구/동/면",
+    metropolitanCity: "시/도",
+    dstrict: "구/동/면",
+    detailedAddress: "",
     schedule: [],
     recruitmentDeadline: "",
     target: [],
@@ -321,12 +324,11 @@ export const AnnouncementForm = () => {
     AdministratorApproval: true,
   };
 
-  const { values, setValues, handleChange } = useForm({
+  const { values, handleClick, handleChange } = useForm({
     initialValues,
   });
 
   const [etcCategory, setEtcCategory] = useState("");
-  const [subAreas, setSubAreas] = useState([]);
 
   return (
     <form>
@@ -470,23 +472,29 @@ export const AnnouncementForm = () => {
         </div>
       </CategoryOptions>
       <SelectBox>
-        <SelectBox.Title activeSelect={values.locationOrPlace.split(",")[0]} />
+        <SelectBox.Title activeSelect={values.metropolitanCity} />
         <SelectBox.Select>
           {CITYS.map((city) => (
             <SelectBox.Option
-              setValues={setValues}
-              name="locationOrPlace"
+              handleClick={handleClick}
+              name="metropolitanCity"
               key={city}
               value={city}
             ></SelectBox.Option>
           ))}
         </SelectBox.Select>
       </SelectBox>
-      {/* <SelectBox defaultValue="구/동/면"handleChange={handleChange}>
-        <SelectBox.Title />
+      <DateTimeInput />
+      {/* <SelectBox>
+        <SelectBox.Title activeSelect={values.locationOrPlace.split(",")[1]} />
         <SelectBox.Select>
-          {subAreas.map((city) => (
-            <SelectBox.Option key={city} value={city}></SelectBox.Option>
+          {SEOUL.map((city) => (
+            <SelectBox.Option
+              setValues={setValues}
+              name="locationOrPlace"
+              key={city}
+              value={city}
+            ></SelectBox.Option>
           ))}
         </SelectBox.Select>
       </SelectBox> */}

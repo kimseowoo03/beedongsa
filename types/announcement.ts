@@ -2,7 +2,9 @@ interface Announcement {
   registeredEmail: string;
   title: string;
   category: Array<string>;
-  locationOrPlace: string;
+  metropolitanCity: string;
+  dstrict: string;
+  detailedAddress: string;
   schedule: Array<string>;
   recruitmentDeadline: string;
   target: Array<
