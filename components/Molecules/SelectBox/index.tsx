@@ -92,24 +92,19 @@ const SelectBoxSelect = ({ children }: SelectBoxSelectProps) => {
 interface SelectBoxOptionProps {
   value: string;
   name: string;
-  setValues: (updater: (prevState: any) => any) => void;
+  handleClick: ({ value, name }: { value: string; name: string }) => void;
   children?: React.ReactNode;
 }
 const SelectBoxOption = ({
   value,
   name,
-  setValues,
+  handleClick,
   children,
 }: SelectBoxOptionProps) => {
   const { setIsClick } = useContext(SelectBoxContext);
 
   const optionClickHandler = () => {
-    //form value 직접 업데이트
-    setValues((prev) => ({
-      ...prev,
-      [name]: value,
-    }));
-
+    handleClick({ value, name });
     setIsClick((prev) => !prev);
   };
   return (
