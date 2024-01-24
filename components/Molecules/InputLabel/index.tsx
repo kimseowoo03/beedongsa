@@ -11,13 +11,17 @@ const Wrap = styled.div<{ isRequire: boolean }>`
     font-weight: var(--font-weight-medium);
   }
 
-  label::after {
-    position: relative;
-    left: 2px;
-    top: -2px;
-    content: "*";
-    color: var(--primary-color-r);
-  }
+  ${({ isRequire }) =>
+    isRequire &&
+    `
+      &::after {
+        content: "*";
+        position: relative;
+        left: 2px;
+        top: -2px;
+        color: var(--primary-color-r);
+      }
+    `}
 
   input {
     padding: 12px 16px;
