@@ -25,9 +25,21 @@ const DateTimeBoxContext = createContext<DateTimeBoxContextType>({
 });
 
 interface DateTimeBoxMainProps {
+  name?: string;
+  handleClick?: ({
+    value,
+    name,
+  }: {
+    value: string | Array<string>;
+    name: string;
+  }) => void;
   children: React.ReactNode;
 }
-const DateTimeBoxMain = ({ children }: DateTimeBoxMainProps) => {
+const DateTimeBoxMain = ({
+  name,
+  handleClick,
+  children,
+}: DateTimeBoxMainProps) => {
   const [date, setDate] = useState("");
   const [startTime, setStartTime] = useState("");
   const [endTime, setEndTime] = useState("");
@@ -35,8 +47,13 @@ const DateTimeBoxMain = ({ children }: DateTimeBoxMainProps) => {
 
   const handleCreateDate = () => {
     const newEntry = `${date}/${startTime}~${endTime}`;
-    setSchedule([...schedule, newEntry]);
-    console.log(newEntry, "newEntry", schedule, "<<schedule");
+
+    const isDuplicate = schedule.some((entry) => entry === newEntry);
+
+    if (!isDuplicate) {
+      handleClick({ value: schedule, name });
+      setSchedule([...schedule, newEntry]);
+    }
   };
 
   return (
@@ -58,15 +75,29 @@ const DateTimeBoxMain = ({ children }: DateTimeBoxMainProps) => {
   );
 };
 
-const DateTimeBoxDate = () => {
+interface DateTimeBoxDateProps {
+  name?: string;
+  handleChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
+}
+const DateTimeBoxDate = ({ name, handleChange }: DateTimeBoxDateProps) => {
   const { date, setDate } = useContext(DateTimeBoxContext);
+
+  const DateTimeBoxDateHandle = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (handleChange) {
+      handleChange(e);
+    } else {
+      const value = e.target.value;
+      setDate(() => value);
+    }
+  };
   return (
     <label>
       날짜:
       <input
         type="date"
+        name={name}
         value={date}
-        onChange={(e) => setDate(e.target.value)}
+        onChange={DateTimeBoxDateHandle}
       />
     </label>
   );
