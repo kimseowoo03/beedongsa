@@ -76,10 +76,15 @@ const DateTimeBoxMain = ({
 };
 
 interface DateTimeBoxDateProps {
+  value?: string;
   name?: string;
   handleChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
 }
-const DateTimeBoxDate = ({ name, handleChange }: DateTimeBoxDateProps) => {
+const DateTimeBoxDate = ({
+  value,
+  name,
+  handleChange,
+}: DateTimeBoxDateProps) => {
   const { date, setDate } = useContext(DateTimeBoxContext);
 
   const DateTimeBoxDateHandle = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -96,7 +101,7 @@ const DateTimeBoxDate = ({ name, handleChange }: DateTimeBoxDateProps) => {
       <input
         type="date"
         name={name}
-        value={date}
+        value={value ?? date}
         onChange={DateTimeBoxDateHandle}
       />
     </label>
