@@ -1,4 +1,4 @@
-interface Announcement {
+export interface Announcement {
   registeredEmail: string;
   title: string;
   category: Array<string>;

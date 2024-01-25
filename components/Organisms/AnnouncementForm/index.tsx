@@ -1,15 +1,22 @@
 "use client";
 
 import { useState } from "react";
+import { useMutation } from "@tanstack/react-query";
 
 import CheckboxLabel from "@/components/Molecules/CheckboxLabel";
 import InputLabel from "@/components/Molecules/InputLabel";
+import { SelectBox } from "@/components/Molecules/SelectBox";
+import { DateTimeBox } from "@/components/Molecules/DateTimeInput";
+import SubmitButton from "../../Atoms/Button";
 
 import styled from "@emotion/styled";
 
 import useForm from "@/hooks/useForm";
-import { SelectBox } from "@/components/Molecules/SelectBox";
-import { DateTimeBox } from "@/components/Molecules/DateTimeInput";
+
+import { useAtom } from "jotai";
+import { userAtom } from "@/atoms/auth";
+
+import type { Announcement } from "@/types/announcement";
 
 const CITYS = [
   "서울",
@@ -267,7 +274,7 @@ const REGIONDETAILS = {
   제주: ["서귀포시", "제주시"],
 };
 
-const CategoryOptions = styled.div`
+const MultipleSelection = styled.div`
   .label {
     color: var(--font-color-1);
     font-size: var(--font-size-xxs);
@@ -295,9 +302,30 @@ const EtcInput = styled.input`
   }
 `;
 
+const submitAnnouncementCreate = async (
+  formData: Announcement
+): Promise<any> => {
+  const response = await fetch("/api/announcement/create", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(formData),
+  });
+
+  if (!response.ok) {
+    const errorData = await response.json();
+    throw new Error(errorData.errorMessage);
+  }
+  return response.json();
+};
+
 export const AnnouncementForm = () => {
+  const [{ email: registeredEmail }] = useAtom(userAtom);
+  console.log(registeredEmail, "<<email");
+
   const initialValues: Announcement = {
-    registeredEmail: "",
+    registeredEmail,
     title: "",
     category: [],
     metropolitanCity: "시/도",
@@ -321,279 +349,489 @@ export const AnnouncementForm = () => {
   });
 
   const [etcCategory, setEtcCategory] = useState("");
-  console.log(values, values.target.includes("중학생"), "valuesvalues");
+
+  const [
+    etcPreferredLectureOrConsultingStyle,
+    setEtcPreferredLectureOrConsultingStyle,
+  ] = useState("");
+  console.log(initialValues);
+  const mutation = useMutation({
+    mutationFn: submitAnnouncementCreate,
+  });
+
+  const submitHandler = (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    mutation.mutate(values as Announcement);
+  };
+
   return (
-    <form>
-      <InputLabel
-        label="공고제목"
-        type="text"
-        name="title"
-        placeholder="ex) 나만의 계절꽃다발 만들기 (꽃다발을 가져갈 수 있어요.)"
-        value={values.title}
-        handleChange={(event) => handleChange(event)}
-      />
-      <CategoryOptions>
-        <div className="label">카테고리</div>
-        <div>
-          <CheckboxLabel
-            label="미술/공예"
-            type="checkbox"
-            name="category"
-            id="미술/공예"
-            value="미술/공예"
-            handleChange={(event) => handleChange(event)}
-            checked={values.category.includes("미술/공예")}
-          />
-          <CheckboxLabel
-            label="체육/건강"
-            type="checkbox"
-            name="category"
-            id="체육/건강"
-            value="체육/건강"
-            handleChange={(event) => handleChange(event)}
-            checked={values.category.includes("체육/건강")}
-          />
-          <CheckboxLabel
-            label="음악"
-            type="checkbox"
-            name="category"
-            id="음악"
-            value="음악"
-            handleChange={(event) => handleChange(event)}
-            checked={values.category.includes("음악")}
-          />
-          <CheckboxLabel
-            label="문화 심리"
-            type="checkbox"
-            name="category"
-            id="문화 심리"
-            value="문화 심리"
-            handleChange={(event) => handleChange(event)}
-            checked={values.category.includes("문화 심리")}
-          />
-          <CheckboxLabel
-            label="요리/베이킹"
-            type="checkbox"
-            name="category"
-            id="요리/베이킹"
-            value="요리/베이킹"
-            handleChange={(event) => handleChange(event)}
-            checked={values.category.includes("요리/베이킹")}
-          />
-          <CheckboxLabel
-            label="실무교육/조직문화"
-            type="checkbox"
-            name="category"
-            id="실무교육/조직문화"
-            value="실무교육/조직문화"
-            handleChange={(event) => handleChange(event)}
-            checked={values.category.includes("실무교육/조직문화")}
-          />
-          <CheckboxLabel
-            label="외국어"
-            type="checkbox"
-            name="category"
-            id="외국어"
-            value="외국어"
-            handleChange={(event) => handleChange(event)}
-            checked={values.category.includes("외국어")}
-          />
-          <CheckboxLabel
-            label="경영/경제/마케팅"
-            type="checkbox"
-            name="category"
-            id="경영/경제/마케팅"
-            value="경영/경제/마케팅"
-            handleChange={(event) => handleChange(event)}
-            checked={values.category.includes("경영/경제/마케팅")}
-          />
-          <CheckboxLabel
-            label="수학/과학"
-            type="checkbox"
-            name="category"
-            id="수학/과학"
-            value="수학/과학"
-            handleChange={(event) => handleChange(event)}
-            checked={values.category.includes("수학/과학")}
-          />
-          <CheckboxLabel
-            label="컴퓨터/IT"
-            type="checkbox"
-            name="category"
-            id="컴퓨터/IT"
-            value="컴퓨터/IT"
-            handleChange={(event) => handleChange(event)}
-            checked={values.category.includes("컴퓨터/IT")}
-          />
-          <CheckboxLabel
-            label="취업/자기개발"
-            type="checkbox"
-            name="category"
-            id="취업/자기개발"
-            value="취업/자기개발"
-            handleChange={(event) => handleChange(event)}
-            checked={values.category.includes("취업/자기개발")}
-          />
-          <CheckboxLabel
-            label="취미/실용/스포츠"
-            type="checkbox"
-            name="category"
-            id="취미/실용/스포츠"
-            value="취미/실용/스포츠"
-            handleChange={(event) => handleChange(event)}
-            checked={values.category.includes("취미/실용/스포츠")}
-          />
-          <CheckboxLabel
-            label="기타"
-            type="checkbox"
-            name="category"
-            id={etcCategory}
-            value={etcCategory}
-            handleChange={(event) => handleChange(event)}
-            checked={values.category.includes(etcCategory)}
-          >
-            <EtcInput
-              type="text"
-              placeholder="입력 후 체크"
-              name="etcCategory"
-              value={etcCategory}
-              onChange={(e) => setEtcCategory(e.target.value)}
-              disabled={values.category.includes(etcCategory)}
-            />
-          </CheckboxLabel>
-        </div>
-      </CategoryOptions>
+    <form onSubmit={submitHandler}>
       <div>
-        <SelectBox>
-          <SelectBox.Title activeSelect={values.metropolitanCity} />
-          <SelectBox.Select>
-            {CITYS.map((city) => (
-              <SelectBox.Option
-                handleClick={handleClick}
-                name="metropolitanCity"
-                key={city}
-                value={city}
-              ></SelectBox.Option>
-            ))}
-          </SelectBox.Select>
-        </SelectBox>
-        <SelectBox>
-          <SelectBox.Title activeSelect={values.dstrict} />
-          <SelectBox.Select>
-            {REGIONDETAILS[values.metropolitanCity] &&
-              REGIONDETAILS[values.metropolitanCity].map((dstrict: string) => (
+        <InputLabel
+          label="공고제목"
+          type="text"
+          name="title"
+          placeholder="ex) 나만의 계절꽃다발 만들기 (꽃다발을 가져갈 수 있어요.)"
+          value={values.title}
+          handleChange={(event) => handleChange(event)}
+        />
+        <MultipleSelection>
+          <div className="label">카테고리</div>
+          <div>
+            <CheckboxLabel
+              label="미술/공예"
+              type="checkbox"
+              name="category"
+              id="미술/공예"
+              value="미술/공예"
+              handleChange={(event) => handleChange(event)}
+              checked={values.category.includes("미술/공예")}
+            />
+            <CheckboxLabel
+              label="체육/건강"
+              type="checkbox"
+              name="category"
+              id="체육/건강"
+              value="체육/건강"
+              handleChange={(event) => handleChange(event)}
+              checked={values.category.includes("체육/건강")}
+            />
+            <CheckboxLabel
+              label="음악"
+              type="checkbox"
+              name="category"
+              id="음악"
+              value="음악"
+              handleChange={(event) => handleChange(event)}
+              checked={values.category.includes("음악")}
+            />
+            <CheckboxLabel
+              label="문화 심리"
+              type="checkbox"
+              name="category"
+              id="문화 심리"
+              value="문화 심리"
+              handleChange={(event) => handleChange(event)}
+              checked={values.category.includes("문화 심리")}
+            />
+            <CheckboxLabel
+              label="요리/베이킹"
+              type="checkbox"
+              name="category"
+              id="요리/베이킹"
+              value="요리/베이킹"
+              handleChange={(event) => handleChange(event)}
+              checked={values.category.includes("요리/베이킹")}
+            />
+            <CheckboxLabel
+              label="실무교육/조직문화"
+              type="checkbox"
+              name="category"
+              id="실무교육/조직문화"
+              value="실무교육/조직문화"
+              handleChange={(event) => handleChange(event)}
+              checked={values.category.includes("실무교육/조직문화")}
+            />
+            <CheckboxLabel
+              label="외국어"
+              type="checkbox"
+              name="category"
+              id="외국어"
+              value="외국어"
+              handleChange={(event) => handleChange(event)}
+              checked={values.category.includes("외국어")}
+            />
+            <CheckboxLabel
+              label="경영/경제/마케팅"
+              type="checkbox"
+              name="category"
+              id="경영/경제/마케팅"
+              value="경영/경제/마케팅"
+              handleChange={(event) => handleChange(event)}
+              checked={values.category.includes("경영/경제/마케팅")}
+            />
+            <CheckboxLabel
+              label="수학/과학"
+              type="checkbox"
+              name="category"
+              id="수학/과학"
+              value="수학/과학"
+              handleChange={(event) => handleChange(event)}
+              checked={values.category.includes("수학/과학")}
+            />
+            <CheckboxLabel
+              label="컴퓨터/IT"
+              type="checkbox"
+              name="category"
+              id="컴퓨터/IT"
+              value="컴퓨터/IT"
+              handleChange={(event) => handleChange(event)}
+              checked={values.category.includes("컴퓨터/IT")}
+            />
+            <CheckboxLabel
+              label="취업/자기개발"
+              type="checkbox"
+              name="category"
+              id="취업/자기개발"
+              value="취업/자기개발"
+              handleChange={(event) => handleChange(event)}
+              checked={values.category.includes("취업/자기개발")}
+            />
+            <CheckboxLabel
+              label="취미/실용/스포츠"
+              type="checkbox"
+              name="category"
+              id="취미/실용/스포츠"
+              value="취미/실용/스포츠"
+              handleChange={(event) => handleChange(event)}
+              checked={values.category.includes("취미/실용/스포츠")}
+            />
+            <CheckboxLabel
+              label="기타"
+              type="checkbox"
+              name="category"
+              id={etcCategory}
+              value={etcCategory}
+              handleChange={(event) => handleChange(event)}
+              checked={values.category.includes(etcCategory)}
+            >
+              <EtcInput
+                type="text"
+                placeholder="입력 후 체크"
+                name="etcCategory"
+                value={etcCategory}
+                onChange={(e) => setEtcCategory(e.target.value)}
+                disabled={values.category.includes(etcCategory)}
+              />
+            </CheckboxLabel>
+          </div>
+        </MultipleSelection>
+        <div>
+          <SelectBox>
+            <SelectBox.Title activeSelect={values.metropolitanCity} />
+            <SelectBox.Select>
+              {CITYS.map((city) => (
                 <SelectBox.Option
                   handleClick={handleClick}
-                  name="dstrict"
-                  key={dstrict}
-                  value={dstrict}
+                  name="metropolitanCity"
+                  key={city}
+                  value={city}
                 ></SelectBox.Option>
               ))}
-          </SelectBox.Select>
-        </SelectBox>
+            </SelectBox.Select>
+          </SelectBox>
+          <SelectBox>
+            <SelectBox.Title activeSelect={values.dstrict} />
+            <SelectBox.Select>
+              {REGIONDETAILS[values.metropolitanCity] &&
+                REGIONDETAILS[values.metropolitanCity].map(
+                  (dstrict: string) => (
+                    <SelectBox.Option
+                      handleClick={handleClick}
+                      name="dstrict"
+                      key={dstrict}
+                      value={dstrict}
+                    ></SelectBox.Option>
+                  )
+                )}
+            </SelectBox.Select>
+          </SelectBox>
+          <InputLabel
+            isRequire={false}
+            label="상세주소"
+            type="text"
+            name="detailedAddress"
+            placeholder="상세장소 (ex 00고등학교) "
+            value={values.detailedAddress}
+            handleChange={(event) => handleChange(event)}
+          />
+        </div>
+        <DateTimeBox handleClick={handleClick} name="schedule">
+          <DateTimeBox.Date />
+          <DateTimeBox.Time />
+          <DateTimeBox.CreateButton />
+          <DateTimeBox.ScheduleList />
+        </DateTimeBox>
+        <DateTimeBox>
+          <DateTimeBox.Date
+            value={values.recruitmentDeadline}
+            name="recruitmentDeadline"
+            handleChange={handleChange}
+          />
+          까지
+        </DateTimeBox>
+        <MultipleSelection>
+          <div className="label">대상</div>
+          <div>
+            <CheckboxLabel
+              label="영유아"
+              type="checkbox"
+              name="target"
+              id="영유아"
+              value="영유아"
+              handleChange={(event) => handleChange(event)}
+              checked={values.target.includes("영유아")}
+            />
+            <CheckboxLabel
+              label="초등학생"
+              type="checkbox"
+              name="target"
+              id="초등학생"
+              value="초등학생"
+              handleChange={(event) => handleChange(event)}
+              checked={values.target.includes("초등학생")}
+            />
+            <CheckboxLabel
+              label="중학생"
+              type="checkbox"
+              name="target"
+              id="중학생"
+              value="중학생"
+              handleChange={(event) => handleChange(event)}
+              checked={values.target.includes("중학생")}
+            />
+            <CheckboxLabel
+              label="고등학생"
+              type="checkbox"
+              name="target"
+              id="고등학생"
+              value="고등학생"
+              handleChange={(event) => handleChange(event)}
+              checked={values.target.includes("고등학생")}
+            />
+            <CheckboxLabel
+              label="청년"
+              type="checkbox"
+              name="target"
+              id="청년"
+              value="청년"
+              handleChange={(event) => handleChange(event)}
+              checked={values.target.includes("청년")}
+            />
+            <CheckboxLabel
+              label="중년"
+              type="checkbox"
+              name="target"
+              id="중년"
+              value="중년"
+              handleChange={(event) => handleChange(event)}
+              checked={values.target.includes("중년")}
+            />
+            <CheckboxLabel
+              label="장년"
+              type="checkbox"
+              name="target"
+              id="장년"
+              value="장년"
+              handleChange={(event) => handleChange(event)}
+              checked={values.target.includes("장년")}
+            />
+            <CheckboxLabel
+              label="기업"
+              type="checkbox"
+              name="target"
+              id="기업"
+              value="기업"
+              handleChange={(event) => handleChange(event)}
+              checked={values.target.includes("기업")}
+            />
+          </div>
+        </MultipleSelection>
         <InputLabel
-          isRequire={false}
-          label="상세주소"
+          label="최대 수용 가능 인원"
+          type="number"
+          name="personnel"
+          placeholder="최대 인원 입력"
+          value={values.personnel}
+          handleChange={(event) => handleChange(event)}
+        />
+        <InputLabel
+          label="총 비용"
+          type="number"
+          name="totalCost"
+          placeholder="숫자만 입력해주세요."
+          value={values.totalCost}
+          handleChange={(event) => handleChange(event)}
+        />
+        <MultipleSelection>
+          <div className="label">비용에 포함된 지원 내역</div>
+          <div>
+            <CheckboxLabel
+              label="숙박지원"
+              type="checkbox"
+              name="supportIncludedInTheCost"
+              id="숙박지원"
+              value="숙박지원"
+              handleChange={(event) => handleChange(event)}
+              checked={values.supportIncludedInTheCost.includes("숙박지원")}
+            />
+            <CheckboxLabel
+              label="식사지원"
+              type="checkbox"
+              name="supportIncludedInTheCost"
+              id="식사지원"
+              value="식사지원"
+              handleChange={(event) => handleChange(event)}
+              checked={values.supportIncludedInTheCost.includes("식사지원")}
+            />
+            <CheckboxLabel
+              label="차비지원"
+              type="checkbox"
+              name="supportIncludedInTheCost"
+              id="차비지원"
+              value="차비지원"
+              handleChange={(event) => handleChange(event)}
+              checked={values.supportIncludedInTheCost.includes("차비지원")}
+            />
+          </div>
+        </MultipleSelection>
+        <InputLabel
+          label="상세내용"
           type="text"
-          name="detailedAddress"
-          placeholder="상세장소 (ex 00고등학교) "
-          value={values.detailedAddress}
+          name="detail"
+          placeholder="추가적으로 필요한 내용을 입력하세요."
+          value={values.detail}
           handleChange={(event) => handleChange(event)}
         />
       </div>
-
-      <DateTimeBox handleClick={handleClick} name="schedule">
-        <DateTimeBox.Date />
-        <DateTimeBox.Time />
-        <DateTimeBox.CreateButton />
-        <DateTimeBox.ScheduleList />
-      </DateTimeBox>
-
-      <DateTimeBox>
-        <DateTimeBox.Date
-          name="recruitmentDeadline"
-          handleChange={handleChange}
+      <div>
+        <InputLabel
+          label="경력"
+          type="text"
+          name="desiredExperience"
+          value={values.desiredExperience}
+          handleChange={(event) => handleChange(event)}
         />
-        까지
-      </DateTimeBox>
-
-      <CategoryOptions>
-        <div className="label">대상</div>
-        <div>
-          <CheckboxLabel
-            label="영유아"
-            type="checkbox"
-            name="target"
-            id="영유아"
-            value="영유아"
-            handleChange={(event) => handleChange(event)}
-            checked={values.target.includes("영유아")}
-          />
-          <CheckboxLabel
-            label="초등학생"
-            type="checkbox"
-            name="target"
-            id="초등학생"
-            value="초등학생"
-            handleChange={(event) => handleChange(event)}
-            checked={values.target.includes("초등학생")}
-          />
-          <CheckboxLabel
-            label="중학생"
-            type="checkbox"
-            name="target"
-            id="중학생"
-            value="중학생"
-            handleChange={(event) => handleChange(event)}
-            checked={values.target.includes("중학생")}
-          />
-          <CheckboxLabel
-            label="고등학생"
-            type="checkbox"
-            name="target"
-            id="고등학생"
-            value="고등학생"
-            handleChange={(event) => handleChange(event)}
-            checked={values.target.includes("고등학생")}
-          />
-          <CheckboxLabel
-            label="청년"
-            type="checkbox"
-            name="target"
-            id="청년"
-            value="청년"
-            handleChange={(event) => handleChange(event)}
-            checked={values.target.includes("청년")}
-          />
-          <CheckboxLabel
-            label="중년"
-            type="checkbox"
-            name="target"
-            id="중년"
-            value="중년"
-            handleChange={(event) => handleChange(event)}
-            checked={values.target.includes("중년")}
-          />
-          <CheckboxLabel
-            label="장년"
-            type="checkbox"
-            name="target"
-            id="장년"
-            value="장년"
-            handleChange={(event) => handleChange(event)}
-            checked={values.target.includes("장년")}
-          />
-          <CheckboxLabel
-            label="기업"
-            type="checkbox"
-            name="target"
-            id="기업"
-            value="기업"
-            handleChange={(event) => handleChange(event)}
-            checked={values.target.includes("기업")}
-          />
-        </div>
-      </CategoryOptions>
+        <InputLabel
+          label="자격사항(학력, 자격증 등)"
+          type="text"
+          name="desiredQualifications"
+          value={values.desiredQualifications}
+          handleChange={(event) => handleChange(event)}
+        />
+        <MultipleSelection>
+          <div className="label">카테고리</div>
+          <div>
+            <CheckboxLabel
+              label="활기차요"
+              type="checkbox"
+              name="preferredLectureOrConsultingStyle"
+              id="활기차요"
+              value="활기차요"
+              handleChange={(event) => handleChange(event)}
+              checked={values.preferredLectureOrConsultingStyle.includes(
+                "활기차요"
+              )}
+            />
+            <CheckboxLabel
+              label="차분해요"
+              type="checkbox"
+              name="preferredLectureOrConsultingStyle"
+              id="차분해요"
+              value="차분해요"
+              handleChange={(event) => handleChange(event)}
+              checked={values.preferredLectureOrConsultingStyle.includes(
+                "차분해요"
+              )}
+            />
+            <CheckboxLabel
+              label="집중이 잘돼요"
+              type="checkbox"
+              name="preferredLectureOrConsultingStyle"
+              id="집중이 잘돼요"
+              value="집중이 잘돼요"
+              handleChange={(event) => handleChange(event)}
+              checked={values.preferredLectureOrConsultingStyle.includes(
+                "집중이 잘돼요"
+              )}
+            />
+            <CheckboxLabel
+              label="에너지가 넘쳐요"
+              type="checkbox"
+              name="preferredLectureOrConsultingStyle"
+              id="에너지가 넘쳐요"
+              value="에너지가 넘쳐요"
+              handleChange={(event) => handleChange(event)}
+              checked={values.preferredLectureOrConsultingStyle.includes(
+                "에너지가 넘쳐요"
+              )}
+            />
+            <CheckboxLabel
+              label="열정적이예요"
+              type="checkbox"
+              name="preferredLectureOrConsultingStyle"
+              id="열정적이예요"
+              value="열정적이예요"
+              handleChange={(event) => handleChange(event)}
+              checked={values.preferredLectureOrConsultingStyle.includes(
+                "열정적이예요"
+              )}
+            />
+            <CheckboxLabel
+              label="유머러스해요"
+              type="checkbox"
+              name="preferredLectureOrConsultingStyle"
+              id="유머러스해요"
+              value="유머러스해요"
+              handleChange={(event) => handleChange(event)}
+              checked={values.preferredLectureOrConsultingStyle.includes(
+                "유머러스해요"
+              )}
+            />
+            <CheckboxLabel
+              label="친절해요"
+              type="checkbox"
+              name="preferredLectureOrConsultingStyle"
+              id="친절해요"
+              value="친절해요"
+              handleChange={(event) => handleChange(event)}
+              checked={values.preferredLectureOrConsultingStyle.includes(
+                "친절해요"
+              )}
+            />
+            <CheckboxLabel
+              label="전문적이예요"
+              type="checkbox"
+              name="preferredLectureOrConsultingStyle"
+              id="전문적이예요"
+              value="전문적이예요"
+              handleChange={(event) => handleChange(event)}
+              checked={values.preferredLectureOrConsultingStyle.includes(
+                "전문적이예요"
+              )}
+            />
+            <CheckboxLabel
+              label="기타"
+              type="checkbox"
+              name="preferredLectureOrConsultingStyle"
+              id={etcPreferredLectureOrConsultingStyle}
+              value={etcPreferredLectureOrConsultingStyle}
+              handleChange={(event) => handleChange(event)}
+              checked={values.preferredLectureOrConsultingStyle.includes(
+                etcPreferredLectureOrConsultingStyle
+              )}
+            >
+              <EtcInput
+                type="text"
+                placeholder="입력 후 체크"
+                name="preferredLectureOrConsultingStyle"
+                value={etcPreferredLectureOrConsultingStyle}
+                onChange={(e) =>
+                  setEtcPreferredLectureOrConsultingStyle(e.target.value)
+                }
+                disabled={values.preferredLectureOrConsultingStyle.includes(
+                  etcPreferredLectureOrConsultingStyle
+                )}
+              />
+            </CheckboxLabel>
+          </div>
+        </MultipleSelection>
+      </div>
+      <SubmitButton
+        text={mutation.isPending ? "로딩중" : "등록하기"}
+        type="submit"
+        disabled={false}
+      />
     </form>
   );
 };

@@ -1,5 +1,6 @@
 import { refreshTokenFetch } from "@/services/refreshTokenFetch";
 import AnnouncementCreatePage from "./page.client";
+import AuthHydrateAtoms from "@/configs/AuthHydrateAtoms";
 
 export default async function Page() {
   const { idToken, email } = (await refreshTokenFetch()) ?? {
@@ -11,5 +12,9 @@ export default async function Page() {
   //   redirect("/");
   // }
 
-  return <AnnouncementCreatePage />;
+  return (
+    <AuthHydrateAtoms email={email} idToken={idToken}>
+      <AnnouncementCreatePage />
+    </AuthHydrateAtoms>
+  );
 }
