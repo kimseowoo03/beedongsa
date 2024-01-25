@@ -1,20 +1,22 @@
 "use client";
 
-import { idTokenAtom } from "@/atoms/auth/idTokenAtom";
 import { useHydrateAtoms } from "jotai/utils";
 
 import type { TokenType } from "@/types/auth";
+import { userAtom } from "@/atoms/auth";
 
 interface AuthHydrateAtomsProps {
   children: React.ReactNode;
-  newIDToken: TokenType;
+  email: string;
+  idToken: TokenType;
 }
 
 export default function AuthHydrateAtoms({
   children,
-  newIDToken,
+  email,
+  idToken,
 }: AuthHydrateAtomsProps) {
-  useHydrateAtoms([[idTokenAtom, newIDToken]]);
+  useHydrateAtoms([[userAtom, { idToken, email }]]);
 
   return <>{children}</>;
 }
