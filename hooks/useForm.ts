@@ -39,7 +39,13 @@ const useForm = <T extends {}>({ initialValues }: useFormProps<T>) => {
   /**
    * input이 아닌, 클릭으로 변경될 때 사용하는 함수입니다.
    */
-  const handleClick = ({ value, name }: { value: string; name: string }) => {
+  const handleClick = ({
+    value,
+    name,
+  }: {
+    value: string | Array<string>;
+    name: string;
+  }) => {
     console.log(value, name, "<<<");
     setValues((prevValues) => ({
       ...prevValues,
