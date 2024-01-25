@@ -321,7 +321,7 @@ export const AnnouncementForm = () => {
   });
 
   const [etcCategory, setEtcCategory] = useState("");
-  console.log(values, "valuesvalues");
+  console.log(values, values.target.includes("중학생"), "valuesvalues");
   return (
     <form>
       <InputLabel
@@ -516,6 +516,84 @@ export const AnnouncementForm = () => {
         />
         까지
       </DateTimeBox>
+
+      <CategoryOptions>
+        <div className="label">대상</div>
+        <div>
+          <CheckboxLabel
+            label="영유아"
+            type="checkbox"
+            name="target"
+            id="영유아"
+            value="영유아"
+            handleChange={(event) => handleChange(event)}
+            checked={values.target.includes("영유아")}
+          />
+          <CheckboxLabel
+            label="초등학생"
+            type="checkbox"
+            name="target"
+            id="초등학생"
+            value="초등학생"
+            handleChange={(event) => handleChange(event)}
+            checked={values.target.includes("초등학생")}
+          />
+          <CheckboxLabel
+            label="중학생"
+            type="checkbox"
+            name="target"
+            id="중학생"
+            value="중학생"
+            handleChange={(event) => handleChange(event)}
+            checked={values.target.includes("중학생")}
+          />
+          <CheckboxLabel
+            label="고등학생"
+            type="checkbox"
+            name="target"
+            id="고등학생"
+            value="고등학생"
+            handleChange={(event) => handleChange(event)}
+            checked={values.target.includes("고등학생")}
+          />
+          <CheckboxLabel
+            label="청년"
+            type="checkbox"
+            name="target"
+            id="청년"
+            value="청년"
+            handleChange={(event) => handleChange(event)}
+            checked={values.target.includes("청년")}
+          />
+          <CheckboxLabel
+            label="중년"
+            type="checkbox"
+            name="target"
+            id="중년"
+            value="중년"
+            handleChange={(event) => handleChange(event)}
+            checked={values.target.includes("중년")}
+          />
+          <CheckboxLabel
+            label="장년"
+            type="checkbox"
+            name="target"
+            id="장년"
+            value="장년"
+            handleChange={(event) => handleChange(event)}
+            checked={values.target.includes("장년")}
+          />
+          <CheckboxLabel
+            label="기업"
+            type="checkbox"
+            name="target"
+            id="기업"
+            value="기업"
+            handleChange={(event) => handleChange(event)}
+            checked={values.target.includes("기업")}
+          />
+        </div>
+      </CategoryOptions>
     </form>
   );
 };
