@@ -321,14 +321,14 @@ export const AnnouncementForm = () => {
   });
 
   const [etcCategory, setEtcCategory] = useState("");
-
+  console.log(values, "valuesvalues");
   return (
     <form>
       <InputLabel
         label="공고제목"
         type="text"
         name="title"
-        placeholder="공고제목을 입력해주세요."
+        placeholder="ex) 나만의 계절꽃다발 만들기 (꽃다발을 가져갈 수 있어요.)"
         value={values.title}
         handleChange={(event) => handleChange(event)}
       />
@@ -463,47 +463,58 @@ export const AnnouncementForm = () => {
           </CheckboxLabel>
         </div>
       </CategoryOptions>
-      <SelectBox>
-        <SelectBox.Title activeSelect={values.metropolitanCity} />
-        <SelectBox.Select>
-          {CITYS.map((city) => (
-            <SelectBox.Option
-              handleClick={handleClick}
-              name="metropolitanCity"
-              key={city}
-              value={city}
-            ></SelectBox.Option>
-          ))}
-        </SelectBox.Select>
-      </SelectBox>
-      <SelectBox>
-        <SelectBox.Title activeSelect={values.dstrict} />
-        <SelectBox.Select>
-          {REGIONDETAILS[values.metropolitanCity] &&
-            REGIONDETAILS[values.metropolitanCity].map((dstrict: string) => (
+      <div>
+        <SelectBox>
+          <SelectBox.Title activeSelect={values.metropolitanCity} />
+          <SelectBox.Select>
+            {CITYS.map((city) => (
               <SelectBox.Option
                 handleClick={handleClick}
-                name="dstrict"
-                key={dstrict}
-                value={dstrict}
+                name="metropolitanCity"
+                key={city}
+                value={city}
               ></SelectBox.Option>
             ))}
-        </SelectBox.Select>
-      </SelectBox>
-      <InputLabel
-        isRequire={false}
-        label="상세주소"
-        type="text"
-        name="detailedAddress"
-        placeholder="상세장소 (ex 00고등학교) "
-        value={values.detailedAddress}
-        handleChange={(event) => handleChange(event)}
-      />
-      <DateTimeBox>
+          </SelectBox.Select>
+        </SelectBox>
+        <SelectBox>
+          <SelectBox.Title activeSelect={values.dstrict} />
+          <SelectBox.Select>
+            {REGIONDETAILS[values.metropolitanCity] &&
+              REGIONDETAILS[values.metropolitanCity].map((dstrict: string) => (
+                <SelectBox.Option
+                  handleClick={handleClick}
+                  name="dstrict"
+                  key={dstrict}
+                  value={dstrict}
+                ></SelectBox.Option>
+              ))}
+          </SelectBox.Select>
+        </SelectBox>
+        <InputLabel
+          isRequire={false}
+          label="상세주소"
+          type="text"
+          name="detailedAddress"
+          placeholder="상세장소 (ex 00고등학교) "
+          value={values.detailedAddress}
+          handleChange={(event) => handleChange(event)}
+        />
+      </div>
+
+      <DateTimeBox handleClick={handleClick} name="schedule">
         <DateTimeBox.Date />
         <DateTimeBox.Time />
         <DateTimeBox.CreateButton />
         <DateTimeBox.ScheduleList />
+      </DateTimeBox>
+
+      <DateTimeBox>
+        <DateTimeBox.Date
+          name="recruitmentDeadline"
+          handleChange={handleChange}
+        />
+        까지
       </DateTimeBox>
     </form>
   );
