@@ -24,5 +24,6 @@ export interface Announcement {
   desiredExperience: number;
   desiredQualifications: string;
   preferredLectureOrConsultingStyle: Array<string>;
-  AdministratorApproval: boolean;
+  administratorApproval: boolean;
+  closeAnnouncement: boolean;
 }

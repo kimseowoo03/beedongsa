@@ -30,7 +30,8 @@ export async function POST(request: Request) {
       desiredExperience,
       desiredQualifications,
       preferredLectureOrConsultingStyle,
-      AdministratorApproval,
+      administratorApproval,
+      closeAnnouncement,
     } = data;
 
     const firestoreClientData = {
@@ -75,7 +76,8 @@ export async function POST(request: Request) {
             })),
           },
         },
-        AdministratorApproval: { booleanValue: AdministratorApproval },
+        AdministratorApproval: { booleanValue: administratorApproval },
+        closeAnnouncement: { booleanValue: closeAnnouncement },
       },
     };
 

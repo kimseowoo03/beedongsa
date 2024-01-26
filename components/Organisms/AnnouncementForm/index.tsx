@@ -354,7 +354,8 @@ export const AnnouncementForm = () => {
     desiredExperience: undefined,
     desiredQualifications: "",
     preferredLectureOrConsultingStyle: [],
-    AdministratorApproval: true,
+    administratorApproval: true,
+    closeAnnouncement: false,
   };
 
   const { values, handleClick, handleChange } = useForm({
