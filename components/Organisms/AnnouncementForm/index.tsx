@@ -1,22 +1,30 @@
 "use client";
 
+/**react, next */
 import { useState } from "react";
 import { useMutation } from "@tanstack/react-query";
 
+/**style */
+import styled from "@emotion/styled";
+
+/**상태관리 */
+import { useAtom } from "jotai";
+import { userAtom } from "@/atoms/auth";
+
+/**components */
 import CheckboxLabel from "@/components/Molecules/CheckboxLabel";
 import InputLabel from "@/components/Molecules/InputLabel";
 import { SelectBox } from "@/components/Molecules/SelectBox";
 import { DateTimeBox } from "@/components/Molecules/DateTimeInput";
 import SubmitButton from "../../Atoms/Button";
 
-import styled from "@emotion/styled";
-
+/**hooks */
 import useForm from "@/hooks/useForm";
 
-import { useAtom } from "jotai";
-import { userAtom } from "@/atoms/auth";
-
+/**type */
 import type { Announcement } from "@/types/announcement";
+import type { TokenType } from "@/types/auth";
+import { useRouter } from "next/navigation";
 
 const CITYS = [
   "서울",
@@ -302,13 +310,18 @@ const EtcInput = styled.input`
   }
 `;
 
-const submitAnnouncementCreate = async (
-  formData: Announcement
-): Promise<any> => {
+const submitAnnouncementCreate = async ({
+  formData,
+  token,
+}: {
+  formData: Announcement;
+  token: NonNullable<TokenType>;
+}): Promise<any> => {
   const response = await fetch("/api/announcement/create", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
     },
     body: JSON.stringify(formData),
   });
@@ -321,8 +334,8 @@ const submitAnnouncementCreate = async (
 };
 
 export const AnnouncementForm = () => {
-  const [{ email: registeredEmail }] = useAtom(userAtom);
-  console.log(registeredEmail, "<<email");
+  const router = useRouter();
+  const [{ idToken, email: registeredEmail }] = useAtom(userAtom);
 
   const initialValues: Announcement = {
     registeredEmail,
@@ -354,14 +367,24 @@ export const AnnouncementForm = () => {
     etcPreferredLectureOrConsultingStyle,
     setEtcPreferredLectureOrConsultingStyle,
   ] = useState("");
-  console.log(initialValues);
+
   const mutation = useMutation({
     mutationFn: submitAnnouncementCreate,
   });
 
   const submitHandler = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    mutation.mutate(values as Announcement);
+    mutation.mutate(
+      {
+        formData: values as Announcement,
+        token: idToken,
+      },
+      {
+        onSuccess: () => {
+          router.push("/profile");
+        },
+      }
+    );
   };
 
   return (
