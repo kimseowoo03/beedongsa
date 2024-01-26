@@ -9,11 +9,13 @@ import Button from "@/components/Atoms/Button";
 import { Tabs } from "@/components/Molecules/Tabs";
 
 import type { ClientUser, EducatorUser } from "@/types/user";
+import type { ProfileDatasType } from "@/types/profile";
 
 interface ProfileProps {
   userData: EducatorUser | ClientUser;
+  ProfileDatas: ProfileDatasType[];
 }
-export const Profile = ({ userData }: ProfileProps) => {
+export const Profile = ({ userData, ProfileDatas }: ProfileProps) => {
   const { type } = userData;
 
   return (
@@ -31,7 +33,14 @@ export const Profile = ({ userData }: ProfileProps) => {
               <Tabs.Trigger value="지원관리" text="지원관리" />
             </Tabs.List>
             <Tabs.Panel value="공고목록">
-              <div>공고목록</div>
+              {ProfileDatas.map((ProfileData) => {
+                return (
+                  <AnnouncementList
+                    key={ProfileData.id}
+                    ProfileData={ProfileData}
+                  />
+                );
+              })}
             </Tabs.Panel>
             <Tabs.Panel value="지원관리">
               <div>지원관리</div>

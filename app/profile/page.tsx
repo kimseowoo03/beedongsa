@@ -1,10 +1,11 @@
 /**components */
 import ProfilePage from "./page.client";
 
-/**utils,  services*/
+/**utils,  services, config*/
 import { transformFirestoreDocument } from "@/utils/transformFirebaseDocument";
 import { transformFirestoreDocuments } from "@/utils/transformFirestoreArrayDocuments";
 import { refreshTokenFetch } from "@/services/refreshTokenFetch";
+import AuthHydrateAtoms from "@/configs/AuthHydrateAtoms";
 
 /**type */
 import type { ClientUser, EducatorUser } from "@/types/user";
@@ -112,5 +113,9 @@ export default async function Page() {
   console.log(ProfileDatas, "ProfileDatas");
   console.log("-------------page.tsx-----------");
 
-  return <ProfilePage userData={userData} ProfileDatas={ProfileDatas} />;
+  return (
+    <AuthHydrateAtoms email={email} idToken={idToken}>
+      <ProfilePage userData={userData} ProfileDatas={ProfileDatas} />
+    </AuthHydrateAtoms>
+  );
 }
