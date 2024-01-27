@@ -57,7 +57,7 @@ const AnnouncementList = ({ ProfileData }: AnnouncementListProps) => {
     <div>
       <div>
         {data.title}
-        <Link href="/profile/client/announcement-edit">수정</Link>
+        <Link href={`/profile/client/announcement-edit/${id}`}>수정</Link>
 
         <button
           type="button"
