@@ -15,6 +15,10 @@ export const transformFirestoreDocument = <T>(fields: any) => {
       transformedObject[key] = value.booleanValue;
     } else if (value.hasOwnProperty("integerValue")) {
       transformedObject[key] = parseInt(value.integerValue, 10);
+    } else if (value.hasOwnProperty("arrayValue")) {
+      transformedObject[key] = value.arrayValue.values
+        ? value.arrayValue.values.map((item: any) => item.stringValue)
+        : [];
     }
   });
 
