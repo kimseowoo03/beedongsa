@@ -1,9 +1,12 @@
+/**next */
+import { redirect } from "next/navigation";
+
 /**components */
 import ProfilePage from "./page.client";
 
 /**utils,  services, config*/
 import { transformFirestoreDocument } from "@/utils/transformFirebaseDocument";
-import { transformFirestoreDocuments } from "@/utils/transformFirestoreArrayDocuments";
+import { transformFirestoreArrayDocuments } from "@/utils/transformFirestoreArrayDocuments";
 import { refreshTokenFetch } from "@/services/refreshTokenFetch";
 import AuthHydrateAtoms from "@/configs/AuthHydrateAtoms";
 
@@ -39,6 +42,10 @@ async function getBasicUserData({
   }
 }
 
+interface ProfileDataArray {
+  document?: {}; // document가 옵셔널 필드임을 나타냄
+  readTime: string;
+}
 async function getQueryProfileData({
   collectionId,
   idToken,
@@ -47,7 +54,7 @@ async function getQueryProfileData({
   collectionId: "Announcements" | "Lectures";
   idToken: string;
   email: string;
-}): Promise<[]> {
+}): Promise<ProfileDataArray[]> {
   const projectId = process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID;
   const url = `https://firestore.googleapis.com/v1beta1/projects/${projectId}/databases/(default)/documents:runQuery`;
   const query = {
@@ -88,9 +95,9 @@ export default async function Page() {
   };
 
   //비회원인경우 홈으로 이동
-  // if (!newIDToken) {
-  //   redirect("/");
-  // }
+  if (!idToken) {
+    redirect("/");
+  }
 
   const { fields } = await getBasicUserData({ idToken, email });
 
@@ -107,11 +114,9 @@ export default async function Page() {
     email,
   });
 
-  const ProfileDatas =
-    transformFirestoreDocuments<Announcement>(ProfileDataArray);
-
-  console.log(ProfileDatas, "ProfileDatas");
-  console.log("-------------page.tsx-----------");
+  const ProfileDatas = ProfileDataArray[0].document
+    ? transformFirestoreArrayDocuments<Announcement>(ProfileDataArray)
+    : [];
 
   return (
     <AuthHydrateAtoms email={email} idToken={idToken}>
