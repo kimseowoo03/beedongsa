@@ -25,6 +25,7 @@ const DateTimeBoxContext = createContext<DateTimeBoxContextType>({
 });
 
 interface DateTimeBoxMainProps {
+  scheduleValue?: Array<string>;
   name?: string;
   handleClick?: ({
     value,
@@ -36,6 +37,7 @@ interface DateTimeBoxMainProps {
   children: React.ReactNode;
 }
 const DateTimeBoxMain = ({
+  scheduleValue,
   name,
   handleClick,
   children,
@@ -43,7 +45,7 @@ const DateTimeBoxMain = ({
   const [date, setDate] = useState("");
   const [startTime, setStartTime] = useState("");
   const [endTime, setEndTime] = useState("");
-  const [schedule, setSchedule] = useState([]);
+  const [schedule, setSchedule] = useState(scheduleValue ? scheduleValue : []);
 
   const handleCreateDate = () => {
     const newEntry = `${date}/${startTime}~${endTime}`;
@@ -51,8 +53,8 @@ const DateTimeBoxMain = ({
     const isDuplicate = schedule.some((entry) => entry === newEntry);
 
     if (!isDuplicate) {
-      handleClick({ value: schedule, name });
-      setSchedule([...schedule, newEntry]);
+      handleClick({ value: [...schedule, newEntry], name });
+      setSchedule(() => [...schedule, newEntry]);
     }
   };
 
@@ -101,7 +103,7 @@ const DateTimeBoxDate = ({
       <input
         type="date"
         name={name}
-        value={value ?? date}
+        value={value ? value : date}
         onChange={DateTimeBoxDateHandle}
       />
     </label>
