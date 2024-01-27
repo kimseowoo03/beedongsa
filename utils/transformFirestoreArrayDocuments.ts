@@ -8,7 +8,7 @@ import { transformFirestoreDocument } from "./transformFirebaseDocument";
  *          id - 문서의 고유 ID
  *          data - 변환된 데이터 객체, T 타입
  */
-export const transformFirestoreDocuments = <T>(
+export const transformFirestoreArrayDocuments = <T>(
   documents: any[]
 ): { id: string; data: T }[] => {
   return documents.map((doc) => {

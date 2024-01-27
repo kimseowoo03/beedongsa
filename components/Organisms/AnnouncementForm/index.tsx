@@ -3,6 +3,7 @@
 /**react, next */
 import { useState } from "react";
 import { useMutation } from "@tanstack/react-query";
+import { useRouter } from "next/navigation";
 
 /**style */
 import styled from "@emotion/styled";
@@ -24,7 +25,6 @@ import useForm from "@/hooks/useForm";
 /**type */
 import type { Announcement } from "@/types/announcement";
 import type { TokenType } from "@/types/auth";
-import { useRouter } from "next/navigation";
 
 const CITYS = [
   "서울",
@@ -310,20 +310,31 @@ const EtcInput = styled.input`
   }
 `;
 
-const submitAnnouncementCreate = async ({
-  formData,
-  token,
-}: {
+interface submitAnnouncementProps {
+  id?: string;
+  type: "create" | "edit";
   formData: Announcement;
   token: NonNullable<TokenType>;
-}): Promise<any> => {
-  const response = await fetch("/api/announcement/create", {
+}
+const submitAnnouncement = async ({
+  id,
+  type,
+  formData,
+  token,
+}: submitAnnouncementProps): Promise<any> => {
+  let bodyData: Announcement & { id?: string } = { ...formData };
+
+  if (type === "edit") {
+    bodyData.id = id;
+  }
+
+  const response = await fetch(`/api/announcement/${type}`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
       Authorization: `Bearer ${token}`,
     },
-    body: JSON.stringify(formData),
+    body: JSON.stringify(bodyData),
   });
 
   if (!response.ok) {
@@ -333,11 +344,18 @@ const submitAnnouncementCreate = async ({
   return response.json();
 };
 
-export const AnnouncementForm = () => {
+interface AnnouncementFormProps {
+  announcementData?: Announcement;
+  announcementID?: string;
+}
+export const AnnouncementForm = ({
+  announcementID: id,
+  announcementData,
+}: AnnouncementFormProps) => {
   const router = useRouter();
   const [{ idToken, email: registeredEmail }] = useAtom(userAtom);
 
-  const initialValues: Announcement = {
+  const initialValues: Announcement = announcementData || {
     registeredEmail,
     title: "",
     category: [],
@@ -370,22 +388,27 @@ export const AnnouncementForm = () => {
   ] = useState("");
 
   const mutation = useMutation({
-    mutationFn: submitAnnouncementCreate,
+    mutationFn: submitAnnouncement,
   });
 
   const submitHandler = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    mutation.mutate(
-      {
-        formData: values as Announcement,
-        token: idToken,
+    const mutateData: submitAnnouncementProps = {
+      type: announcementData ? "edit" : "create",
+      formData: values as Announcement,
+      token: idToken,
+    };
+
+    if (announcementData) {
+      mutateData.id = id; // id를 조건부로 추가
+    }
+
+    mutation.mutate(mutateData, {
+      onSuccess: (response) => {
+        alert(response.message);
+        location.replace("/profile");
       },
-      {
-        onSuccess: () => {
-          router.push("/profile");
-        },
-      }
-    );
+    });
   };
 
   return (
@@ -570,7 +593,11 @@ export const AnnouncementForm = () => {
             handleChange={(event) => handleChange(event)}
           />
         </div>
-        <DateTimeBox handleClick={handleClick} name="schedule">
+        <DateTimeBox
+          handleClick={handleClick}
+          name="schedule"
+          scheduleValue={values.schedule}
+        >
           <DateTimeBox.Date />
           <DateTimeBox.Time />
           <DateTimeBox.CreateButton />
@@ -852,7 +879,9 @@ export const AnnouncementForm = () => {
         </MultipleSelection>
       </div>
       <SubmitButton
-        text={mutation.isPending ? "로딩중" : "등록하기"}
+        text={
+          mutation.isPending ? "로딩중" : announcementData ? "확인" : "등록하기"
+        }
         type="submit"
         disabled={false}
       />

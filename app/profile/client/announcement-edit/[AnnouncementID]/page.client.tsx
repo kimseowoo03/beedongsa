@@ -1,5 +1,18 @@
 import { AnnouncementEdit } from "@/components/Templates/Profile/Announcement-edit";
+import type { Announcement } from "@/types/announcement";
 
-export default function AnnouncementCreatePage() {
-  return <AnnouncementEdit />;
+interface AnnouncementEditPageProps {
+  announcementID: string;
+  announcementData: Announcement;
+}
+export default function AnnouncementEditPage({
+  announcementID,
+  announcementData,
+}: AnnouncementEditPageProps) {
+  return (
+    <AnnouncementEdit
+      announcementID={announcementID}
+      announcementData={announcementData}
+    />
+  );
 }

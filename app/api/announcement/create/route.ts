@@ -76,7 +76,7 @@ export async function POST(request: Request) {
             })),
           },
         },
-        AdministratorApproval: { booleanValue: administratorApproval },
+        administratorApproval: { booleanValue: administratorApproval },
         closeAnnouncement: { booleanValue: closeAnnouncement },
       },
     };
