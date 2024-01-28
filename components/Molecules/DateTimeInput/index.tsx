@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState } from "react";
+import React, { createContext, memo, useContext, useState } from "react";
 import { HiOutlineXMark } from "react-icons/hi2";
 
 interface DateTimeBoxContextType {
@@ -92,18 +92,15 @@ const DateTimeBoxMain = ({
 interface DateTimeBoxDateProps {
   value?: string;
   name?: string;
-  handleChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  onChange?: (name: string, type, checked: boolean, newValue) => void;
 }
-const DateTimeBoxDate = ({
-  value,
-  name,
-  handleChange,
-}: DateTimeBoxDateProps) => {
+const DateTimeBoxDate = ({ value, name, onChange }: DateTimeBoxDateProps) => {
   const { date, setDate } = useContext(DateTimeBoxContext);
 
   const DateTimeBoxDateHandle = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (handleChange) {
-      handleChange(e);
+    const { name, value: newValue, type, checked } = e.target;
+    if (onChange) {
+      onChange(name, type, checked, newValue);
     } else {
       const value = e.target.value;
       setDate(() => value);
@@ -170,8 +167,8 @@ const DateTimeBoxScheduleList = () => {
   );
 };
 export const DateTimeBox = Object.assign(DateTimeBoxMain, {
-  Date: DateTimeBoxDate,
-  Time: DateTimeBoxTime,
-  CreateButton: DateTimeBoxCreateButton,
-  ScheduleList: DateTimeBoxScheduleList,
+  Date: memo(DateTimeBoxDate),
+  Time: memo(DateTimeBoxTime),
+  CreateButton: memo(DateTimeBoxCreateButton),
+  ScheduleList: memo(DateTimeBoxScheduleList),
 });

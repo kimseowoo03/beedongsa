@@ -1,3 +1,5 @@
+import { memo } from "react";
+
 import styled from "@emotion/styled";
 import CheckIcon from "@/public/icon/check.svg";
 
@@ -38,21 +40,26 @@ interface CheckboxLabelProps {
   type: React.HTMLInputTypeAttribute;
   placeholder?: string;
   value: string | number;
-  handleChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
+  onChange: (name: string, type, checked: boolean, newValue) => void;
   checked?: boolean;
   id?: string;
   children?: React.ReactNode;
 }
 
-export default function CheckboxLabel({
+function CheckboxLabel({
   label,
   name,
   value,
-  handleChange,
+  onChange,
   checked,
   id,
   children,
 }: CheckboxLabelProps) {
+  const handleInputChange = (event) => {
+    const { name, value: newValue, type, checked } = event.target;
+    onChange(name, type, checked, newValue);
+  };
+
   return (
     <CheckboxWrap>
       <input
@@ -62,7 +69,7 @@ export default function CheckboxLabel({
         name={name}
         value={value}
         checked={checked}
-        onChange={handleChange}
+        onChange={handleInputChange}
       />
       <label htmlFor={id}>
         <CheckIcon className="checkbox-icon" />
@@ -72,3 +79,5 @@ export default function CheckboxLabel({
     </CheckboxWrap>
   );
 }
+
+export default memo(CheckboxLabel);

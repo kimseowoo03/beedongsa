@@ -1,3 +1,4 @@
+import { memo } from "react";
 import styled from "@emotion/styled";
 
 const Wrap = styled.div<{ isRequire: boolean }>`
@@ -47,18 +48,23 @@ interface InputLabelProps {
   type: React.HTMLInputTypeAttribute;
   placeholder?: string;
   value: string | number;
-  handleChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
+  onChange: (name: string, type, checked: boolean, newValue) => void;
 }
 
-export default function InputLabel({
+function InputLabel({
   isRequire = true,
   label,
   name,
   type,
   placeholder,
   value,
-  handleChange,
+  onChange,
 }: InputLabelProps) {
+  const handleInputChange = (event) => {
+    const { name, value: newValue, type, checked } = event.target;
+    onChange(name, type, checked, newValue);
+  };
+
   return (
     <Wrap isRequire={isRequire}>
       <label htmlFor={name}>{label}</label>
@@ -68,8 +74,10 @@ export default function InputLabel({
         name={name}
         placeholder={placeholder}
         value={value}
-        onChange={handleChange}
+        onChange={handleInputChange}
       />
     </Wrap>
   );
 }
+
+export default memo(InputLabel);

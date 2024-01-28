@@ -1,9 +1,8 @@
 "use client";
 
 /**react, next */
-import { useState } from "react";
+import { useCallback, useState } from "react";
 import { useMutation } from "@tanstack/react-query";
-import { useRouter } from "next/navigation";
 
 /**style */
 import styled from "@emotion/styled";
@@ -20,7 +19,6 @@ import { DateTimeBox } from "@/components/Molecules/DateTimeInput";
 import SubmitButton from "../../Atoms/Button";
 
 /**hooks */
-import useForm from "@/hooks/useForm";
 
 /**type */
 import type { Announcement } from "@/types/announcement";
@@ -281,7 +279,12 @@ const REGIONDETAILS = {
   ],
   제주: ["서귀포시", "제주시"],
 };
-
+const Wrap = styled.div`
+  padding: 50px;
+  display: flex;
+  gap: 10px;
+  flex-direction: column;
+`;
 const MultipleSelection = styled.div`
   .label {
     color: var(--font-color-1);
@@ -352,7 +355,6 @@ export const AnnouncementForm = ({
   announcementID: id,
   announcementData,
 }: AnnouncementFormProps) => {
-  const router = useRouter();
   const [{ idToken, email: registeredEmail }] = useAtom(userAtom);
 
   const initialValues: Announcement = announcementData || {
@@ -376,12 +378,8 @@ export const AnnouncementForm = ({
     closeAnnouncement: false,
   };
 
-  const { values, handleClick, handleChange } = useForm({
-    initialValues,
-  });
-
+  const [values, setValues] = useState(initialValues);
   const [etcCategory, setEtcCategory] = useState("");
-
   const [
     etcPreferredLectureOrConsultingStyle,
     setEtcPreferredLectureOrConsultingStyle,
@@ -411,6 +409,40 @@ export const AnnouncementForm = ({
     });
   };
 
+  const onChange = useCallback((name: string, type, checked, newValue) => {
+    setValues((prevValues) => {
+      if (Array.isArray(prevValues[name])) {
+        return {
+          ...prevValues,
+          [name]:
+            newValue === ""
+              ? []
+              : prevValues[name].includes(newValue)
+              ? prevValues[name].filter((item: string) => item !== newValue)
+              : [...prevValues[name], newValue],
+        };
+      }
+
+      const value = type === "number" ? Number(newValue) : newValue;
+
+      return {
+        ...prevValues,
+        [name]: type !== "checkbox" ? value : checked,
+      };
+    });
+  }, []);
+
+  const handleClick = useCallback(
+    ({ value, name }: { value: string | Array<string>; name: string }) => {
+      console.log(value, name, "<<<");
+      setValues((prevValues) => ({
+        ...prevValues,
+        [name]: value,
+      }));
+    },
+    []
+  );
+
   return (
     <form onSubmit={submitHandler}>
       <div>
@@ -420,7 +452,7 @@ export const AnnouncementForm = ({
           name="title"
           placeholder="ex) 나만의 계절꽃다발 만들기 (꽃다발을 가져갈 수 있어요.)"
           value={values.title}
-          handleChange={(event) => handleChange(event)}
+          onChange={onChange}
         />
         <MultipleSelection>
           <div className="label">카테고리</div>
@@ -431,7 +463,7 @@ export const AnnouncementForm = ({
               name="category"
               id="미술/공예"
               value="미술/공예"
-              handleChange={(event) => handleChange(event)}
+              onChange={onChange}
               checked={values.category.includes("미술/공예")}
             />
             <CheckboxLabel
@@ -440,7 +472,7 @@ export const AnnouncementForm = ({
               name="category"
               id="체육/건강"
               value="체육/건강"
-              handleChange={(event) => handleChange(event)}
+              onChange={onChange}
               checked={values.category.includes("체육/건강")}
             />
             <CheckboxLabel
@@ -449,7 +481,7 @@ export const AnnouncementForm = ({
               name="category"
               id="음악"
               value="음악"
-              handleChange={(event) => handleChange(event)}
+              onChange={onChange}
               checked={values.category.includes("음악")}
             />
             <CheckboxLabel
@@ -458,7 +490,7 @@ export const AnnouncementForm = ({
               name="category"
               id="문화 심리"
               value="문화 심리"
-              handleChange={(event) => handleChange(event)}
+              onChange={onChange}
               checked={values.category.includes("문화 심리")}
             />
             <CheckboxLabel
@@ -467,7 +499,7 @@ export const AnnouncementForm = ({
               name="category"
               id="요리/베이킹"
               value="요리/베이킹"
-              handleChange={(event) => handleChange(event)}
+              onChange={onChange}
               checked={values.category.includes("요리/베이킹")}
             />
             <CheckboxLabel
@@ -476,7 +508,7 @@ export const AnnouncementForm = ({
               name="category"
               id="실무교육/조직문화"
               value="실무교육/조직문화"
-              handleChange={(event) => handleChange(event)}
+              onChange={onChange}
               checked={values.category.includes("실무교육/조직문화")}
             />
             <CheckboxLabel
@@ -485,7 +517,7 @@ export const AnnouncementForm = ({
               name="category"
               id="외국어"
               value="외국어"
-              handleChange={(event) => handleChange(event)}
+              onChange={onChange}
               checked={values.category.includes("외국어")}
             />
             <CheckboxLabel
@@ -494,7 +526,7 @@ export const AnnouncementForm = ({
               name="category"
               id="경영/경제/마케팅"
               value="경영/경제/마케팅"
-              handleChange={(event) => handleChange(event)}
+              onChange={onChange}
               checked={values.category.includes("경영/경제/마케팅")}
             />
             <CheckboxLabel
@@ -503,7 +535,7 @@ export const AnnouncementForm = ({
               name="category"
               id="수학/과학"
               value="수학/과학"
-              handleChange={(event) => handleChange(event)}
+              onChange={onChange}
               checked={values.category.includes("수학/과학")}
             />
             <CheckboxLabel
@@ -512,7 +544,7 @@ export const AnnouncementForm = ({
               name="category"
               id="컴퓨터/IT"
               value="컴퓨터/IT"
-              handleChange={(event) => handleChange(event)}
+              onChange={onChange}
               checked={values.category.includes("컴퓨터/IT")}
             />
             <CheckboxLabel
@@ -521,7 +553,7 @@ export const AnnouncementForm = ({
               name="category"
               id="취업/자기개발"
               value="취업/자기개발"
-              handleChange={(event) => handleChange(event)}
+              onChange={onChange}
               checked={values.category.includes("취업/자기개발")}
             />
             <CheckboxLabel
@@ -530,7 +562,7 @@ export const AnnouncementForm = ({
               name="category"
               id="취미/실용/스포츠"
               value="취미/실용/스포츠"
-              handleChange={(event) => handleChange(event)}
+              onChange={onChange}
               checked={values.category.includes("취미/실용/스포츠")}
             />
             <CheckboxLabel
@@ -539,7 +571,7 @@ export const AnnouncementForm = ({
               name="category"
               id={etcCategory}
               value={etcCategory}
-              handleChange={(event) => handleChange(event)}
+              onChange={onChange}
               checked={values.category.includes(etcCategory)}
             >
               <EtcInput
@@ -590,7 +622,7 @@ export const AnnouncementForm = ({
             name="detailedAddress"
             placeholder="상세장소 (ex 00고등학교) "
             value={values.detailedAddress}
-            handleChange={(event) => handleChange(event)}
+            onChange={onChange}
           />
         </div>
         <DateTimeBox
@@ -607,7 +639,7 @@ export const AnnouncementForm = ({
           <DateTimeBox.Date
             value={values.recruitmentDeadline}
             name="recruitmentDeadline"
-            handleChange={handleChange}
+            onChange={onChange}
           />
           까지
         </DateTimeBox>
@@ -620,7 +652,7 @@ export const AnnouncementForm = ({
               name="target"
               id="영유아"
               value="영유아"
-              handleChange={(event) => handleChange(event)}
+              onChange={onChange}
               checked={values.target.includes("영유아")}
             />
             <CheckboxLabel
@@ -629,7 +661,7 @@ export const AnnouncementForm = ({
               name="target"
               id="초등학생"
               value="초등학생"
-              handleChange={(event) => handleChange(event)}
+              onChange={onChange}
               checked={values.target.includes("초등학생")}
             />
             <CheckboxLabel
@@ -638,7 +670,7 @@ export const AnnouncementForm = ({
               name="target"
               id="중학생"
               value="중학생"
-              handleChange={(event) => handleChange(event)}
+              onChange={onChange}
               checked={values.target.includes("중학생")}
             />
             <CheckboxLabel
@@ -647,7 +679,7 @@ export const AnnouncementForm = ({
               name="target"
               id="고등학생"
               value="고등학생"
-              handleChange={(event) => handleChange(event)}
+              onChange={onChange}
               checked={values.target.includes("고등학생")}
             />
             <CheckboxLabel
@@ -656,7 +688,7 @@ export const AnnouncementForm = ({
               name="target"
               id="청년"
               value="청년"
-              handleChange={(event) => handleChange(event)}
+              onChange={onChange}
               checked={values.target.includes("청년")}
             />
             <CheckboxLabel
@@ -665,7 +697,7 @@ export const AnnouncementForm = ({
               name="target"
               id="중년"
               value="중년"
-              handleChange={(event) => handleChange(event)}
+              onChange={onChange}
               checked={values.target.includes("중년")}
             />
             <CheckboxLabel
@@ -674,7 +706,7 @@ export const AnnouncementForm = ({
               name="target"
               id="장년"
               value="장년"
-              handleChange={(event) => handleChange(event)}
+              onChange={onChange}
               checked={values.target.includes("장년")}
             />
             <CheckboxLabel
@@ -683,7 +715,7 @@ export const AnnouncementForm = ({
               name="target"
               id="기업"
               value="기업"
-              handleChange={(event) => handleChange(event)}
+              onChange={onChange}
               checked={values.target.includes("기업")}
             />
           </div>
@@ -694,7 +726,7 @@ export const AnnouncementForm = ({
           name="personnel"
           placeholder="최대 인원 입력"
           value={values.personnel}
-          handleChange={(event) => handleChange(event)}
+          onChange={onChange}
         />
         <InputLabel
           label="총 비용"
@@ -702,7 +734,7 @@ export const AnnouncementForm = ({
           name="totalCost"
           placeholder="숫자만 입력해주세요."
           value={values.totalCost}
-          handleChange={(event) => handleChange(event)}
+          onChange={onChange}
         />
         <MultipleSelection>
           <div className="label">비용에 포함된 지원 내역</div>
@@ -713,7 +745,7 @@ export const AnnouncementForm = ({
               name="supportIncludedInTheCost"
               id="숙박지원"
               value="숙박지원"
-              handleChange={(event) => handleChange(event)}
+              onChange={onChange}
               checked={values.supportIncludedInTheCost.includes("숙박지원")}
             />
             <CheckboxLabel
@@ -722,7 +754,7 @@ export const AnnouncementForm = ({
               name="supportIncludedInTheCost"
               id="식사지원"
               value="식사지원"
-              handleChange={(event) => handleChange(event)}
+              onChange={onChange}
               checked={values.supportIncludedInTheCost.includes("식사지원")}
             />
             <CheckboxLabel
@@ -731,7 +763,7 @@ export const AnnouncementForm = ({
               name="supportIncludedInTheCost"
               id="차비지원"
               value="차비지원"
-              handleChange={(event) => handleChange(event)}
+              onChange={onChange}
               checked={values.supportIncludedInTheCost.includes("차비지원")}
             />
           </div>
@@ -742,7 +774,7 @@ export const AnnouncementForm = ({
           name="detail"
           placeholder="추가적으로 필요한 내용을 입력하세요."
           value={values.detail}
-          handleChange={(event) => handleChange(event)}
+          onChange={onChange}
         />
       </div>
       <div>
@@ -751,17 +783,17 @@ export const AnnouncementForm = ({
           type="text"
           name="desiredExperience"
           value={values.desiredExperience}
-          handleChange={(event) => handleChange(event)}
+          onChange={onChange}
         />
         <InputLabel
           label="자격사항(학력, 자격증 등)"
           type="text"
           name="desiredQualifications"
           value={values.desiredQualifications}
-          handleChange={(event) => handleChange(event)}
+          onChange={onChange}
         />
         <MultipleSelection>
-          <div className="label">카테고리</div>
+          <div className="label">강의/컨설팅 스타일</div>
           <div>
             <CheckboxLabel
               label="활기차요"
@@ -769,7 +801,7 @@ export const AnnouncementForm = ({
               name="preferredLectureOrConsultingStyle"
               id="활기차요"
               value="활기차요"
-              handleChange={(event) => handleChange(event)}
+              onChange={onChange}
               checked={values.preferredLectureOrConsultingStyle.includes(
                 "활기차요"
               )}
@@ -780,7 +812,7 @@ export const AnnouncementForm = ({
               name="preferredLectureOrConsultingStyle"
               id="차분해요"
               value="차분해요"
-              handleChange={(event) => handleChange(event)}
+              onChange={onChange}
               checked={values.preferredLectureOrConsultingStyle.includes(
                 "차분해요"
               )}
@@ -791,7 +823,7 @@ export const AnnouncementForm = ({
               name="preferredLectureOrConsultingStyle"
               id="집중이 잘돼요"
               value="집중이 잘돼요"
-              handleChange={(event) => handleChange(event)}
+              onChange={onChange}
               checked={values.preferredLectureOrConsultingStyle.includes(
                 "집중이 잘돼요"
               )}
@@ -802,7 +834,7 @@ export const AnnouncementForm = ({
               name="preferredLectureOrConsultingStyle"
               id="에너지가 넘쳐요"
               value="에너지가 넘쳐요"
-              handleChange={(event) => handleChange(event)}
+              onChange={onChange}
               checked={values.preferredLectureOrConsultingStyle.includes(
                 "에너지가 넘쳐요"
               )}
@@ -813,7 +845,7 @@ export const AnnouncementForm = ({
               name="preferredLectureOrConsultingStyle"
               id="열정적이예요"
               value="열정적이예요"
-              handleChange={(event) => handleChange(event)}
+              onChange={onChange}
               checked={values.preferredLectureOrConsultingStyle.includes(
                 "열정적이예요"
               )}
@@ -824,7 +856,7 @@ export const AnnouncementForm = ({
               name="preferredLectureOrConsultingStyle"
               id="유머러스해요"
               value="유머러스해요"
-              handleChange={(event) => handleChange(event)}
+              onChange={onChange}
               checked={values.preferredLectureOrConsultingStyle.includes(
                 "유머러스해요"
               )}
@@ -835,7 +867,7 @@ export const AnnouncementForm = ({
               name="preferredLectureOrConsultingStyle"
               id="친절해요"
               value="친절해요"
-              handleChange={(event) => handleChange(event)}
+              onChange={onChange}
               checked={values.preferredLectureOrConsultingStyle.includes(
                 "친절해요"
               )}
@@ -846,7 +878,7 @@ export const AnnouncementForm = ({
               name="preferredLectureOrConsultingStyle"
               id="전문적이예요"
               value="전문적이예요"
-              handleChange={(event) => handleChange(event)}
+              onChange={onChange}
               checked={values.preferredLectureOrConsultingStyle.includes(
                 "전문적이예요"
               )}
@@ -857,7 +889,7 @@ export const AnnouncementForm = ({
               name="preferredLectureOrConsultingStyle"
               id={etcPreferredLectureOrConsultingStyle}
               value={etcPreferredLectureOrConsultingStyle}
-              handleChange={(event) => handleChange(event)}
+              onChange={onChange}
               checked={values.preferredLectureOrConsultingStyle.includes(
                 etcPreferredLectureOrConsultingStyle
               )}

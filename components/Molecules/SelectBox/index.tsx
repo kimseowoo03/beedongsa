@@ -1,6 +1,6 @@
 "use client";
 
-import { createContext, useContext, useState } from "react";
+import { createContext, memo, useContext, useState } from "react";
 
 import styled from "@emotion/styled";
 import { HiChevronUp, HiChevronDown } from "react-icons/hi";
@@ -116,7 +116,7 @@ const SelectBoxOption = ({
 };
 
 export const SelectBox = Object.assign(SelectBoxMain, {
-  Title: SelectBoxTitle,
-  Select: SelectBoxSelect,
-  Option: SelectBoxOption,
+  Title: memo(SelectBoxTitle),
+  Select: memo(SelectBoxSelect),
+  Option: memo(SelectBoxOption),
 });
