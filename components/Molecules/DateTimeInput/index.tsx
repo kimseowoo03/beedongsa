@@ -1,4 +1,5 @@
 import React, { createContext, useContext, useState } from "react";
+import { HiOutlineXMark } from "react-icons/hi2";
 
 interface DateTimeBoxContextType {
   date: string;
@@ -10,6 +11,7 @@ interface DateTimeBoxContextType {
   schedule: string[];
   setSchedule: React.Dispatch<React.SetStateAction<string[]>>;
   handleCreateDate: () => void;
+  handleScheduleDelete: (scheduleToRemove: string) => void;
 }
 
 const DateTimeBoxContext = createContext<DateTimeBoxContextType>({
@@ -22,6 +24,7 @@ const DateTimeBoxContext = createContext<DateTimeBoxContextType>({
   schedule: [],
   setSchedule: () => {},
   handleCreateDate: () => {},
+  handleScheduleDelete: (scheduleToRemove: string) => {},
 });
 
 interface DateTimeBoxMainProps {
@@ -58,6 +61,14 @@ const DateTimeBoxMain = ({
     }
   };
 
+  const handleScheduleDelete = (scheduleToRemove: string) => {
+    const updatedSchedule = schedule.filter(
+      (item) => item !== scheduleToRemove
+    );
+    handleClick({ value: updatedSchedule, name });
+    setSchedule(() => updatedSchedule);
+  };
+
   return (
     <DateTimeBoxContext.Provider
       value={{
@@ -70,6 +81,7 @@ const DateTimeBoxMain = ({
         schedule,
         setSchedule,
         handleCreateDate,
+        handleScheduleDelete,
       }}
     >
       {children}
@@ -145,11 +157,14 @@ const DateTimeBoxCreateButton = () => {
 };
 
 const DateTimeBoxScheduleList = () => {
-  const { schedule } = useContext(DateTimeBoxContext);
+  const { schedule, handleScheduleDelete } = useContext(DateTimeBoxContext);
   return (
     <ul>
       {schedule.map((item, index) => (
-        <li key={index}>{item}</li>
+        <li key={index}>
+          {item}
+          <HiOutlineXMark onClick={() => handleScheduleDelete(item)} />
+        </li>
       ))}
     </ul>
   );
