@@ -48,6 +48,8 @@ const AnnouncementList = ({ ProfileData }: AnnouncementListProps) => {
       {
         onSuccess: (response) => {
           alert(response.message);
+          //공고 마감 값 변경 해주기
+          data.closeAnnouncement = true;
         },
       }
     );
