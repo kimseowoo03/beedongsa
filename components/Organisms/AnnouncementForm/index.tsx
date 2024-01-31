@@ -16,7 +16,7 @@ import CheckboxLabel from "@/components/Molecules/CheckboxLabel";
 import InputLabel from "@/components/Molecules/InputLabel";
 import { SelectBox } from "@/components/Molecules/SelectBox";
 import { DateTimeBox } from "@/components/Molecules/DateTimeInput";
-import SubmitButton from "../../Atoms/Button";
+import Button from "../../Atoms/Button";
 
 /**hooks */
 
@@ -390,11 +390,18 @@ export const AnnouncementForm = ({
     mutationFn: submitAnnouncement,
   });
 
-  const submitHandler = (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
+  const submitHandler = (
+    type: "create" | "edit",
+    isTemporaryStorage: boolean
+  ) => {
+    //수정, 추가할때, 임시저장여부에 따라 임시저장키 값 설정
+    const updatedValues = isTemporaryStorage
+      ? { ...values, temporaryStorage: true }
+      : values;
+
     const mutateData: submitAnnouncementProps = {
-      type: announcementData ? "edit" : "create",
-      formData: values as Announcement,
+      type,
+      formData: updatedValues as Announcement,
       token: idToken,
     };
 
@@ -445,7 +452,7 @@ export const AnnouncementForm = ({
   );
 
   return (
-    <form onSubmit={submitHandler}>
+    <form>
       <div>
         <InputLabel
           label="공고제목"
@@ -911,12 +918,23 @@ export const AnnouncementForm = ({
           </div>
         </MultipleSelection>
       </div>
-      <SubmitButton
+      <Button
+        text="임시저장"
+        type="button"
+        disabled={false}
+        onClick={() =>
+          submitHandler(announcementData ? "edit" : "create", true)
+        }
+      />
+      <Button
         text={
           mutation.isPending ? "로딩중" : announcementData ? "확인" : "등록하기"
         }
-        type="submit"
+        type="button"
         disabled={false}
+        onClick={() =>
+          submitHandler(announcementData ? "edit" : "create", false)
+        }
       />
     </form>
   );
