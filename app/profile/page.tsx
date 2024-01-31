@@ -22,8 +22,7 @@ async function getBasicUserData({
   email: string;
 }) {
   const projectId = process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID;
-  const documentId = encodeURIComponent(email); // URL에 사용하기 위해 인코딩
-  const url = `https://firestore.googleapis.com/v1beta1/projects/${projectId}/databases/(default)/documents/Users/${documentId}`;
+  const url = `https://firestore.googleapis.com/v1beta1/projects/${projectId}/databases/(default)/documents/Users/${email}`;
 
   try {
     const response = await fetch(url, {

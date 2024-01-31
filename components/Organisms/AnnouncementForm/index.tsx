@@ -376,6 +376,7 @@ export const AnnouncementForm = ({
     preferredLectureOrConsultingStyle: [],
     administratorApproval: true,
     closeAnnouncement: false,
+    temporaryStorage: false,
   };
 
   const [values, setValues] = useState(initialValues);

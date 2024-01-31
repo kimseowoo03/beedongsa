@@ -26,4 +26,5 @@ export interface Announcement {
   preferredLectureOrConsultingStyle: Array<string>;
   administratorApproval: boolean;
   closeAnnouncement: boolean;
+  temporaryStorage: boolean;
 }
