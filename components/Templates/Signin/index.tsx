@@ -1,4 +1,5 @@
 /**react, next */
+import { useCallback, useState } from "react";
 import Link from "next/link";
 import { useMutation } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
@@ -9,7 +10,6 @@ import styled from "@emotion/styled";
 /**상태관리 */
 
 /**hooks */
-import useForm from "@/hooks/useForm";
 
 /**components */
 import SubmitButton from "../../Atoms/Button";
@@ -43,12 +43,12 @@ const submitSigninForm = async (formData: {
 export const Signin = () => {
   const router = useRouter();
 
-  const { values, setValues, handleChange } = useForm({
-    initialValues: {
-      email: "",
-      password: "",
-    },
-  });
+  const initialValues = {
+    email: "",
+    password: "",
+  };
+
+  const [values, setValues] = useState(initialValues);
 
   const mutation = useMutation({
     mutationFn: submitSigninForm,
@@ -64,6 +64,15 @@ export const Signin = () => {
 
   const signinDisabled = values.email && values.password && !mutation.isPending;
 
+  const onChange = useCallback((name: string, type, checked, newValue) => {
+    setValues((prevValues) => {
+      return {
+        ...prevValues,
+        [name]: newValue,
+      };
+    });
+  }, []);
+
   return (
     <Wrap>
       <Form onSubmit={submitHandler}>
@@ -75,7 +84,7 @@ export const Signin = () => {
             name="email"
             placeholder="이메일을 입력해주세요."
             value={values.email}
-            handleChange={(event) => handleChange(event)}
+            onChange={onChange}
           />
           <InputLabel
             label="비밀번호"
@@ -83,7 +92,7 @@ export const Signin = () => {
             name="password"
             placeholder="비밀번호를 입력해주세요."
             value={values.password}
-            handleChange={(event) => handleChange(event)}
+            onChange={onChange}
           />
         </div>
         <SubmitButton
