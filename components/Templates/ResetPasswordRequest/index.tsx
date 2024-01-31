@@ -1,4 +1,5 @@
 /**react, next */
+import { useCallback, useState } from "react";
 import { useMutation } from "@tanstack/react-query";
 
 /**style */
@@ -39,11 +40,11 @@ const sendEmailPost = async (email: string): Promise<any> => {
 };
 
 export const ResetPasswordRequest = () => {
-  const { values, handleChange } = useForm({
-    initialValues: {
-      email: "",
-    },
-  });
+  const initialValues = {
+    email: "",
+  };
+
+  const [values, setValues] = useState(initialValues);
   const next = useSetAtom(resetPasswordPageNextAtom);
 
   const mutation = useMutation({
@@ -64,6 +65,15 @@ export const ResetPasswordRequest = () => {
     mutation.mutate(values.email);
   };
 
+  const onChange = useCallback((name: string, type, checked, newValue) => {
+    setValues((prevValues) => {
+      return {
+        ...prevValues,
+        [name]: newValue,
+      };
+    });
+  }, []);
+
   return (
     <Form onSubmit={sendEmailHandler}>
       <p className="title">비밀번호 재설정</p>
@@ -76,7 +86,7 @@ export const ResetPasswordRequest = () => {
         name="email"
         placeholder="이메일을 입력해주세요."
         value={values.email}
-        handleChange={(event) => handleChange(event)}
+        onChange={onChange}
       />
       <SubmitButton
         text={mutation.isPending ? "로딩중" : "전송하기"}
