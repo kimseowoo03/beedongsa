@@ -56,14 +56,29 @@ async function getQueryProfileData({
 }): Promise<ProfileDataArray[]> {
   const projectId = process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID;
   const url = `https://firestore.googleapis.com/v1beta1/projects/${projectId}/databases/(default)/documents:runQuery`;
+  //해당 이메일과 임시저장이 이닌 조건
   const query = {
     structuredQuery: {
       from: [{ collectionId }],
       where: {
-        fieldFilter: {
-          field: { fieldPath: "registeredEmail" },
-          op: "EQUAL",
-          value: { stringValue: email },
+        compositeFilter: {
+          op: "AND",
+          filters: [
+            {
+              fieldFilter: {
+                field: { fieldPath: "registeredEmail" },
+                op: "EQUAL",
+                value: { stringValue: email },
+              },
+            },
+            {
+              fieldFilter: {
+                field: { fieldPath: "temporaryStorage" },
+                op: "EQUAL",
+                value: { booleanValue: false },
+              },
+            },
+          ],
         },
       },
     },
