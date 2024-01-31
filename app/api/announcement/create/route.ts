@@ -1,8 +1,5 @@
-/**
- * 1. Announcement 정보 저장
- * 2. Announcement 고유 ID 해당 이메일 유저 정보에
- */
 import { Announcement } from "@/types/announcement";
+import { transformToFirestoreFormat } from "@/utils/transformFirebaseFormat";
 
 export async function POST(request: Request) {
   const token = request.headers.get("Authorization").split(" ")[1];
@@ -12,75 +9,10 @@ export async function POST(request: Request) {
 
   const data: Announcement = await request.json();
   console.log(data, "<<POSTSTSSTST");
+
+  const firestoreClientData = transformToFirestoreFormat(data);
+  console.log(firestoreClientData);
   try {
-    const {
-      registeredEmail,
-      title,
-      category,
-      metropolitanCity,
-      dstrict,
-      detailedAddress,
-      schedule,
-      recruitmentDeadline,
-      target,
-      personnel,
-      totalCost,
-      supportIncludedInTheCost,
-      detail,
-      desiredExperience,
-      desiredQualifications,
-      preferredLectureOrConsultingStyle,
-      administratorApproval,
-      closeAnnouncement,
-    } = data;
-
-    const firestoreClientData = {
-      fields: {
-        registeredEmail: { stringValue: registeredEmail },
-        title: { stringValue: title },
-        category: {
-          arrayValue: {
-            values: category.map((value) => ({ stringValue: value })),
-          },
-        },
-        metropolitanCity: { stringValue: metropolitanCity },
-        dstrict: { stringValue: dstrict },
-        detailedAddress: { stringValue: detailedAddress },
-        schedule: {
-          arrayValue: {
-            values: schedule.map((value) => ({ stringValue: value })),
-          },
-        },
-        recruitmentDeadline: { stringValue: recruitmentDeadline },
-        target: {
-          arrayValue: {
-            values: target.map((value) => ({ stringValue: value })),
-          },
-        },
-        personnel: { integerValue: personnel },
-        totalCost: { integerValue: totalCost },
-        supportIncludedInTheCost: {
-          arrayValue: {
-            values: supportIncludedInTheCost.map((value) => ({
-              stringValue: value,
-            })),
-          },
-        },
-        detail: { stringValue: detail },
-        desiredExperience: { integerValue: desiredExperience },
-        desiredQualifications: { stringValue: desiredQualifications },
-        preferredLectureOrConsultingStyle: {
-          arrayValue: {
-            values: preferredLectureOrConsultingStyle.map((value) => ({
-              stringValue: value,
-            })),
-          },
-        },
-        administratorApproval: { booleanValue: administratorApproval },
-        closeAnnouncement: { booleanValue: closeAnnouncement },
-      },
-    };
-
     const firestoreAnnouncementsRes = await fetch(
       `https://firestore.googleapis.com/v1beta1/projects/${process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID}/databases/(default)/documents/Announcements/`,
       {
@@ -102,7 +34,7 @@ export async function POST(request: Request) {
     return new Response(
       JSON.stringify({
         data: firestoreAnnouncementsData,
-        message: "공고 등록 완료",
+        message: data.temporaryStorage ? "임시 저장 완료" : "공고 등록 완료",
       }),
       {
         status: 200,
