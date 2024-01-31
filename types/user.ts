@@ -16,6 +16,9 @@ export interface EducatorUser extends User {
   educatorType: Array<"lecture" | "consulting">;
   lectureTopic: Array<string>;
   experience: number;
+  experienceRecord: Array<string>;
+  certificate: Array<string>;
+  etcRecord: Array<string>;
 }
 
 export interface ClientUser extends User {

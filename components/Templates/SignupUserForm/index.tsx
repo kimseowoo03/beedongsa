@@ -1,6 +1,6 @@
 /**react, next */
-import { useMemo, useState } from "react";
-import { useMutation, useQuery } from "@tanstack/react-query";
+import { useCallback, useMemo, useState } from "react";
+import { useMutation } from "@tanstack/react-query";
 
 /**type */
 import type { ClientUser, EducatorUser, UserType } from "@/types/user";
@@ -8,9 +8,6 @@ import type { ClientUser, EducatorUser, UserType } from "@/types/user";
 /**style */
 import styled from "@emotion/styled";
 import { Hr } from "@/styles/htmlStyles";
-
-/**hooks */
-import useForm from "@/hooks/useForm";
 
 /**components */
 import SubmitButton from "../../Atoms/Button";
@@ -66,10 +63,12 @@ export const SignupUserForm = ({ type }: UserFormProps) => {
         password: "",
         educatorType: ["lecture"],
         lectureTopic: [],
-        experience: undefined,
+        experience: 0,
+        eventEnabled: false,
         serviceTermsAccepted: false,
         privacyPolicyAgreed: false,
-        eventEnabled: false,
+        certificate: [],
+        etcRecord: [],
       };
     } else if (type === "client") {
       return {
@@ -88,10 +87,7 @@ export const SignupUserForm = ({ type }: UserFormProps) => {
     }
   }, [type]);
 
-  // useForm 훅에 초기값을 설정
-  const { values, setValues, handleChange } = useForm({
-    initialValues,
-  });
+  const [values, setValues] = useState(initialValues);
 
   const mutation = useMutation({
     mutationFn: submitSignUpForm,
@@ -108,7 +104,6 @@ export const SignupUserForm = ({ type }: UserFormProps) => {
   }
 
   const AllAgreedHandler = () => {
-    //TODO: 만약 하나라도 false면 전체동의 false로 변경하기
     setAllAgreed(() => !allAgreed);
     setValues((prev) => ({
       ...prev,
@@ -124,6 +119,29 @@ export const SignupUserForm = ({ type }: UserFormProps) => {
     values.privacyPolicyAgreed &&
     !mutation.isPending;
 
+  const onChange = useCallback((name: string, type, checked, newValue) => {
+    setValues((prevValues) => {
+      if (Array.isArray(prevValues[name])) {
+        return {
+          ...prevValues,
+          [name]:
+            newValue === ""
+              ? []
+              : prevValues[name].includes(newValue)
+              ? prevValues[name].filter((item: string) => item !== newValue)
+              : [...prevValues[name], newValue],
+        };
+      }
+
+      const value = type === "number" ? Number(newValue) : newValue;
+
+      return {
+        ...prevValues,
+        [name]: type !== "checkbox" ? value : checked,
+      };
+    });
+  }, []);
+
   return (
     <Wrap>
       <Form onSubmit={submitHandler}>
@@ -138,7 +156,7 @@ export const SignupUserForm = ({ type }: UserFormProps) => {
               name="name"
               placeholder="이름을 입력해주세요."
               value={values.name}
-              handleChange={(event) => handleChange(event)}
+              onChange={onChange}
             />
             <InputLabel
               label="이메일"
@@ -146,7 +164,7 @@ export const SignupUserForm = ({ type }: UserFormProps) => {
               name="email"
               placeholder="이메일을 입력해주세요."
               value={values.email}
-              handleChange={(event) => handleChange(event)}
+              onChange={onChange}
             />
             <InputLabel
               label="휴대폰 번호"
@@ -154,7 +172,7 @@ export const SignupUserForm = ({ type }: UserFormProps) => {
               name="phoneNumber"
               placeholder="ex) 01012345678"
               value={values.phoneNumber}
-              handleChange={(event) => handleChange(event)}
+              onChange={onChange}
             />
             <InputLabel
               label="비밀번호"
@@ -162,7 +180,7 @@ export const SignupUserForm = ({ type }: UserFormProps) => {
               name="password"
               placeholder="비밀번호를 입력해주세요."
               value={values.password}
-              handleChange={(event) => handleChange(event)}
+              onChange={onChange}
             />
             <EducatorTypeOptions>
               <div className="label">강의 / 컨설턴트 선택 (다중선택 가능)</div>
@@ -172,7 +190,7 @@ export const SignupUserForm = ({ type }: UserFormProps) => {
                 name="educatorType"
                 id="lecture"
                 value="lecture"
-                handleChange={(event) => handleChange(event)}
+                onChange={onChange}
                 checked={values.educatorType.includes("lecture")}
               />
               <CheckboxLabel
@@ -181,7 +199,7 @@ export const SignupUserForm = ({ type }: UserFormProps) => {
                 name="educatorType"
                 id="consultant"
                 value="consultant"
-                handleChange={(event) => handleChange(event)}
+                onChange={onChange}
                 checked={values.educatorType.includes("consultant")}
               />
             </EducatorTypeOptions>
@@ -194,7 +212,7 @@ export const SignupUserForm = ({ type }: UserFormProps) => {
                   name="lectureTopic"
                   id="미술/공예"
                   value="미술/공예"
-                  handleChange={(event) => handleChange(event)}
+                  onChange={onChange}
                   checked={values.lectureTopic.includes("미술/공예")}
                 />
                 <CheckboxLabel
@@ -203,7 +221,7 @@ export const SignupUserForm = ({ type }: UserFormProps) => {
                   name="lectureTopic"
                   id="체육/건강"
                   value="체육/건강"
-                  handleChange={(event) => handleChange(event)}
+                  onChange={onChange}
                   checked={values.lectureTopic.includes("체육/건강")}
                 />
                 <CheckboxLabel
@@ -212,7 +230,7 @@ export const SignupUserForm = ({ type }: UserFormProps) => {
                   name="lectureTopic"
                   id="음악"
                   value="음악"
-                  handleChange={(event) => handleChange(event)}
+                  onChange={onChange}
                   checked={values.lectureTopic.includes("음악")}
                 />
                 <CheckboxLabel
@@ -221,7 +239,7 @@ export const SignupUserForm = ({ type }: UserFormProps) => {
                   name="lectureTopic"
                   id="문화 심리"
                   value="문화 심리"
-                  handleChange={(event) => handleChange(event)}
+                  onChange={onChange}
                   checked={values.lectureTopic.includes("문화 심리")}
                 />
                 <CheckboxLabel
@@ -230,7 +248,7 @@ export const SignupUserForm = ({ type }: UserFormProps) => {
                   name="lectureTopic"
                   id="요리/베이킹"
                   value="요리/베이킹"
-                  handleChange={(event) => handleChange(event)}
+                  onChange={onChange}
                   checked={values.lectureTopic.includes("요리/베이킹")}
                 />
                 <CheckboxLabel
@@ -239,7 +257,7 @@ export const SignupUserForm = ({ type }: UserFormProps) => {
                   name="lectureTopic"
                   id="실무교육/조직문화"
                   value="실무교육/조직문화"
-                  handleChange={(event) => handleChange(event)}
+                  onChange={onChange}
                   checked={values.lectureTopic.includes("실무교육/조직문화")}
                 />
                 <CheckboxLabel
@@ -248,7 +266,7 @@ export const SignupUserForm = ({ type }: UserFormProps) => {
                   name="lectureTopic"
                   id="외국어"
                   value="외국어"
-                  handleChange={(event) => handleChange(event)}
+                  onChange={onChange}
                   checked={values.lectureTopic.includes("외국어")}
                 />
                 <CheckboxLabel
@@ -257,7 +275,7 @@ export const SignupUserForm = ({ type }: UserFormProps) => {
                   name="lectureTopic"
                   id="경영/경제/마케팅"
                   value="경영/경제/마케팅"
-                  handleChange={(event) => handleChange(event)}
+                  onChange={onChange}
                   checked={values.lectureTopic.includes("경영/경제/마케팅")}
                 />
                 <CheckboxLabel
@@ -266,7 +284,7 @@ export const SignupUserForm = ({ type }: UserFormProps) => {
                   name="lectureTopic"
                   id="수학/과학"
                   value="수학/과학"
-                  handleChange={(event) => handleChange(event)}
+                  onChange={onChange}
                   checked={values.lectureTopic.includes("수학/과학")}
                 />
                 <CheckboxLabel
@@ -275,7 +293,7 @@ export const SignupUserForm = ({ type }: UserFormProps) => {
                   name="lectureTopic"
                   id="컴퓨터/IT"
                   value="컴퓨터/IT"
-                  handleChange={(event) => handleChange(event)}
+                  onChange={onChange}
                   checked={values.lectureTopic.includes("컴퓨터/IT")}
                 />
                 <CheckboxLabel
@@ -284,7 +302,7 @@ export const SignupUserForm = ({ type }: UserFormProps) => {
                   name="lectureTopic"
                   id="취업/자기개발"
                   value="취업/자기개발"
-                  handleChange={(event) => handleChange(event)}
+                  onChange={onChange}
                   checked={values.lectureTopic.includes("취업/자기개발")}
                 />
                 <CheckboxLabel
@@ -293,7 +311,7 @@ export const SignupUserForm = ({ type }: UserFormProps) => {
                   name="lectureTopic"
                   id="취미/실용/스포츠"
                   value="취미/실용/스포츠"
-                  handleChange={(event) => handleChange(event)}
+                  onChange={onChange}
                   checked={values.lectureTopic.includes("취미/실용/스포츠")}
                 />
                 <CheckboxLabel
@@ -302,7 +320,7 @@ export const SignupUserForm = ({ type }: UserFormProps) => {
                   name="lectureTopic"
                   id={etcLectureTopic}
                   value={etcLectureTopic}
-                  handleChange={(event) => handleChange(event)}
+                  onChange={onChange}
                   checked={values.lectureTopic.includes(etcLectureTopic)}
                 >
                   <EtcInput
@@ -316,14 +334,6 @@ export const SignupUserForm = ({ type }: UserFormProps) => {
                 </CheckboxLabel>
               </div>
             </LectureTopicOptions>
-            <InputLabel
-              label="경력"
-              type="number"
-              name="experience"
-              placeholder="경력을 입력해주세요."
-              value={values.experience}
-              handleChange={(event) => handleChange(event)}
-            />
           </div>
         ) : (
           <div className="typeForm">
@@ -333,7 +343,7 @@ export const SignupUserForm = ({ type }: UserFormProps) => {
               name="name"
               placeholder="이름을 입력해주세요."
               value={values.name}
-              handleChange={(event) => handleChange(event)}
+              onChange={onChange}
             />
             <InputLabel
               label="이메일"
@@ -341,7 +351,7 @@ export const SignupUserForm = ({ type }: UserFormProps) => {
               name="email"
               placeholder="이메일을 입력해주세요."
               value={values.email}
-              handleChange={(event) => handleChange(event)}
+              onChange={onChange}
             />
             <InputLabel
               label="휴대폰 번호"
@@ -349,7 +359,7 @@ export const SignupUserForm = ({ type }: UserFormProps) => {
               name="phoneNumber"
               placeholder="ex) 01012345678"
               value={values.phoneNumber}
-              handleChange={(event) => handleChange(event)}
+              onChange={onChange}
             />
             <InputLabel
               label="비밀번호"
@@ -357,7 +367,7 @@ export const SignupUserForm = ({ type }: UserFormProps) => {
               name="password"
               placeholder="비밀번호를 입력해주세요."
               value={values.password}
-              handleChange={(event) => handleChange(event)}
+              onChange={onChange}
             />
             <InputLabel
               label="담당자 이름"
@@ -365,7 +375,7 @@ export const SignupUserForm = ({ type }: UserFormProps) => {
               name="managerName"
               placeholder="담당자 이름을 입력해주세요."
               value={values.managerName}
-              handleChange={(event) => handleChange(event)}
+              onChange={onChange}
             />
             <InputLabel
               label="담당자 이메일"
@@ -373,7 +383,7 @@ export const SignupUserForm = ({ type }: UserFormProps) => {
               name="managerEmail"
               placeholder="담당자 이메일을 입력해주세요."
               value={values.managerEmail}
-              handleChange={(event) => handleChange(event)}
+              onChange={onChange}
             />
             <InputLabel
               label="담당자 직통 번호"
@@ -381,7 +391,7 @@ export const SignupUserForm = ({ type }: UserFormProps) => {
               name="managerPhoneNumber"
               placeholder="ex) 01012345678"
               value={values.managerPhoneNumber}
-              handleChange={(event) => handleChange(event)}
+              onChange={onChange}
             />
           </div>
         )}
@@ -392,7 +402,7 @@ export const SignupUserForm = ({ type }: UserFormProps) => {
             name="serviceTermsAccepted"
             id="전체동의"
             value={undefined}
-            handleChange={AllAgreedHandler}
+            onChange={AllAgreedHandler}
             checked={allAgreed}
           />
           <Hr />
@@ -403,7 +413,7 @@ export const SignupUserForm = ({ type }: UserFormProps) => {
               name="serviceTermsAccepted"
               id="이용약관 동의"
               value={undefined}
-              handleChange={(event) => handleChange(event)}
+              onChange={onChange}
               checked={values.serviceTermsAccepted}
             />
             <CheckboxLabel
@@ -412,7 +422,7 @@ export const SignupUserForm = ({ type }: UserFormProps) => {
               name="privacyPolicyAgreed"
               id="개인 정보 제 3자 제공 동의"
               value={undefined}
-              handleChange={(event) => handleChange(event)}
+              onChange={onChange}
               checked={values.privacyPolicyAgreed}
             />
             <CheckboxLabel
@@ -421,7 +431,7 @@ export const SignupUserForm = ({ type }: UserFormProps) => {
               name="eventEnabled"
               id="서비스명 알람 수신 동의"
               value={undefined}
-              handleChange={(event) => handleChange(event)}
+              onChange={onChange}
               checked={values.eventEnabled}
             />
           </div>

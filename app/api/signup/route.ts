@@ -65,7 +65,22 @@ export async function POST(request: Request) {
                   })),
                 },
               },
-              experience: { integerValue: data.experience.toString() },
+              experience: { integerValue: 0 },
+              experienceRecord: {
+                arrayValue: {
+                  values: data.experienceRecord,
+                },
+              },
+              certificate: {
+                arrayValue: {
+                  values: data.certificate,
+                },
+              },
+              etcRecord: {
+                arrayValue: {
+                  values: data.etcRecord,
+                },
+              },
             },
           }
         : {
@@ -103,8 +118,6 @@ export async function POST(request: Request) {
       throw new Error(firestoreUserDataRes.error.message);
     }
 
-    //TODO: 회원가입 정보 저장 실패시, 에러처리 고민
-    // 어차피 유효성 테스트할거기때문에, 에러가 터졌을 상황에  "다시 시도해주세요." 라는 문구로 노출시키자
     return new Response(JSON.stringify({ message: "회원가입성공" }), {
       status: 200,
     });
