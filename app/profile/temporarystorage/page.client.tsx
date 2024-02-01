@@ -1,7 +1,7 @@
-import type { ProfileDatasType } from "@/types/profile";
+import type { ProfileAnnouncementDatasType } from "@/types/profile";
 
 interface ProfilePageProps {
-  TemporaryStorageDatas: ProfileDatasType[];
+  TemporaryStorageDatas: ProfileAnnouncementDatasType[];
 }
 
 export default function TemporaryStoragePage({

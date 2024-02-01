@@ -1,10 +1,10 @@
 import { Profile } from "@/components/Templates/Profile";
-import type { ProfileDatasType } from "@/types/profile";
+import type { ProfileAnnouncementDatasType } from "@/types/profile";
 import type { ClientUser, EducatorUser } from "@/types/user";
 
 interface ProfilePageProps {
   userData: EducatorUser | ClientUser;
-  ProfileDatas: ProfileDatasType[];
+  ProfileDatas: ProfileAnnouncementDatasType[];
 }
 export default function ProfilePage({
   userData,

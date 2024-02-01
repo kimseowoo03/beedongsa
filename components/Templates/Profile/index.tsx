@@ -9,11 +9,11 @@ import Button from "@/components/Atoms/Button";
 import { Tabs } from "@/components/Molecules/Tabs";
 
 import type { ClientUser, EducatorUser } from "@/types/user";
-import type { ProfileDatasType } from "@/types/profile";
+import type { ProfileAnnouncementDatasType } from "@/types/profile";
 
 interface ProfileProps {
   userData: EducatorUser | ClientUser;
-  ProfileDatas: ProfileDatasType[];
+  ProfileDatas: ProfileAnnouncementDatasType[];
 }
 export const Profile = ({ userData, ProfileDatas }: ProfileProps) => {
   const { type } = userData;

@@ -1,6 +1,6 @@
 import type { Announcement } from "./announcement";
 
-export interface ProfileDatasType {
+export interface ProfileAnnouncementDatasType {
   id: string;
   data: Announcement;
 }
