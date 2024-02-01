@@ -3,7 +3,7 @@ import Link from "next/link";
 
 import { ProfileClientHeader } from "@/components/Organisms/ProfileClientHeader";
 import { ProfileEducatorHeader } from "@/components/Organisms/ProfileEducatorHeader";
-import NoticeBar from "@/components/Atoms/ NoticeBar";
+import NoticeBar from "@/components/Atoms/NoticeBar";
 import AnnouncementList from "@/components/Organisms/AnnouncementList";
 import Button from "@/components/Atoms/Button";
 import { Tabs } from "@/components/Molecules/Tabs";
