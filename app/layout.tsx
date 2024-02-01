@@ -6,7 +6,7 @@ import "./globals.css";
 import ReactQueryConfigs from "@/configs/ReactQueryConfigs";
 import JotaiConfigs from "@/configs/JotaiConfigs";
 
-import Header from "@/components/Organisms/Header";
+import MainLayout from "@/layouts/MainLayout";
 
 const notoSansKR = Noto_Sans_KR({
   weight: ["300", "400", "500", "700"],
@@ -28,8 +28,7 @@ export default async function RootLayout({
       <body className={notoSansKR.className}>
         <ReactQueryConfigs>
           <JotaiConfigs>
-            <Header />
-            {children}
+            <MainLayout>{children}</MainLayout>
           </JotaiConfigs>
         </ReactQueryConfigs>
       </body>
