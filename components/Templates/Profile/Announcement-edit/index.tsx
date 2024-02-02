@@ -11,6 +11,7 @@ export const AnnouncementEdit = ({
 }: AnnouncementEditProps) => {
   return (
     <AnnouncementForm
+      formType="edit"
       announcementData={announcementData}
       announcementID={announcementID}
     />

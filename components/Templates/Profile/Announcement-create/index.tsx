@@ -1,5 +1,5 @@
 import { AnnouncementForm } from "@/components/Organisms/AnnouncementForm";
 
 export const AnnouncementCreate = () => {
-  return <AnnouncementForm />;
+  return <AnnouncementForm formType="create" />;
 };

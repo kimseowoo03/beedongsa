@@ -351,16 +351,18 @@ const submitAnnouncement = async ({
 };
 
 interface AnnouncementFormProps {
+  formType: "create" | "edit";
   announcementData?: Announcement;
   announcementID?: string;
 }
 export const AnnouncementForm = ({
+  formType,
   announcementID: id,
   announcementData,
 }: AnnouncementFormProps) => {
   const [{ idToken, email: registeredEmail }] = useAtom(userAtom);
 
-  const initialValues: Announcement = announcementData || {
+  const initialValues: Announcement = {
     registeredEmail,
     title: "",
     category: [],
@@ -380,6 +382,7 @@ export const AnnouncementForm = ({
     administratorApproval: true,
     closeAnnouncement: false,
     temporaryStorage: false,
+    ...announcementData,
   };
 
   const [values, setValues] = useState(initialValues);
@@ -393,17 +396,14 @@ export const AnnouncementForm = ({
     mutationFn: submitAnnouncement,
   });
 
-  const submitHandler = (
-    type: "create" | "edit",
-    isTemporaryStorage: boolean
-  ) => {
+  const submitHandler = (isTemporaryStorage: boolean) => {
     //수정, 추가할때, 임시저장여부에 따라 임시저장키 값 설정
     const updatedValues = isTemporaryStorage
       ? { ...values, temporaryStorage: true }
-      : values;
+      : { ...values, temporaryStorage: false };
 
     const mutateData: submitAnnouncementProps = {
-      type,
+      type: formType,
       formData: updatedValues as Announcement,
       token: idToken,
     };
@@ -445,7 +445,6 @@ export const AnnouncementForm = ({
 
   const handleClick = useCallback(
     ({ value, name }: { value: string | Array<string>; name: string }) => {
-      console.log(value, name, "<<<");
       setValues((prevValues) => ({
         ...prevValues,
         [name]: value,
@@ -458,23 +457,21 @@ export const AnnouncementForm = ({
     <div>
       <ContentActionBar>
         <ActionBox>
+          {formType === "create" && (
+            <button
+              type="button"
+              disabled={false}
+              onClick={() => submitHandler(true)}
+            >
+              임시저장
+            </button>
+          )}
           <button
             type="button"
             disabled={false}
-            onClick={() =>
-              submitHandler(announcementData ? "edit" : "create", true)
-            }
+            onClick={() => submitHandler(false)}
           >
-            임시저장
-          </button>
-          <button
-            type="button"
-            disabled={false}
-            onClick={() =>
-              submitHandler(announcementData ? "edit" : "create", false)
-            }
-          >
-            {announcementData ? "확인" : "등록하기"}
+            {formType === "create" ? "등록" : "확인"}
           </button>
         </ActionBox>
       </ContentActionBar>
