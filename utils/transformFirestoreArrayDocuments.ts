@@ -10,15 +10,19 @@ import { transformFirestoreDocument } from "./transformFirebaseDocument";
  */
 export const transformFirestoreArrayDocuments = <T>(
   documents: any[]
-): { id: string; data: T }[] => {
+): { id: string; data: T; createTime: string }[] => {
   return documents.map((doc) => {
     const docData = doc.document;
     const transformedObject = transformFirestoreDocument<T>(docData.fields);
     const docId = docData.name.split("/").pop();
 
+    const formattedDate: string = docData.createTime
+      .replace("T", " ")
+      .replace(/\.\d+Z$/, "");
     return {
       id: docId,
       data: transformedObject,
+      createTime: formattedDate,
     };
   });
 };
