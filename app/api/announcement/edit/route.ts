@@ -1,4 +1,5 @@
 import { Announcement } from "@/types/announcement";
+import { transformToFirestoreFormat } from "@/utils/transformFirebaseFormat";
 
 export async function POST(request: Request) {
   const token = request.headers.get("Authorization").split(" ")[1];
@@ -7,75 +8,9 @@ export async function POST(request: Request) {
   }
 
   const data: Announcement & { id: string } = await request.json();
-  console.log(data, "<<POSTSTSSTST");
-  const {
-    id,
-    registeredEmail,
-    title,
-    category,
-    metropolitanCity,
-    dstrict,
-    detailedAddress,
-    schedule,
-    recruitmentDeadline,
-    target,
-    personnel,
-    totalCost,
-    supportIncludedInTheCost,
-    detail,
-    desiredExperience,
-    desiredQualifications,
-    preferredLectureOrConsultingStyle,
-    administratorApproval,
-    closeAnnouncement,
-  } = data;
 
-  const firestoreBodyData = {
-    fields: {
-      registeredEmail: { stringValue: registeredEmail },
-      title: { stringValue: title },
-      category: {
-        arrayValue: {
-          values: category.map((value) => ({ stringValue: value })),
-        },
-      },
-      metropolitanCity: { stringValue: metropolitanCity },
-      dstrict: { stringValue: dstrict },
-      detailedAddress: { stringValue: detailedAddress },
-      schedule: {
-        arrayValue: {
-          values: schedule.map((value) => ({ stringValue: value })),
-        },
-      },
-      recruitmentDeadline: { stringValue: recruitmentDeadline },
-      target: {
-        arrayValue: {
-          values: target.map((value) => ({ stringValue: value })),
-        },
-      },
-      personnel: { integerValue: personnel.toString() },
-      totalCost: { integerValue: totalCost.toString() },
-      supportIncludedInTheCost: {
-        arrayValue: {
-          values: supportIncludedInTheCost.map((value) => ({
-            stringValue: value,
-          })),
-        },
-      },
-      detail: { stringValue: detail },
-      desiredExperience: { integerValue: desiredExperience.toString() },
-      desiredQualifications: { stringValue: desiredQualifications },
-      preferredLectureOrConsultingStyle: {
-        arrayValue: {
-          values: preferredLectureOrConsultingStyle.map((value) => ({
-            stringValue: value,
-          })),
-        },
-      },
-      administratorApproval: { booleanValue: administratorApproval },
-      closeAnnouncement: { booleanValue: closeAnnouncement },
-    },
-  };
+  const firestoreBodyData = transformToFirestoreFormat(data);
+
   try {
     const firestoreAnnouncementsRes = await fetch(
       `https://firestore.googleapis.com/v1beta1/projects/${process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID}/databases/(default)/documents/Announcements/${data.id}`,
