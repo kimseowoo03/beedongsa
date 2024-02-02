@@ -131,7 +131,10 @@ export default async function Page() {
 
   return (
     <AuthHydrateAtoms email={email} idToken={idToken}>
-      <TemporaryStoragePage TemporaryStorageDatas={TemporaryStorageDatas} />
+      <TemporaryStoragePage
+        userType={userType}
+        TemporaryStorageDatas={TemporaryStorageDatas}
+      />
     </AuthHydrateAtoms>
   );
 }
