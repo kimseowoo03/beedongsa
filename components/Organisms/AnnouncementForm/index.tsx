@@ -16,7 +16,10 @@ import CheckboxLabel from "@/components/Molecules/CheckboxLabel";
 import InputLabel from "@/components/Molecules/InputLabel";
 import { SelectBox } from "@/components/Molecules/SelectBox";
 import { DateTimeBox } from "@/components/Molecules/DateTimeInput";
-import Button from "../../Atoms/Button";
+import {
+  ActionBox,
+  ContentActionBar,
+} from "@/components/Molecules/ContentActionBar";
 
 /**hooks */
 
@@ -452,7 +455,29 @@ export const AnnouncementForm = ({
   );
 
   return (
-    <form>
+    <div>
+      <ContentActionBar>
+        <ActionBox>
+          <button
+            type="button"
+            disabled={false}
+            onClick={() =>
+              submitHandler(announcementData ? "edit" : "create", true)
+            }
+          >
+            임시저장
+          </button>
+          <button
+            type="button"
+            disabled={false}
+            onClick={() =>
+              submitHandler(announcementData ? "edit" : "create", false)
+            }
+          >
+            {announcementData ? "확인" : "등록하기"}
+          </button>
+        </ActionBox>
+      </ContentActionBar>
       <div>
         <InputLabel
           label="공고제목"
@@ -918,24 +943,6 @@ export const AnnouncementForm = ({
           </div>
         </MultipleSelection>
       </div>
-      <Button
-        text="임시저장"
-        type="button"
-        disabled={false}
-        onClick={() =>
-          submitHandler(announcementData ? "edit" : "create", true)
-        }
-      />
-      <Button
-        text={
-          mutation.isPending ? "로딩중" : announcementData ? "확인" : "등록하기"
-        }
-        type="button"
-        disabled={false}
-        onClick={() =>
-          submitHandler(announcementData ? "edit" : "create", false)
-        }
-      />
-    </form>
+    </div>
   );
 };

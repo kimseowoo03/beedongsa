@@ -1,3 +1,4 @@
+"use client";
 import styled from "@emotion/styled";
 import { useRouter } from "next/navigation";
 import { HiOutlineChevronLeft } from "react-icons/hi2";
@@ -30,11 +31,12 @@ export const ActionBox = styled.div`
   display: flex;
 `;
 
-interface FormActionBarProps {
+interface ContentActionBarProps {
   children: React.ReactNode;
 }
-export const FormActionBar = ({ children }: FormActionBarProps) => {
+export const ContentActionBar = ({ children }: ContentActionBarProps) => {
   const router = useRouter();
+
   return (
     <Wrap>
       <BackButton type="button" onClick={() => router.back()}>
