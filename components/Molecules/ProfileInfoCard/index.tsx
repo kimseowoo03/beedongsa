@@ -11,23 +11,22 @@ const Photo = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 160px;
-  height: 160px;
-  font-size: var(--font-size-l);
+  width: 140px;
+  height: 140px;
+  font-size: var(--font-size-m);
   font-weight: var(--font-weight-medium);
   background-color: var(--font-color-1);
   color: #fff;
 `;
 
 const Name = styled.p`
-  font-size: var(--font-size-l);
+  font-size: var(--font-size-m);
   font-weight: var(--font-weight-medium);
   color: var(--font-color-1);
-  margin-bottom: var(--gap);
 `;
 
 const MoreInfo = styled.p`
-  font-size: var(--font-size-xs);
+  font-size: var(--font-size-xxs);
   font-weight: var(--font-weight-regular);
   color: var(--font-color-2);
   line-height: 2;

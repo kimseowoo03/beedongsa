@@ -1,5 +1,12 @@
 import { ProfileInfoCard } from "@/components/Molecules/ProfileInfoCard";
 import type { EducatorUser } from "@/types/user";
+import styled from "@emotion/styled";
+
+const ProfileInfoInfoWrap = styled.div`
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+`;
 
 interface ProfileEducatorHeaderProps {
   userData: EducatorUser;
@@ -7,13 +14,22 @@ interface ProfileEducatorHeaderProps {
 export const ProfileEducatorHeader = ({
   userData,
 }: ProfileEducatorHeaderProps) => {
+  const { name, email, phoneNumber, educatorType } = userData;
   return (
     <ProfileInfoCard>
-      <ProfileInfoCard.Photo>사진</ProfileInfoCard.Photo>
-      <ProfileInfoCard.Name>강사 이름</ProfileInfoCard.Name>
-      <ProfileInfoCard.MoreInfo>개인 이메일</ProfileInfoCard.MoreInfo>
-      <ProfileInfoCard.MoreInfo>[강사, 컨설턴트]</ProfileInfoCard.MoreInfo>
-      <ProfileInfoCard.MoreInfo>경력: 2년차</ProfileInfoCard.MoreInfo>
+      <ProfileInfoCard.Photo>{name.substring(0, 4)}</ProfileInfoCard.Photo>
+      <ProfileInfoInfoWrap>
+        <ProfileInfoCard.Name>{name}</ProfileInfoCard.Name>
+        <div>
+          <ProfileInfoCard.MoreInfo>
+            {educatorType.map((item) => {
+              return <>{item === "lecture" ? "강사" : "컨설턴트"}</>;
+            })}
+          </ProfileInfoCard.MoreInfo>
+          <ProfileInfoCard.MoreInfo>{email}</ProfileInfoCard.MoreInfo>
+          <ProfileInfoCard.MoreInfo>{phoneNumber}</ProfileInfoCard.MoreInfo>
+        </div>
+      </ProfileInfoInfoWrap>
     </ProfileInfoCard>
   );
 };
