@@ -527,7 +527,7 @@ export const LectureForm = ({
       </ContentActionBar>
       <div>
         <InputLabel
-          label="강의제목"
+          label="강의 제목"
           type="text"
           name="title"
           placeholder="ex) 나만의 계절꽃다발 만들기 (꽃다발을 가져갈 수 있어요.)"
@@ -535,7 +535,7 @@ export const LectureForm = ({
           onChange={onChange}
         />
         <InputLabel
-          label="강의설명"
+          label="강의 설명"
           type="text"
           name="description"
           placeholder="강의에 대해 소개해주세요."
@@ -675,7 +675,7 @@ export const LectureForm = ({
         </MultipleSelection>
 
         <DemoLecture>
-          <div className="label">강의 / 컨설턴트 선택 (다중선택 가능)</div>
+          <div className="label">데모 강의 여부</div>
           <CheckboxLabel
             label="무료가능"
             type="checkbox"
@@ -704,6 +704,110 @@ export const LectureForm = ({
             checked={values.isDemoLecture === "불가능"}
           />
         </DemoLecture>
+
+        <MultipleSelection>
+          <div className="label">대상</div>
+          <div>
+            <CheckboxLabel
+              label="영유아"
+              type="checkbox"
+              name="target"
+              id="영유아"
+              value="영유아"
+              onChange={onChange}
+              checked={values.target.includes("영유아")}
+            />
+            <CheckboxLabel
+              label="초등학생"
+              type="checkbox"
+              name="target"
+              id="초등학생"
+              value="초등학생"
+              onChange={onChange}
+              checked={values.target.includes("초등학생")}
+            />
+            <CheckboxLabel
+              label="중학생"
+              type="checkbox"
+              name="target"
+              id="중학생"
+              value="중학생"
+              onChange={onChange}
+              checked={values.target.includes("중학생")}
+            />
+            <CheckboxLabel
+              label="고등학생"
+              type="checkbox"
+              name="target"
+              id="고등학생"
+              value="고등학생"
+              onChange={onChange}
+              checked={values.target.includes("고등학생")}
+            />
+            <CheckboxLabel
+              label="청년"
+              type="checkbox"
+              name="target"
+              id="청년"
+              value="청년"
+              onChange={onChange}
+              checked={values.target.includes("청년")}
+            />
+            <CheckboxLabel
+              label="중년"
+              type="checkbox"
+              name="target"
+              id="중년"
+              value="중년"
+              onChange={onChange}
+              checked={values.target.includes("중년")}
+            />
+            <CheckboxLabel
+              label="장년"
+              type="checkbox"
+              name="target"
+              id="장년"
+              value="장년"
+              onChange={onChange}
+              checked={values.target.includes("장년")}
+            />
+            <CheckboxLabel
+              label="기업"
+              type="checkbox"
+              name="target"
+              id="기업"
+              value="기업"
+              onChange={onChange}
+              checked={values.target.includes("기업")}
+            />
+          </div>
+        </MultipleSelection>
+
+        <InputLabel
+          label="총 소요시간"
+          type="number"
+          name="totalTime"
+          placeholder="ex) 80 (분) 숫자로만 입력해주세요."
+          value={values.totalTime}
+          onChange={onChange}
+        />
+
+        <InputLabel
+          label="다회차 책정 기준"
+          type="text"
+          name="multiSessionPricing"
+          placeholder="ex) 1달 4회 35만원 (20명 이하)"
+          value={values.multiSessionPricing}
+          onChange={onChange}
+        />
+        <InputLabel
+          label="추가비용 책정 기준"
+          type="text"
+          name="additionalCost"
+          placeholder="장거리, 1박 이상의 일정, 재료비 등 추가비용이 필요한 경우 작성해요."
+          value={values.additionalCost}
+          onChange={onChange}
+        />
       </div>
     </div>
   );
