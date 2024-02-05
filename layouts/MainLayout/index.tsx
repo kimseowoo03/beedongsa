@@ -9,6 +9,7 @@ export default function MainLayout({ children }) {
   const isActionHeader =
     pathname.startsWith("/profile/client/announcement-create") ||
     pathname.startsWith("/profile/client/announcement-edit") ||
+    pathname.startsWith("/profile/educator/lecture-create") ||
     pathname.startsWith("/profile/temporarystorage");
 
   return (
