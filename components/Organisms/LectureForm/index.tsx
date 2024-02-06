@@ -12,19 +12,16 @@ import { useAtom } from "jotai";
 import { userAtom } from "@/atoms/auth";
 
 /**components */
-import CheckboxLabel from "@/components/Molecules/CheckboxLabel";
+import { MultipleSelection } from "@/components/Molecules/CheckboxLabel";
 import InputLabel from "@/components/Molecules/InputLabel";
-import { SelectBox } from "@/components/Molecules/SelectBox";
-import { DateTimeBox } from "@/components/Molecules/DateTimeInput";
 import {
-  ActionBox,
   ContentActionBar,
+  ActionBox,
 } from "@/components/Molecules/ContentActionBar";
 
 /**hooks */
 
 /**type */
-import type { Announcement } from "@/types/announcement";
 import type { TokenType } from "@/types/auth";
 import { Lecture } from "@/types/lecture";
 
@@ -311,21 +308,6 @@ const Wrap = styled.div`
   gap: 10px;
   flex-direction: column;
 `;
-const MultipleSelection = styled.div`
-  .label {
-    color: var(--font-color-1);
-    font-size: var(--font-size-xxs);
-    font-weight: var(--font-weight-medium);
-    margin-bottom: 8px;
-  }
-  .label::after {
-    position: relative;
-    left: 2px;
-    top: -2px;
-    content: "*";
-    color: var(--primary-color-r);
-  }
-`;
 
 const EtcInput = styled.input`
   width: 80px;
@@ -336,22 +318,6 @@ const EtcInput = styled.input`
 
   &:focus {
     outline: none;
-  }
-`;
-
-const DemoLecture = styled.div`
-  .label {
-    color: var(--font-color-1);
-    font-size: var(--font-size-xxs);
-    font-weight: var(--font-weight-medium);
-    margin-bottom: 8px;
-  }
-  .label::after {
-    position: relative;
-    left: 2px;
-    top: -2px;
-    content: "*";
-    color: var(--primary-color-r);
   }
 `;
 
@@ -414,7 +380,7 @@ export const LectureForm = ({
     multiSessionPricing: "",
     additionalCost: "",
     includedDetails: "",
-    isLongDistance: false,
+    isLongDistance: "",
     linkAttached: [],
     interview1: "",
     interview2: "",
@@ -502,6 +468,7 @@ export const LectureForm = ({
     },
     []
   );
+  console.log(values.isLongDistance, "<<isLongDistance");
 
   return (
     <div>
@@ -542,10 +509,10 @@ export const LectureForm = ({
           value={values.description}
           onChange={onChange}
         />
-        <MultipleSelection>
+        <MultipleSelection values={values.category}>
           <div className="label">카테고리</div>
           <div>
-            <CheckboxLabel
+            <MultipleSelection.CheckboxLabel
               label="미술/공예"
               type="checkbox"
               name="category"
@@ -554,7 +521,7 @@ export const LectureForm = ({
               onChange={onChange}
               checked={values.category.includes("미술/공예")}
             />
-            <CheckboxLabel
+            <MultipleSelection.CheckboxLabel
               label="체육/건강"
               type="checkbox"
               name="category"
@@ -563,7 +530,7 @@ export const LectureForm = ({
               onChange={onChange}
               checked={values.category.includes("체육/건강")}
             />
-            <CheckboxLabel
+            <MultipleSelection.CheckboxLabel
               label="음악"
               type="checkbox"
               name="category"
@@ -572,7 +539,7 @@ export const LectureForm = ({
               onChange={onChange}
               checked={values.category.includes("음악")}
             />
-            <CheckboxLabel
+            <MultipleSelection.CheckboxLabel
               label="문화 심리"
               type="checkbox"
               name="category"
@@ -581,7 +548,7 @@ export const LectureForm = ({
               onChange={onChange}
               checked={values.category.includes("문화 심리")}
             />
-            <CheckboxLabel
+            <MultipleSelection.CheckboxLabel
               label="요리/베이킹"
               type="checkbox"
               name="category"
@@ -590,7 +557,7 @@ export const LectureForm = ({
               onChange={onChange}
               checked={values.category.includes("요리/베이킹")}
             />
-            <CheckboxLabel
+            <MultipleSelection.CheckboxLabel
               label="실무교육/조직문화"
               type="checkbox"
               name="category"
@@ -599,7 +566,7 @@ export const LectureForm = ({
               onChange={onChange}
               checked={values.category.includes("실무교육/조직문화")}
             />
-            <CheckboxLabel
+            <MultipleSelection.CheckboxLabel
               label="외국어"
               type="checkbox"
               name="category"
@@ -608,7 +575,7 @@ export const LectureForm = ({
               onChange={onChange}
               checked={values.category.includes("외국어")}
             />
-            <CheckboxLabel
+            <MultipleSelection.CheckboxLabel
               label="경영/경제/마케팅"
               type="checkbox"
               name="category"
@@ -617,7 +584,7 @@ export const LectureForm = ({
               onChange={onChange}
               checked={values.category.includes("경영/경제/마케팅")}
             />
-            <CheckboxLabel
+            <MultipleSelection.CheckboxLabel
               label="수학/과학"
               type="checkbox"
               name="category"
@@ -626,7 +593,7 @@ export const LectureForm = ({
               onChange={onChange}
               checked={values.category.includes("수학/과학")}
             />
-            <CheckboxLabel
+            <MultipleSelection.CheckboxLabel
               label="컴퓨터/IT"
               type="checkbox"
               name="category"
@@ -635,7 +602,7 @@ export const LectureForm = ({
               onChange={onChange}
               checked={values.category.includes("컴퓨터/IT")}
             />
-            <CheckboxLabel
+            <MultipleSelection.CheckboxLabel
               label="취업/자기개발"
               type="checkbox"
               name="category"
@@ -644,7 +611,7 @@ export const LectureForm = ({
               onChange={onChange}
               checked={values.category.includes("취업/자기개발")}
             />
-            <CheckboxLabel
+            <MultipleSelection.CheckboxLabel
               label="취미/실용/스포츠"
               type="checkbox"
               name="category"
@@ -653,7 +620,7 @@ export const LectureForm = ({
               onChange={onChange}
               checked={values.category.includes("취미/실용/스포츠")}
             />
-            <CheckboxLabel
+            <MultipleSelection.CheckboxLabel
               label="기타"
               type="checkbox"
               name="category"
@@ -670,13 +637,13 @@ export const LectureForm = ({
                 onChange={(e) => setEtcCategory(e.target.value)}
                 disabled={values.category.includes(etcCategory)}
               />
-            </CheckboxLabel>
+            </MultipleSelection.CheckboxLabel>
           </div>
         </MultipleSelection>
 
-        <DemoLecture>
+        <MultipleSelection values={values.isDemoLecture}>
           <div className="label">데모 강의 여부</div>
-          <CheckboxLabel
+          <MultipleSelection.CheckboxLabel
             label="무료가능"
             type="checkbox"
             name="isDemoLecture"
@@ -685,7 +652,7 @@ export const LectureForm = ({
             onChange={onChange}
             checked={values.isDemoLecture === "무료가능"}
           />
-          <CheckboxLabel
+          <MultipleSelection.CheckboxLabel
             label="유료가능"
             type="checkbox"
             name="isDemoLecture"
@@ -694,7 +661,7 @@ export const LectureForm = ({
             onChange={onChange}
             checked={values.isDemoLecture === "유료가능"}
           />
-          <CheckboxLabel
+          <MultipleSelection.CheckboxLabel
             label="불가능"
             type="checkbox"
             name="isDemoLecture"
@@ -703,12 +670,12 @@ export const LectureForm = ({
             onChange={onChange}
             checked={values.isDemoLecture === "불가능"}
           />
-        </DemoLecture>
+        </MultipleSelection>
 
-        <MultipleSelection>
+        <MultipleSelection values={values.target}>
           <div className="label">대상</div>
           <div>
-            <CheckboxLabel
+            <MultipleSelection.CheckboxLabel
               label="영유아"
               type="checkbox"
               name="target"
@@ -717,7 +684,7 @@ export const LectureForm = ({
               onChange={onChange}
               checked={values.target.includes("영유아")}
             />
-            <CheckboxLabel
+            <MultipleSelection.CheckboxLabel
               label="초등학생"
               type="checkbox"
               name="target"
@@ -726,7 +693,7 @@ export const LectureForm = ({
               onChange={onChange}
               checked={values.target.includes("초등학생")}
             />
-            <CheckboxLabel
+            <MultipleSelection.CheckboxLabel
               label="중학생"
               type="checkbox"
               name="target"
@@ -735,7 +702,7 @@ export const LectureForm = ({
               onChange={onChange}
               checked={values.target.includes("중학생")}
             />
-            <CheckboxLabel
+            <MultipleSelection.CheckboxLabel
               label="고등학생"
               type="checkbox"
               name="target"
@@ -744,7 +711,7 @@ export const LectureForm = ({
               onChange={onChange}
               checked={values.target.includes("고등학생")}
             />
-            <CheckboxLabel
+            <MultipleSelection.CheckboxLabel
               label="청년"
               type="checkbox"
               name="target"
@@ -753,7 +720,7 @@ export const LectureForm = ({
               onChange={onChange}
               checked={values.target.includes("청년")}
             />
-            <CheckboxLabel
+            <MultipleSelection.CheckboxLabel
               label="중년"
               type="checkbox"
               name="target"
@@ -762,7 +729,7 @@ export const LectureForm = ({
               onChange={onChange}
               checked={values.target.includes("중년")}
             />
-            <CheckboxLabel
+            <MultipleSelection.CheckboxLabel
               label="장년"
               type="checkbox"
               name="target"
@@ -771,7 +738,7 @@ export const LectureForm = ({
               onChange={onChange}
               checked={values.target.includes("장년")}
             />
-            <CheckboxLabel
+            <MultipleSelection.CheckboxLabel
               label="기업"
               type="checkbox"
               name="target"
@@ -808,6 +775,36 @@ export const LectureForm = ({
           value={values.additionalCost}
           onChange={onChange}
         />
+        <InputLabel
+          label="포함 내역"
+          type="text"
+          name="includedDetails"
+          placeholder="ex) 유인물, 교구재 대여, 실습재료"
+          value={values.includedDetails}
+          onChange={onChange}
+        />
+
+        <MultipleSelection values={values.isLongDistance}>
+          <div className="label">장거리 출장가능여부</div>
+          <MultipleSelection.CheckboxLabel
+            label="가능"
+            type="checkbox"
+            name="isLongDistance"
+            id="Y"
+            value="Y"
+            onChange={onChange}
+            checked={values.isLongDistance === "Y"}
+          />
+          <MultipleSelection.CheckboxLabel
+            label="불가능"
+            type="checkbox"
+            name="isLongDistance"
+            id="N"
+            value="N"
+            onChange={onChange}
+            checked={values.isLongDistance === "N"}
+          />
+        </MultipleSelection>
       </div>
     </div>
   );

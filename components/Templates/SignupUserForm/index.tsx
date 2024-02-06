@@ -12,7 +12,7 @@ import { Hr } from "@/styles/htmlStyles";
 /**components */
 import SubmitButton from "../../Atoms/Button";
 import InputLabel from "../../Molecules/InputLabel";
-import CheckboxLabel from "../../Molecules/CheckboxLabel";
+import { MultipleSelection } from "../../Molecules/CheckboxLabel";
 
 interface UserFormProps {
   type: UserType;
@@ -182,9 +182,9 @@ export const SignupUserForm = ({ type }: UserFormProps) => {
               value={values.password}
               onChange={onChange}
             />
-            <EducatorTypeOptions>
+            <MultipleSelection values={values.educatorType}>
               <div className="label">강의 / 컨설턴트 선택 (다중선택 가능)</div>
-              <CheckboxLabel
+              <MultipleSelection.CheckboxLabel
                 label="강의"
                 type="checkbox"
                 name="educatorType"
@@ -193,7 +193,7 @@ export const SignupUserForm = ({ type }: UserFormProps) => {
                 onChange={onChange}
                 checked={values.educatorType.includes("lecture")}
               />
-              <CheckboxLabel
+              <MultipleSelection.CheckboxLabel
                 label="컨설턴트"
                 type="checkbox"
                 name="educatorType"
@@ -202,11 +202,11 @@ export const SignupUserForm = ({ type }: UserFormProps) => {
                 onChange={onChange}
                 checked={values.educatorType.includes("consultant")}
               />
-            </EducatorTypeOptions>
-            <LectureTopicOptions>
+            </MultipleSelection>
+            <MultipleSelection values={values.lectureTopic}>
               <div className="label">강의 컨설턴트 주제</div>
               <div>
-                <CheckboxLabel
+                <MultipleSelection.CheckboxLabel
                   label="미술/공예"
                   type="checkbox"
                   name="lectureTopic"
@@ -215,7 +215,7 @@ export const SignupUserForm = ({ type }: UserFormProps) => {
                   onChange={onChange}
                   checked={values.lectureTopic.includes("미술/공예")}
                 />
-                <CheckboxLabel
+                <MultipleSelection.CheckboxLabel
                   label="체육/건강"
                   type="checkbox"
                   name="lectureTopic"
@@ -224,7 +224,7 @@ export const SignupUserForm = ({ type }: UserFormProps) => {
                   onChange={onChange}
                   checked={values.lectureTopic.includes("체육/건강")}
                 />
-                <CheckboxLabel
+                <MultipleSelection.CheckboxLabel
                   label="음악"
                   type="checkbox"
                   name="lectureTopic"
@@ -233,7 +233,7 @@ export const SignupUserForm = ({ type }: UserFormProps) => {
                   onChange={onChange}
                   checked={values.lectureTopic.includes("음악")}
                 />
-                <CheckboxLabel
+                <MultipleSelection.CheckboxLabel
                   label="문화 심리"
                   type="checkbox"
                   name="lectureTopic"
@@ -242,7 +242,7 @@ export const SignupUserForm = ({ type }: UserFormProps) => {
                   onChange={onChange}
                   checked={values.lectureTopic.includes("문화 심리")}
                 />
-                <CheckboxLabel
+                <MultipleSelection.CheckboxLabel
                   label="요리/베이킹"
                   type="checkbox"
                   name="lectureTopic"
@@ -251,7 +251,7 @@ export const SignupUserForm = ({ type }: UserFormProps) => {
                   onChange={onChange}
                   checked={values.lectureTopic.includes("요리/베이킹")}
                 />
-                <CheckboxLabel
+                <MultipleSelection.CheckboxLabel
                   label="실무교육/조직문화"
                   type="checkbox"
                   name="lectureTopic"
@@ -260,7 +260,7 @@ export const SignupUserForm = ({ type }: UserFormProps) => {
                   onChange={onChange}
                   checked={values.lectureTopic.includes("실무교육/조직문화")}
                 />
-                <CheckboxLabel
+                <MultipleSelection.CheckboxLabel
                   label="외국어"
                   type="checkbox"
                   name="lectureTopic"
@@ -269,7 +269,7 @@ export const SignupUserForm = ({ type }: UserFormProps) => {
                   onChange={onChange}
                   checked={values.lectureTopic.includes("외국어")}
                 />
-                <CheckboxLabel
+                <MultipleSelection.CheckboxLabel
                   label="경영/경제/마케팅"
                   type="checkbox"
                   name="lectureTopic"
@@ -278,7 +278,7 @@ export const SignupUserForm = ({ type }: UserFormProps) => {
                   onChange={onChange}
                   checked={values.lectureTopic.includes("경영/경제/마케팅")}
                 />
-                <CheckboxLabel
+                <MultipleSelection.CheckboxLabel
                   label="수학/과학"
                   type="checkbox"
                   name="lectureTopic"
@@ -287,7 +287,7 @@ export const SignupUserForm = ({ type }: UserFormProps) => {
                   onChange={onChange}
                   checked={values.lectureTopic.includes("수학/과학")}
                 />
-                <CheckboxLabel
+                <MultipleSelection.CheckboxLabel
                   label="컴퓨터/IT"
                   type="checkbox"
                   name="lectureTopic"
@@ -296,7 +296,7 @@ export const SignupUserForm = ({ type }: UserFormProps) => {
                   onChange={onChange}
                   checked={values.lectureTopic.includes("컴퓨터/IT")}
                 />
-                <CheckboxLabel
+                <MultipleSelection.CheckboxLabel
                   label="취업/자기개발"
                   type="checkbox"
                   name="lectureTopic"
@@ -305,7 +305,7 @@ export const SignupUserForm = ({ type }: UserFormProps) => {
                   onChange={onChange}
                   checked={values.lectureTopic.includes("취업/자기개발")}
                 />
-                <CheckboxLabel
+                <MultipleSelection.CheckboxLabel
                   label="취미/실용/스포츠"
                   type="checkbox"
                   name="lectureTopic"
@@ -314,7 +314,7 @@ export const SignupUserForm = ({ type }: UserFormProps) => {
                   onChange={onChange}
                   checked={values.lectureTopic.includes("취미/실용/스포츠")}
                 />
-                <CheckboxLabel
+                <MultipleSelection.CheckboxLabel
                   label="기타"
                   type="checkbox"
                   name="lectureTopic"
@@ -331,9 +331,9 @@ export const SignupUserForm = ({ type }: UserFormProps) => {
                     onChange={(e) => setEtcLectureTopic(e.target.value)}
                     disabled={values.lectureTopic.includes(etcLectureTopic)}
                   />
-                </CheckboxLabel>
+                </MultipleSelection.CheckboxLabel>
               </div>
-            </LectureTopicOptions>
+            </MultipleSelection>
           </div>
         ) : (
           <div className="typeForm">
@@ -396,7 +396,7 @@ export const SignupUserForm = ({ type }: UserFormProps) => {
           </div>
         )}
         <div>
-          <CheckboxLabel
+          <MultipleSelection.CheckboxLabel
             label="전체동의"
             type="checkbox"
             name="serviceTermsAccepted"
@@ -407,7 +407,7 @@ export const SignupUserForm = ({ type }: UserFormProps) => {
           />
           <Hr />
           <div>
-            <CheckboxLabel
+            <MultipleSelection.CheckboxLabel
               label="이용약관 동의 (필수)"
               type="checkbox"
               name="serviceTermsAccepted"
@@ -416,7 +416,7 @@ export const SignupUserForm = ({ type }: UserFormProps) => {
               onChange={onChange}
               checked={values.serviceTermsAccepted}
             />
-            <CheckboxLabel
+            <MultipleSelection.CheckboxLabel
               label="개인 정보 제 3자 제공 동의 (필수)"
               type="checkbox"
               name="privacyPolicyAgreed"
@@ -425,7 +425,7 @@ export const SignupUserForm = ({ type }: UserFormProps) => {
               onChange={onChange}
               checked={values.privacyPolicyAgreed}
             />
-            <CheckboxLabel
+            <MultipleSelection.CheckboxLabel
               label="서비스명 알람 수신 동의 (선택)"
               type="checkbox"
               name="eventEnabled"
@@ -459,38 +459,6 @@ const Form = styled.form`
     display: flex;
     flex-direction: column;
     gap: 16px;
-  }
-`;
-
-const EducatorTypeOptions = styled.div`
-  .label {
-    color: var(--font-color-1);
-    font-size: var(--font-size-xxs);
-    font-weight: var(--font-weight-medium);
-    margin-bottom: 8px;
-  }
-  .label::after {
-    position: relative;
-    left: 2px;
-    top: -2px;
-    content: "*";
-    color: var(--primary-color-r);
-  }
-`;
-
-const LectureTopicOptions = styled.div`
-  .label {
-    color: var(--font-color-1);
-    font-size: var(--font-size-xxs);
-    font-weight: var(--font-weight-medium);
-    margin-bottom: 8px;
-  }
-  .label::after {
-    position: relative;
-    left: 2px;
-    top: -2px;
-    content: "*";
-    color: var(--primary-color-r);
   }
 `;
 

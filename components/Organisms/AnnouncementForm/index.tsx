@@ -12,7 +12,7 @@ import { useAtom } from "jotai";
 import { userAtom } from "@/atoms/auth";
 
 /**components */
-import CheckboxLabel from "@/components/Molecules/CheckboxLabel";
+import { MultipleSelection } from "@/components/Molecules/CheckboxLabel";
 import InputLabel from "@/components/Molecules/InputLabel";
 import { SelectBox } from "@/components/Molecules/SelectBox";
 import { DateTimeBox } from "@/components/Molecules/DateTimeInput";
@@ -288,21 +288,6 @@ const Wrap = styled.div`
   gap: 10px;
   flex-direction: column;
 `;
-const MultipleSelection = styled.div`
-  .label {
-    color: var(--font-color-1);
-    font-size: var(--font-size-xxs);
-    font-weight: var(--font-weight-medium);
-    margin-bottom: 8px;
-  }
-  .label::after {
-    position: relative;
-    left: 2px;
-    top: -2px;
-    content: "*";
-    color: var(--primary-color-r);
-  }
-`;
 
 const EtcInput = styled.input`
   width: 80px;
@@ -484,10 +469,10 @@ export const AnnouncementForm = ({
           value={values.title}
           onChange={onChange}
         />
-        <MultipleSelection>
+        <MultipleSelection values={values.category}>
           <div className="label">카테고리</div>
           <div>
-            <CheckboxLabel
+            <MultipleSelection.CheckboxLabel
               label="미술/공예"
               type="checkbox"
               name="category"
@@ -496,7 +481,7 @@ export const AnnouncementForm = ({
               onChange={onChange}
               checked={values.category.includes("미술/공예")}
             />
-            <CheckboxLabel
+            <MultipleSelection.CheckboxLabel
               label="체육/건강"
               type="checkbox"
               name="category"
@@ -505,7 +490,7 @@ export const AnnouncementForm = ({
               onChange={onChange}
               checked={values.category.includes("체육/건강")}
             />
-            <CheckboxLabel
+            <MultipleSelection.CheckboxLabel
               label="음악"
               type="checkbox"
               name="category"
@@ -514,7 +499,7 @@ export const AnnouncementForm = ({
               onChange={onChange}
               checked={values.category.includes("음악")}
             />
-            <CheckboxLabel
+            <MultipleSelection.CheckboxLabel
               label="문화 심리"
               type="checkbox"
               name="category"
@@ -523,7 +508,7 @@ export const AnnouncementForm = ({
               onChange={onChange}
               checked={values.category.includes("문화 심리")}
             />
-            <CheckboxLabel
+            <MultipleSelection.CheckboxLabel
               label="요리/베이킹"
               type="checkbox"
               name="category"
@@ -532,7 +517,7 @@ export const AnnouncementForm = ({
               onChange={onChange}
               checked={values.category.includes("요리/베이킹")}
             />
-            <CheckboxLabel
+            <MultipleSelection.CheckboxLabel
               label="실무교육/조직문화"
               type="checkbox"
               name="category"
@@ -541,7 +526,7 @@ export const AnnouncementForm = ({
               onChange={onChange}
               checked={values.category.includes("실무교육/조직문화")}
             />
-            <CheckboxLabel
+            <MultipleSelection.CheckboxLabel
               label="외국어"
               type="checkbox"
               name="category"
@@ -550,7 +535,7 @@ export const AnnouncementForm = ({
               onChange={onChange}
               checked={values.category.includes("외국어")}
             />
-            <CheckboxLabel
+            <MultipleSelection.CheckboxLabel
               label="경영/경제/마케팅"
               type="checkbox"
               name="category"
@@ -559,7 +544,7 @@ export const AnnouncementForm = ({
               onChange={onChange}
               checked={values.category.includes("경영/경제/마케팅")}
             />
-            <CheckboxLabel
+            <MultipleSelection.CheckboxLabel
               label="수학/과학"
               type="checkbox"
               name="category"
@@ -568,7 +553,7 @@ export const AnnouncementForm = ({
               onChange={onChange}
               checked={values.category.includes("수학/과학")}
             />
-            <CheckboxLabel
+            <MultipleSelection.CheckboxLabel
               label="컴퓨터/IT"
               type="checkbox"
               name="category"
@@ -577,7 +562,7 @@ export const AnnouncementForm = ({
               onChange={onChange}
               checked={values.category.includes("컴퓨터/IT")}
             />
-            <CheckboxLabel
+            <MultipleSelection.CheckboxLabel
               label="취업/자기개발"
               type="checkbox"
               name="category"
@@ -586,7 +571,7 @@ export const AnnouncementForm = ({
               onChange={onChange}
               checked={values.category.includes("취업/자기개발")}
             />
-            <CheckboxLabel
+            <MultipleSelection.CheckboxLabel
               label="취미/실용/스포츠"
               type="checkbox"
               name="category"
@@ -595,7 +580,7 @@ export const AnnouncementForm = ({
               onChange={onChange}
               checked={values.category.includes("취미/실용/스포츠")}
             />
-            <CheckboxLabel
+            <MultipleSelection.CheckboxLabel
               label="기타"
               type="checkbox"
               name="category"
@@ -612,7 +597,7 @@ export const AnnouncementForm = ({
                 onChange={(e) => setEtcCategory(e.target.value)}
                 disabled={values.category.includes(etcCategory)}
               />
-            </CheckboxLabel>
+            </MultipleSelection.CheckboxLabel>
           </div>
         </MultipleSelection>
         <div>
@@ -673,10 +658,10 @@ export const AnnouncementForm = ({
           />
           까지
         </DateTimeBox>
-        <MultipleSelection>
+        <MultipleSelection values={values.target}>
           <div className="label">대상</div>
           <div>
-            <CheckboxLabel
+            <MultipleSelection.CheckboxLabel
               label="영유아"
               type="checkbox"
               name="target"
@@ -685,7 +670,7 @@ export const AnnouncementForm = ({
               onChange={onChange}
               checked={values.target.includes("영유아")}
             />
-            <CheckboxLabel
+            <MultipleSelection.CheckboxLabel
               label="초등학생"
               type="checkbox"
               name="target"
@@ -694,7 +679,7 @@ export const AnnouncementForm = ({
               onChange={onChange}
               checked={values.target.includes("초등학생")}
             />
-            <CheckboxLabel
+            <MultipleSelection.CheckboxLabel
               label="중학생"
               type="checkbox"
               name="target"
@@ -703,7 +688,7 @@ export const AnnouncementForm = ({
               onChange={onChange}
               checked={values.target.includes("중학생")}
             />
-            <CheckboxLabel
+            <MultipleSelection.CheckboxLabel
               label="고등학생"
               type="checkbox"
               name="target"
@@ -712,7 +697,7 @@ export const AnnouncementForm = ({
               onChange={onChange}
               checked={values.target.includes("고등학생")}
             />
-            <CheckboxLabel
+            <MultipleSelection.CheckboxLabel
               label="청년"
               type="checkbox"
               name="target"
@@ -721,7 +706,7 @@ export const AnnouncementForm = ({
               onChange={onChange}
               checked={values.target.includes("청년")}
             />
-            <CheckboxLabel
+            <MultipleSelection.CheckboxLabel
               label="중년"
               type="checkbox"
               name="target"
@@ -730,7 +715,7 @@ export const AnnouncementForm = ({
               onChange={onChange}
               checked={values.target.includes("중년")}
             />
-            <CheckboxLabel
+            <MultipleSelection.CheckboxLabel
               label="장년"
               type="checkbox"
               name="target"
@@ -739,7 +724,7 @@ export const AnnouncementForm = ({
               onChange={onChange}
               checked={values.target.includes("장년")}
             />
-            <CheckboxLabel
+            <MultipleSelection.CheckboxLabel
               label="기업"
               type="checkbox"
               name="target"
@@ -766,10 +751,10 @@ export const AnnouncementForm = ({
           value={values.totalCost}
           onChange={onChange}
         />
-        <MultipleSelection>
+        <MultipleSelection values={values.supportIncludedInTheCost}>
           <div className="label">비용에 포함된 지원 내역</div>
           <div>
-            <CheckboxLabel
+            <MultipleSelection.CheckboxLabel
               label="숙박지원"
               type="checkbox"
               name="supportIncludedInTheCost"
@@ -778,7 +763,7 @@ export const AnnouncementForm = ({
               onChange={onChange}
               checked={values.supportIncludedInTheCost.includes("숙박지원")}
             />
-            <CheckboxLabel
+            <MultipleSelection.CheckboxLabel
               label="식사지원"
               type="checkbox"
               name="supportIncludedInTheCost"
@@ -787,7 +772,7 @@ export const AnnouncementForm = ({
               onChange={onChange}
               checked={values.supportIncludedInTheCost.includes("식사지원")}
             />
-            <CheckboxLabel
+            <MultipleSelection.CheckboxLabel
               label="차비지원"
               type="checkbox"
               name="supportIncludedInTheCost"
@@ -822,10 +807,10 @@ export const AnnouncementForm = ({
           value={values.desiredQualifications}
           onChange={onChange}
         />
-        <MultipleSelection>
+        <MultipleSelection values={values.preferredLectureOrConsultingStyle}>
           <div className="label">강의/컨설팅 스타일</div>
           <div>
-            <CheckboxLabel
+            <MultipleSelection.CheckboxLabel
               label="활기차요"
               type="checkbox"
               name="preferredLectureOrConsultingStyle"
@@ -836,7 +821,7 @@ export const AnnouncementForm = ({
                 "활기차요"
               )}
             />
-            <CheckboxLabel
+            <MultipleSelection.CheckboxLabel
               label="차분해요"
               type="checkbox"
               name="preferredLectureOrConsultingStyle"
@@ -847,7 +832,7 @@ export const AnnouncementForm = ({
                 "차분해요"
               )}
             />
-            <CheckboxLabel
+            <MultipleSelection.CheckboxLabel
               label="집중이 잘돼요"
               type="checkbox"
               name="preferredLectureOrConsultingStyle"
@@ -858,7 +843,7 @@ export const AnnouncementForm = ({
                 "집중이 잘돼요"
               )}
             />
-            <CheckboxLabel
+            <MultipleSelection.CheckboxLabel
               label="에너지가 넘쳐요"
               type="checkbox"
               name="preferredLectureOrConsultingStyle"
@@ -869,7 +854,7 @@ export const AnnouncementForm = ({
                 "에너지가 넘쳐요"
               )}
             />
-            <CheckboxLabel
+            <MultipleSelection.CheckboxLabel
               label="열정적이예요"
               type="checkbox"
               name="preferredLectureOrConsultingStyle"
@@ -880,7 +865,7 @@ export const AnnouncementForm = ({
                 "열정적이예요"
               )}
             />
-            <CheckboxLabel
+            <MultipleSelection.CheckboxLabel
               label="유머러스해요"
               type="checkbox"
               name="preferredLectureOrConsultingStyle"
@@ -891,7 +876,7 @@ export const AnnouncementForm = ({
                 "유머러스해요"
               )}
             />
-            <CheckboxLabel
+            <MultipleSelection.CheckboxLabel
               label="친절해요"
               type="checkbox"
               name="preferredLectureOrConsultingStyle"
@@ -902,7 +887,7 @@ export const AnnouncementForm = ({
                 "친절해요"
               )}
             />
-            <CheckboxLabel
+            <MultipleSelection.CheckboxLabel
               label="전문적이예요"
               type="checkbox"
               name="preferredLectureOrConsultingStyle"
@@ -913,7 +898,7 @@ export const AnnouncementForm = ({
                 "전문적이예요"
               )}
             />
-            <CheckboxLabel
+            <MultipleSelection.CheckboxLabel
               label="기타"
               type="checkbox"
               name="preferredLectureOrConsultingStyle"
@@ -936,7 +921,7 @@ export const AnnouncementForm = ({
                   etcPreferredLectureOrConsultingStyle
                 )}
               />
-            </CheckboxLabel>
+            </MultipleSelection.CheckboxLabel>
           </div>
         </MultipleSelection>
       </div>
