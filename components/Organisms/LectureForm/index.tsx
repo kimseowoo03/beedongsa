@@ -24,6 +24,7 @@ import {
 /**type */
 import type { TokenType } from "@/types/auth";
 import { Lecture } from "@/types/lecture";
+import { InputList } from "@/components/Molecules/InputList";
 
 const CITYS = [
   "서울",
@@ -805,6 +806,17 @@ export const LectureForm = ({
             checked={values.isLongDistance === "N"}
           />
         </MultipleSelection>
+
+        <InputList
+          handleClick={handleClick}
+          name="linkAttached"
+          value={values.linkAttached}
+        >
+          <InputList.Field />
+          <InputList.FieldExplanation />
+          <InputList.AddButton />
+          <InputList.List />
+        </InputList>
       </div>
     </div>
   );
