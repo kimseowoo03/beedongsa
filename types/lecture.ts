@@ -20,7 +20,7 @@ export interface Lecture {
   multiSessionPricing: string;
   additionalCost: string;
   includedDetails: string;
-  isLongDistance: boolean;
+  isLongDistance: "Y" | "N";
   linkAttached: Array<string>;
   interview1: string;
   interview2: string;
