@@ -808,6 +808,7 @@ export const LectureForm = ({
         </MultipleSelection>
 
         <InputList
+          label="링크첨부"
           handleClick={handleClick}
           name="linkAttached"
           value={values.linkAttached}
