@@ -761,6 +761,18 @@ export const LectureForm = ({
           onChange={onChange}
         />
 
+        <InputList
+          label="비용(1회)"
+          handleClick={handleClick}
+          name="expense"
+          value={values.expense}
+        >
+          <InputList.Field />
+          <InputList.FieldExplanation />
+          <InputList.AddButton />
+          <InputList.List />
+        </InputList>
+
         <InputLabel
           label="다회차 책정 기준"
           type="text"
