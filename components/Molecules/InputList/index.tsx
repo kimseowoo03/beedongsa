@@ -160,9 +160,13 @@ const ItemList = () => {
   );
 };
 
-export const InputList = Object.assign(InputListMain, {
-  Field: memo(InputField),
-  AddButton: memo(AddButton),
-  List: memo(ItemList),
-  FieldExplanation: memo(InputFieldExplanation),
+const areEqual = (prevProps, nextProps) => {
+  return prevProps.value === nextProps.value;
+};
+
+export const InputList = Object.assign(memo(InputListMain, areEqual), {
+  Field: InputField,
+  AddButton: AddButton,
+  List: ItemList,
+  FieldExplanation: InputFieldExplanation,
 });
