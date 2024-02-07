@@ -818,6 +818,18 @@ export const LectureForm = ({
           <InputList.AddButton />
           <InputList.List />
         </InputList>
+
+        <InputList
+          label="커리큘럼"
+          handleClick={handleClick}
+          name="curriculum"
+          value={values.curriculum}
+        >
+          <InputList.Field />
+          <InputList.FieldExplanation />
+          <InputList.AddButton />
+          <InputList.List />
+        </InputList>
       </div>
     </div>
   );
