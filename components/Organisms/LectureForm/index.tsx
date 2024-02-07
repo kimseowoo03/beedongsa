@@ -13,6 +13,7 @@ import { userAtom } from "@/atoms/auth";
 
 /**components */
 import { MultipleSelection } from "@/components/Molecules/CheckboxLabel";
+import Interview from "@/components/Molecules/Interview";
 import InputLabel from "@/components/Molecules/InputLabel";
 import {
   ContentActionBar,
@@ -830,6 +831,25 @@ export const LectureForm = ({
           <InputList.AddButton />
           <InputList.List />
         </InputList>
+
+        <Interview
+          question="강의 분야에 대한 당신의 전문성을 어떻게 기르셨나요?"
+          name="interview1"
+          value={values.interview1}
+          onChange={onChange}
+        />
+        <Interview
+          question="강의/컨설팅을 준비하는 과정에서 가장 중요하게 생각하는 부분은 무엇인가요?"
+          name="interview2"
+          value={values.interview2}
+          onChange={onChange}
+        />
+        <Interview
+          question="참여자들과의 상호작용을 어떻게 촉진하나요?"
+          name="interview3"
+          value={values.interview3}
+          onChange={onChange}
+        />
       </div>
     </div>
   );
