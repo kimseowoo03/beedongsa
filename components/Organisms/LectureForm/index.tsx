@@ -239,7 +239,6 @@ export const LectureForm = ({
         <SelectRegion>
           <SelectRegion.CitySelect />
           <SelectRegion.RegionDetailSelect />
-          <SelectRegion.AddButton />
           <SelectRegion.SelectedList />
         </SelectRegion>
 

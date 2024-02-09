@@ -1,5 +1,63 @@
 import React, { useState, createContext, useContext, memo } from "react";
 
+import styled from "@emotion/styled";
+import { HiOutlineXMark } from "react-icons/hi2";
+
+const Wrap = styled.div`
+  ul {
+    list-style: none;
+  }
+`;
+
+const RegionWrap = styled.div`
+  display: inline-flex;
+  flex-direction: column;
+  width: 50%;
+  font-size: var(--font-size-xxs);
+
+  ul {
+    list-style: none;
+    height: 180px;
+    overflow: scroll;
+  }
+
+  li {
+    padding: 6px 10px;
+    color: var(--font-color-1);
+    opacity: 0.7;
+
+    &.selected {
+      opacity: 1;
+      background-color: var(--primary-color-y10);
+    }
+    &:hover {
+      cursor: pointer;
+      background-color: var(--primary-color-y10);
+    }
+  }
+`;
+
+const SelectedListWrap = styled.ul`
+  list-style: none;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  gap: 6px;
+  font-size: var(--font-size-xxx);
+
+  li {
+    display: flex;
+    align-items: center;
+    gap: 2px;
+    border: 1px solid var(--primary-color-y);
+    border-radius: 40px;
+    padding: 4px 10px;
+    svg {
+      cursor: pointer;
+    }
+  }
+`;
+
 const CITYS = [
   "서울",
   "인천",
@@ -284,6 +342,7 @@ interface SelectRegionContextType {
   handleCityChange: React.Dispatch<React.SetStateAction<string>>;
   handleRegionDetailChange: React.Dispatch<React.SetStateAction<string>>;
   handleAddToList: () => void;
+  handleIDeleteToList: (itemToRemove: string) => void;
 }
 const SelectRegionContext = createContext<SelectRegionContextType>({
   selectedCity: "",
@@ -292,11 +351,12 @@ const SelectRegionContext = createContext<SelectRegionContextType>({
   handleCityChange: (city: string) => {},
   handleRegionDetailChange: (regionDetail: string) => {},
   handleAddToList: () => {},
+  handleIDeleteToList: (itemToRemove: string) => {},
 });
 
 const SelectRegionMain = ({ children }) => {
-  const [selectedCity, setSelectedCity] = useState("지역");
-  const [selectedRegionDetail, setSelectedRegionDetail] = useState("상세지역");
+  const [selectedCity, setSelectedCity] = useState("");
+  const [selectedRegionDetail, setSelectedRegionDetail] = useState("");
   const [selectedList, setSelectedList] = useState([]);
 
   const handleCityChange = (city: string) => {
@@ -305,6 +365,12 @@ const SelectRegionMain = ({ children }) => {
 
   const handleRegionDetailChange = (regionDetail: string) => {
     setSelectedRegionDetail(() => regionDetail);
+
+    const newSelection = `${selectedCity} ${regionDetail}`;
+    console.log(newSelection, regionDetail);
+    if (!selectedList.includes(newSelection)) {
+      setSelectedList(() => [...selectedList, newSelection]);
+    }
   };
 
   const handleAddToList = () => {
@@ -316,6 +382,13 @@ const SelectRegionMain = ({ children }) => {
     }
   };
 
+  const handleIDeleteToList = (itemToRemove: string) => {
+    const updatedSchedule = selectedList.filter(
+      (item) => item !== itemToRemove
+    );
+    setSelectedList(() => updatedSchedule);
+  };
+
   return (
     <SelectRegionContext.Provider
       value={{
@@ -325,65 +398,69 @@ const SelectRegionMain = ({ children }) => {
         handleCityChange,
         handleRegionDetailChange,
         handleAddToList,
+        handleIDeleteToList,
       }}
     >
-      {children}
+      <Wrap>{children}</Wrap>
     </SelectRegionContext.Provider>
   );
 };
 
 const CitySelect = () => {
-  const [isClick, setIsClick] = useState(false);
-
   const { selectedCity, handleCityChange } = useContext(SelectRegionContext);
 
   const optionClickHandler = (city: string) => {
     handleCityChange(city);
-    setIsClick((prev) => !prev);
   };
 
   return (
-    <>
-      <div onClick={() => setIsClick((prev) => !prev)}>{selectedCity}</div>
-      {isClick && (
-        <ul>
-          {CITYS.map((city) => (
-            <li key={city} onClick={() => optionClickHandler(city)}>
-              {city}
-            </li>
-          ))}
-        </ul>
-      )}
-    </>
+    <RegionWrap>
+      <p>지역</p>
+      <ul>
+        {CITYS.map((city) => (
+          <li
+            key={city}
+            onClick={() => optionClickHandler(city)}
+            className={selectedCity === city ? "selected" : ""}
+          >
+            {city}
+          </li>
+        ))}
+      </ul>
+    </RegionWrap>
   );
 };
 
 const RegionDetailSelect = () => {
-  const [isClick, setIsClick] = useState(false);
-
-  const { selectedCity, selectedRegionDetail, handleRegionDetailChange } =
+  const { selectedCity, selectedList, handleRegionDetailChange } =
     useContext(SelectRegionContext);
 
   const optionClickHandler = (detail: string) => {
     handleRegionDetailChange(detail);
-    setIsClick((prev) => !prev);
+  };
+
+  const details = REGIONDETAILS[selectedCity] || [];
+
+  const isSelectedDetail = (detail: string) => {
+    const fullDetail = `${selectedCity} ${detail}`;
+    return selectedList.includes(fullDetail);
   };
 
   return (
-    <>
-      <div onClick={() => setIsClick((prev) => !prev)}>
-        {selectedRegionDetail}
-      </div>
-      {isClick && (
-        <ul>
-          {REGIONDETAILS[selectedCity].map((detail) => (
-            <li key={detail} onClick={() => optionClickHandler(detail)}>
-              {detail}
-            </li>
-          ))}
-        </ul>
-      )}
-    </>
+    <RegionWrap>
+      <p>상세지역</p>
+      <ul>
+        {details.map((detail: string) => (
+          <li
+            key={detail}
+            onClick={() => optionClickHandler(detail)}
+            className={isSelectedDetail(detail) ? "selected" : ""}
+          >
+            {detail}
+          </li>
+        ))}
+      </ul>
+    </RegionWrap>
   );
 };
 
@@ -393,13 +470,16 @@ const AddButton = () => {
 };
 
 const SelectedList = () => {
-  const { selectedList } = useContext(SelectRegionContext);
+  const { selectedList, handleIDeleteToList } = useContext(SelectRegionContext);
   return (
-    <ul>
+    <SelectedListWrap>
       {selectedList.map((item, index) => (
-        <li key={index}>{item}</li>
+        <li key={index}>
+          {item}
+          <HiOutlineXMark onClick={() => handleIDeleteToList(item)} />
+        </li>
       ))}
-    </ul>
+    </SelectedListWrap>
   );
 };
 
