@@ -354,7 +354,22 @@ const SelectRegionContext = createContext<SelectRegionContextType>({
   handleIDeleteToList: (itemToRemove: string) => {},
 });
 
-const SelectRegionMain = ({ children }) => {
+interface SelectRegionMainProps {
+  children: React.ReactNode;
+  handleClick: ({
+    value,
+    name,
+  }: {
+    value: string | Array<string>;
+    name: string;
+  }) => void;
+  name: string;
+}
+const SelectRegionMain = ({
+  children,
+  handleClick,
+  name,
+}: SelectRegionMainProps) => {
   const [selectedCity, setSelectedCity] = useState("");
   const [selectedRegionDetail, setSelectedRegionDetail] = useState("");
   const [selectedList, setSelectedList] = useState([]);
@@ -370,6 +385,7 @@ const SelectRegionMain = ({ children }) => {
     console.log(newSelection, regionDetail);
     if (!selectedList.includes(newSelection)) {
       setSelectedList(() => [...selectedList, newSelection]);
+      handleClick({ value: [...selectedList, newSelection], name });
     }
   };
 
