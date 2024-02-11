@@ -12,35 +12,39 @@ export const ListHeader = styled.div`
 export const List = styled.ul`
   display: flex;
   flex-direction: column;
-  gap: 16px;
+  gap: 20px;
   list-style: none;
 `;
 
-export const TextItem = styled.li`
+export const ItemColum = styled.li`
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+
   > div:first-of-type {
-    width: 140px;
-    display: inline-block;
     font-size: var(--font-size-xxs);
     font-weight: var(--font-weight-bold);
     color: var(--font-color-1);
   }
   > div:last-of-type {
-    display: inline-block;
+    flex-direction: column;
+    gap: 6px;
     font-size: var(--font-size-xxs);
     color: var(--gray-sub2);
   }
 `;
 
-export const ArrayItem = styled.li`
+export const Item = styled.li`
+  display: flex;
+
   > div:first-of-type {
     width: 140px;
-    display: inline-block;
     font-size: var(--font-size-xxs);
     font-weight: var(--font-weight-bold);
     color: var(--font-color-1);
   }
   > div:last-of-type {
-    display: inline-flex;
+    display: flex;
     flex-direction: column;
     gap: 6px;
     font-size: var(--font-size-xxs);

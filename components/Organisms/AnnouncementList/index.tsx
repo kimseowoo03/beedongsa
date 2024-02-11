@@ -11,7 +11,7 @@ import { userAtom } from "@/atoms/auth";
 import ToggleIcon from "@/components/Atoms/ToggleIcon";
 
 /**styles */
-import { ArrayItem, List, ListHeader, TextItem } from "@/styles/List";
+import { List, ListHeader, Item } from "@/styles/List";
 
 /**types */
 import type { TokenType } from "@/types/auth";
@@ -90,79 +90,79 @@ const AnnouncementList = ({ ProfileData }: AnnouncementListProps) => {
       {showList && (
         <>
           <List>
-            <ArrayItem>
+            <Item>
               <div>카테고리</div>
               <div>
                 {data.category.map((item) => {
                   return <p key={item}>{item}</p>;
                 })}
               </div>
-            </ArrayItem>
-            <TextItem>
+            </Item>
+            <Item>
               <div>지역</div>
               <div>
                 {data.metropolitanCity} {data.dstrict} {data.detailedAddress}
               </div>
-            </TextItem>
-            <ArrayItem>
+            </Item>
+            <Item>
               <div>일정</div>
               <div>
                 {data.schedule.map((item) => {
                   return <p key={item}>{item}</p>;
                 })}
               </div>
-            </ArrayItem>
-            <TextItem>
+            </Item>
+            <Item>
               <div>모집기한</div>
               <div>{data.recruitmentDeadline} 까지</div>
-            </TextItem>
-            <ArrayItem>
+            </Item>
+            <Item>
               <div>대상</div>
               <div>
                 {data.target.map((item) => {
                   return <p key={item}>{item}</p>;
                 })}
               </div>
-            </ArrayItem>
-            <TextItem>
+            </Item>
+            <Item>
               <div>인원</div>
               <div>최대 {data.personnel} 명</div>
-            </TextItem>
-            <TextItem>
+            </Item>
+            <Item>
               <div>총 비용</div>
               <div>{data.totalCost}원</div>
-            </TextItem>
-            <ArrayItem>
+            </Item>
+            <Item>
               <div>지원목록</div>
               <div>
                 {data.supportIncludedInTheCost.map((item) => {
                   return <p key={item}>{item}</p>;
                 })}
               </div>
-            </ArrayItem>
-            <TextItem>
+            </Item>
+            <Item>
               <div>상세내용</div>
               <div>{data.detail}</div>
-            </TextItem>
+            </Item>
           </List>
           <List>
             <h3>우대사항</h3>
-            <TextItem>
+            <Item>
               <div>경력</div>
               <div>{data.desiredExperience} 년차</div>
-            </TextItem>
-            <TextItem>
+            </Item>
+            <Item>
               <div>자격사항</div>
               <div>{data.desiredQualifications}</div>
-            </TextItem>
-            <ArrayItem>
+            </Item>
+            <Item>
               <div>원하는 스타일</div>
               <div>
                 {data.preferredLectureOrConsultingStyle.map((item) => {
                   return <p key={item}>{item}</p>;
                 })}
               </div>
-            </ArrayItem>
+            </Item>
           </List>
         </>
       )}
