@@ -13,7 +13,6 @@ import { userAtom } from "@/atoms/auth";
 
 /**components */
 import { MultipleSelection } from "@/components/Molecules/CheckboxLabel";
-import Interview from "@/components/Molecules/Interview";
 import InputLabel from "@/components/Molecules/InputLabel";
 import {
   ContentActionBar,
@@ -27,6 +26,7 @@ import type { TokenType } from "@/types/auth";
 import { Lecture } from "@/types/lecture";
 import { InputList } from "@/components/Molecules/InputList";
 import { SelectRegion } from "@/components/Molecules/SelectRegion";
+import Interviews from "@/components/Molecules/Interviews";
 
 const Wrap = styled.div`
   padding: 50px;
@@ -154,6 +154,7 @@ export const LectureForm = ({
   };
 
   const onChange = useCallback((name: string, type, checked, newValue) => {
+    console.log(name, newValue);
     setValues((prevValues) => {
       // 배열인경우
       if (Array.isArray(prevValues[name])) {
@@ -194,7 +195,7 @@ export const LectureForm = ({
     },
     []
   );
-  console.log(values.isLongDistance, "<<isLongDistance");
+  console.log(values.questions, "<<isLongDistance");
 
   return (
     <div>
@@ -236,7 +237,7 @@ export const LectureForm = ({
           onChange={onChange}
         />
 
-        <SelectRegion>
+        <SelectRegion handleClick={handleClick} name="availableRegions">
           <SelectRegion.CitySelect />
           <SelectRegion.RegionDetailSelect />
           <SelectRegion.SelectedList />
@@ -575,22 +576,13 @@ export const LectureForm = ({
           <InputList.List />
         </InputList>
 
-        <Interview
-          question="강의 분야에 대한 당신의 전문성을 어떻게 기르셨나요?"
-          name="interview1"
-          value={values.interview1}
-          onChange={onChange}
-        />
-        <Interview
-          question="강의/컨설팅을 준비하는 과정에서 가장 중요하게 생각하는 부분은 무엇인가요?"
-          name="interview2"
-          value={values.interview2}
-          onChange={onChange}
-        />
-        <Interview
-          question="참여자들과의 상호작용을 어떻게 촉진하나요?"
-          name="interview3"
-          value={values.interview3}
+        <Interviews
+          values={{
+            interview1: values.interview1,
+            interview2: values.interview2,
+            interview3: values.interview3,
+          }}
+          handleClick={handleClick}
           onChange={onChange}
         />
       </div>
