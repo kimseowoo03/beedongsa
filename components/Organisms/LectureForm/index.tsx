@@ -237,7 +237,11 @@ export const LectureForm = ({
           onChange={onChange}
         />
 
-        <SelectRegion handleClick={handleClick} name="availableRegions">
+        <SelectRegion
+          handleClick={handleClick}
+          name="availableRegions"
+          value={values.availableRegions}
+        >
           <SelectRegion.CitySelect />
           <SelectRegion.RegionDetailSelect />
           <SelectRegion.SelectedList />
