@@ -22,6 +22,7 @@ export interface Lecture {
   includedDetails: string;
   isLongDistance: "Y" | "N";
   linkAttached: Array<string>;
+  questions: Array<string>;
   interview1: string;
   interview2: string;
   interview3: string;
