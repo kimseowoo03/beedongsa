@@ -364,15 +364,17 @@ interface SelectRegionMainProps {
     name: string;
   }) => void;
   name: string;
+  value: Array<string>;
 }
 const SelectRegionMain = ({
   children,
   handleClick,
   name,
+  value,
 }: SelectRegionMainProps) => {
   const [selectedCity, setSelectedCity] = useState("");
   const [selectedRegionDetail, setSelectedRegionDetail] = useState("");
-  const [selectedList, setSelectedList] = useState([]);
+  const [selectedList, setSelectedList] = useState(value ? value : []);
 
   const handleCityChange = (city: string) => {
     setSelectedCity(() => city);
@@ -499,7 +501,11 @@ const SelectedList = () => {
   );
 };
 
-export const SelectRegion = Object.assign(SelectRegionMain, {
+const areEqual = (prevProps, nextProps) => {
+  return prevProps.value === nextProps.value;
+};
+
+export const SelectRegion = Object.assign(memo(SelectRegionMain, areEqual), {
   CitySelect,
   RegionDetailSelect,
   AddButton,
