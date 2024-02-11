@@ -40,7 +40,7 @@ const LectureList = ({ ProfileData }: LectureListProps) => {
       <ListHeader onClick={() => setShowList((prev) => !prev)}>
         <h2> {data.title}</h2>
         <div>
-          <Link href={`/profile/client/lecture-edit/${id}`}>수정</Link>
+          <Link href={`/profile/educator/lecture-edit/${id}`}>수정</Link>
           <ToggleIcon isClicked={showList} />
         </div>
       </ListHeader>

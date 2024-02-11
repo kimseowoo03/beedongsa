@@ -23,7 +23,11 @@ export const ProfileEducatorHeader = ({
         <div>
           <ProfileInfoCard.MoreInfo>
             {educatorType.map((item) => {
-              return <>{item === "lecture" ? "강사" : "컨설턴트"}</>;
+              return (
+                <span key={item}>
+                  {item === "lecture" ? "강사 " : "컨설턴트"}
+                </span>
+              );
             })}
           </ProfileInfoCard.MoreInfo>
           <ProfileInfoCard.MoreInfo>{email}</ProfileInfoCard.MoreInfo>
