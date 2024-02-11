@@ -76,7 +76,7 @@ const InputListMain = ({
   const [inputValue, setInputValue] = useState("");
   const [inputExplanationValue, setinputExplanationValue] = useState("");
 
-  const [itemList, setItemList] = useState([]);
+  const [itemList, setItemList] = useState(value ? value : []);
 
   const handleAddItem = () => {
     const newEntry = `${inputValue} ${inputExplanationValue}`;
