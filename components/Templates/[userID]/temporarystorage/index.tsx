@@ -1,14 +1,14 @@
 import { ContentActionBar } from "@/components/Molecules/ContentActionBar";
 import { TemporaryStorageList } from "@/components/Organisms/TemporaryStorageList";
 import { ProfileAnnouncementDatasType } from "@/types/profile";
-import type { UserType } from "@/types/user";
+import type { ClientUser, EducatorUser } from "@/types/user";
 
 interface TemporaryStorageProps {
-  userType: UserType;
+  userData: EducatorUser | ClientUser;
   TemporaryStorageDatas: ProfileAnnouncementDatasType[];
 }
 export const TemporaryStorage = ({
-  userType,
+  userData,
   TemporaryStorageDatas,
 }: TemporaryStorageProps) => {
   return (
@@ -17,7 +17,7 @@ export const TemporaryStorage = ({
         <p>총 {TemporaryStorageDatas.length}개</p>
       </ContentActionBar>
       <TemporaryStorageList
-        userType={userType}
+        userData={userData}
         TemporaryStorageDatas={TemporaryStorageDatas}
       />
     </>

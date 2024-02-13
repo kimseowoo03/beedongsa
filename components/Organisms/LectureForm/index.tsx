@@ -92,6 +92,7 @@ export const LectureForm = ({
   lectureID: id,
 }: LectureFormProps) => {
   const [{ idToken, email: registeredEmail }] = useAtom(userAtom);
+  const userID = registeredEmail.split("@")[0];
 
   const initialValues: Lecture = {
     registeredEmail,
@@ -148,7 +149,7 @@ export const LectureForm = ({
     mutation.mutate(mutateData, {
       onSuccess: (response) => {
         alert(response.message);
-        location.replace("/profile");
+        location.replace(`/${userID}`);
       },
     });
   };

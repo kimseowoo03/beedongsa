@@ -2,7 +2,7 @@
 import { redirect } from "next/navigation";
 
 /**components */
-import TemporaryStoragePage from "./page.client";
+import ProfilePage from "./page.client";
 
 /**utils,  services, config*/
 import { transformFirestoreDocument } from "@/utils/transformFirebaseDocument";
@@ -11,17 +11,18 @@ import { refreshTokenFetch } from "@/services/refreshTokenFetch";
 import AuthHydrateAtoms from "@/configs/AuthHydrateAtoms";
 
 /**type */
+import type { ClientUser, EducatorUser } from "@/types/user";
 import type { Announcement } from "@/types/announcement";
 
-async function getUserType({
+async function getBasicUserData({
   idToken,
-  email,
+  userID,
 }: {
   idToken: string;
-  email: string;
+  userID: string;
 }) {
   const projectId = process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID;
-  const url = `https://firestore.googleapis.com/v1beta1/projects/${projectId}/databases/(default)/documents/Users/${email}`;
+  const url = `https://firestore.googleapis.com/v1beta1/projects/${projectId}/databases/(default)/documents/Users/${userID}`;
 
   try {
     const response = await fetch(url, {
@@ -32,10 +33,8 @@ async function getUserType({
     });
 
     const userDocument = await response.json();
-    //TODO: 전체 다 불러오는 것은 비효율적 나중에 개선필요
-    const userType = await userDocument.fields.type.stringValue;
 
-    return userType;
+    return userDocument;
   } catch (error) {
     console.error("Error fetching user document:", error);
     return null;
@@ -46,7 +45,7 @@ interface ProfileDataArray {
   document?: {}; // document가 옵셔널 필드임을 나타냄
   readTime: string;
 }
-async function getQueryTemporarystorageData({
+async function getQueryProfileData({
   collectionId,
   idToken,
   email,
@@ -76,7 +75,7 @@ async function getQueryTemporarystorageData({
               fieldFilter: {
                 field: { fieldPath: "temporaryStorage" },
                 op: "EQUAL",
-                value: { booleanValue: true },
+                value: { booleanValue: false },
               },
             },
           ],
@@ -104,37 +103,43 @@ async function getQueryTemporarystorageData({
   }
 }
 
-export default async function Page() {
+export default async function Page({ params }) {
+  const { userID } = params;
+
   const { idToken, email } = (await refreshTokenFetch()) ?? {
     idToken: null,
   };
+
+  //TODO: 입력한 userID와 로그인한 유저 이메일 여부
 
   //비회원인경우 홈으로 이동
   if (!idToken) {
     redirect("/");
   }
 
-  const userType = await getUserType({ idToken, email });
+  const { fields } = await getBasicUserData({ idToken, userID });
+
+  console.log(fields, "<<<<<<<<<<<fields");
+  const userData = transformFirestoreDocument<EducatorUser | ClientUser>(
+    fields
+  );
 
   const collectionId: "Announcements" | "Lectures" =
-    userType === "client" ? "Announcements" : "Lectures";
+    userData.type === "client" ? "Announcements" : "Lectures";
 
-  const TemporaryStorageDataArray = await getQueryTemporarystorageData({
+  const ProfileDataArray = await getQueryProfileData({
     collectionId,
     idToken,
     email,
   });
 
-  const TemporaryStorageDatas = TemporaryStorageDataArray[0].document
-    ? transformFirestoreArrayDocuments<Announcement>(TemporaryStorageDataArray)
+  const ProfileDatas = ProfileDataArray[0].document
+    ? transformFirestoreArrayDocuments<Announcement>(ProfileDataArray)
     : [];
 
   return (
     <AuthHydrateAtoms email={email} idToken={idToken}>
-      <TemporaryStoragePage
-        userType={userType}
-        TemporaryStorageDatas={TemporaryStorageDatas}
-      />
+      <ProfilePage userData={userData} ProfileDatas={ProfileDatas} />
     </AuthHydrateAtoms>
   );
 }

@@ -1,4 +1,4 @@
-import { LectureEdit } from "@/components/Templates/Profile/Lecture-edit";
+import { LectureEdit } from "@/components/Templates/[userID]/Lecture-edit";
 import type { Lecture } from "@/types/lecture";
 
 interface LectureEditPageProps {

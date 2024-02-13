@@ -2,15 +2,19 @@
 import { usePathname } from "next/navigation";
 
 import Header from "@/components/Organisms/Header";
+import { useAtom } from "jotai";
+import { userAtom } from "@/atoms/auth";
 
 export default function MainLayout({ children }) {
   const pathname = usePathname();
+  const [{ email }] = useAtom(userAtom);
+  const userID = email.split("@")[0];
 
   const isActionHeader =
-    pathname.startsWith("/profile/client/announcement-create") ||
-    pathname.startsWith("/profile/client/announcement-edit") ||
-    pathname.startsWith("/profile/educator/lecture-create") ||
-    pathname.startsWith("/profile/temporarystorage");
+    pathname.startsWith(`/${userID}/client/announcement-create`) ||
+    pathname.startsWith(`/${userID}/client/announcement-edit`) ||
+    pathname.startsWith(`/${userID}/educator/lecture-create`) ||
+    pathname.startsWith(`/${userID}/temporarystorage`);
 
   return (
     <>

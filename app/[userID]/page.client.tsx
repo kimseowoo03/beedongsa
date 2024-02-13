@@ -1,4 +1,4 @@
-import { Profile } from "@/components/Templates/Profile";
+import { Profile } from "@/components/Templates/[userID]";
 import type {
   ProfileAnnouncementDatasType,
   ProfileLectureDatasType,

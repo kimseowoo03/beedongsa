@@ -347,6 +347,7 @@ export const AnnouncementForm = ({
 }: AnnouncementFormProps) => {
   const [{ idToken, email: registeredEmail }] = useAtom(userAtom);
 
+  const userID = registeredEmail.split("@")[0];
   const initialValues: Announcement = {
     registeredEmail,
     title: "",
@@ -400,7 +401,7 @@ export const AnnouncementForm = ({
     mutation.mutate(mutateData, {
       onSuccess: (response) => {
         alert(response.message);
-        location.replace("/profile");
+        location.replace(`/${userID}`);
       },
     });
   };

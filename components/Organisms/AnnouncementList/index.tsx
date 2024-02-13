@@ -44,7 +44,9 @@ interface AnnouncementListProps {
   ProfileData: ProfileAnnouncementDatasType;
 }
 const AnnouncementList = ({ ProfileData }: AnnouncementListProps) => {
-  const [{ idToken }] = useAtom(userAtom);
+  const [{ email, idToken }] = useAtom(userAtom);
+  const userID = email.split("@")[0];
+
   const { id, data } = ProfileData;
 
   const [showList, setShowList] = useState(false);
@@ -75,7 +77,7 @@ const AnnouncementList = ({ ProfileData }: AnnouncementListProps) => {
         <h2> {data.title}</h2>
         <div>
           {!data.closeAnnouncement && (
-            <Link href={`/profile/client/announcement-edit/${id}`}>수정</Link>
+            <Link href={`/${userID}/announcement-edit/${id}`}>수정</Link>
           )}
           <button
             type="button"

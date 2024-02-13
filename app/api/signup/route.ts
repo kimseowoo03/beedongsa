@@ -100,8 +100,10 @@ export async function POST(request: Request) {
             },
           };
 
+    const userID = email.split("@")[0];
+
     const firestoreRes = await fetch(
-      `https://firestore.googleapis.com/v1beta1/projects/${process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID}/databases/(default)/documents/Users/${email}`,
+      `https://firestore.googleapis.com/v1beta1/projects/${process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID}/databases/(default)/documents/Users/${userID}`,
       {
         method: "PATCH",
         headers: {

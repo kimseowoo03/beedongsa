@@ -1,6 +1,5 @@
 /**react, next */
 import { useState } from "react";
-import { useMutation } from "@tanstack/react-query";
 import Link from "next/link";
 
 /**상태관리 */
@@ -20,7 +19,9 @@ interface LectureListProps {
   ProfileData: ProfileLectureDatasType;
 }
 const LectureList = ({ ProfileData }: LectureListProps) => {
-  const [{ idToken }] = useAtom(userAtom);
+  const [{ email }] = useAtom(userAtom);
+  const userID = email.split("@")[0];
+
   const { id, data } = ProfileData;
 
   const [showList, setShowList] = useState(false);
@@ -40,7 +41,7 @@ const LectureList = ({ ProfileData }: LectureListProps) => {
       <ListHeader onClick={() => setShowList((prev) => !prev)}>
         <h2> {data.title}</h2>
         <div>
-          <Link href={`/profile/educator/lecture-edit/${id}`}>수정</Link>
+          <Link href={`/${userID}/lecture-edit/${id}`}>수정</Link>
           <ToggleIcon isClicked={showList} />
         </div>
       </ListHeader>

@@ -1,4 +1,4 @@
-import { AnnouncementEdit } from "@/components/Templates/Profile/Announcement-edit";
+import { AnnouncementEdit } from "@/components/Templates/[userID]/Announcement-edit";
 import type { Announcement } from "@/types/announcement";
 
 interface AnnouncementEditPageProps {

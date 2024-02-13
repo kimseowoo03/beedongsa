@@ -20,7 +20,8 @@ interface ProfileProps {
   ProfileDatas: ProfileAnnouncementDatasType[] | ProfileLectureDatasType[];
 }
 export const Profile = ({ userData, ProfileDatas }: ProfileProps) => {
-  const { type } = userData;
+  const { type, email } = userData;
+  const userID = email.split("@")[0];
 
   return (
     <>
@@ -50,7 +51,7 @@ export const Profile = ({ userData, ProfileDatas }: ProfileProps) => {
               <div>지원관리</div>
             </Tabs.Panel>
           </Tabs>
-          <Link href="/profile/client/announcement-create">
+          <Link href={`/${userID}/announcement-create`}>
             임시 공고 등록 버튼
           </Link>
         </>
@@ -79,9 +80,7 @@ export const Profile = ({ userData, ProfileDatas }: ProfileProps) => {
               })}
             </Tabs.Panel>
           </Tabs>
-          <Link href="/profile/educator/lecture-create">
-            임시 강의 등록 버튼
-          </Link>
+          <Link href={`/${userID}/lecture-create`}>임시 강의 등록 버튼</Link>
         </>
       )}
     </>

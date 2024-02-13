@@ -1,15 +1,18 @@
 import type { ProfileAnnouncementDatasType } from "@/types/profile";
-import type { UserType } from "@/types/user";
+import type { ClientUser, EducatorUser } from "@/types/user";
 import Link from "next/link";
 
 interface TemporaryStorageListProps {
-  userType: UserType;
+  userData: EducatorUser | ClientUser;
   TemporaryStorageDatas: ProfileAnnouncementDatasType[];
 }
 export const TemporaryStorageList = ({
-  userType,
+  userData,
   TemporaryStorageDatas,
 }: TemporaryStorageListProps) => {
+  const { email } = userData;
+  const userID = email.split("@")[0];
+
   return (
     <ul>
       {TemporaryStorageDatas.map((TemporaryStorageData) => {
@@ -17,7 +20,7 @@ export const TemporaryStorageList = ({
           <li key={TemporaryStorageData.id}>
             <span>{TemporaryStorageData.createTime}</span>
             <Link
-              href={`/profile/client/announcement-edit/${TemporaryStorageData.id}`}
+              href={`/${userID}/announcement-edit/${TemporaryStorageData.id}`}
             >
               {TemporaryStorageData.data.title}
             </Link>
