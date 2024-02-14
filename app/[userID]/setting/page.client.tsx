@@ -1,3 +1,4 @@
+"use client";
 import { ProfileSetting } from "@/components/Templates/[userID]/Setting";
 import type { ClientUser, EducatorUser } from "@/types/user";
 

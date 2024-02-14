@@ -7,13 +7,13 @@ import { ClientUser, EducatorUser } from "@/types/user";
 
 async function getBasicUserData({
   idToken,
-  email,
+  userID,
 }: {
   idToken: string;
-  email: string;
+  userID: string;
 }) {
   const projectId = process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID;
-  const url = `https://firestore.googleapis.com/v1beta1/projects/${projectId}/databases/(default)/documents/Users/${email}`;
+  const url = `https://firestore.googleapis.com/v1beta1/projects/${projectId}/databases/(default)/documents/Users/${userID}`;
 
   try {
     const response = await fetch(url, {
@@ -42,10 +42,11 @@ export default async function Page() {
     redirect("/");
   }
 
-  const { fields } = await getBasicUserData({ idToken, email });
+  const userID = email.split("@")[0];
+  const { fields } = await getBasicUserData({ idToken, userID });
 
   const userData = transformFirestoreDocument<EducatorUser | ClientUser>(
-    fields
+    fields ? fields : {}
   );
 
   return (
