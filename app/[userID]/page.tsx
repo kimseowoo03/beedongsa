@@ -119,9 +119,9 @@ export default async function Page({ params }) {
 
   const { fields } = await getBasicUserData({ idToken, userID });
 
-  console.log(fields, "<<<<<<<<<<<fields");
+  console.log(fields, "<<<<<<<<<<< [userID] = fields");
   const userData = transformFirestoreDocument<EducatorUser | ClientUser>(
-    fields
+    fields ? fields : {}
   );
 
   const collectionId: "Announcements" | "Lectures" =
