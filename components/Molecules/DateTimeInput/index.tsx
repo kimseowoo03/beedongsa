@@ -2,8 +2,12 @@ import React, { createContext, memo, useContext, useState } from "react";
 import { HiOutlineXMark } from "react-icons/hi2";
 
 interface DateTimeBoxContextType {
-  date: string;
-  setDate: React.Dispatch<React.SetStateAction<string>>;
+  startDate: string;
+  setStartDate: React.Dispatch<React.SetStateAction<string>>;
+  endDate: string;
+  setEndDate: React.Dispatch<React.SetStateAction<string>>;
+  InputValue: string;
+  setInputValue: React.Dispatch<React.SetStateAction<string>>;
   startTime: string;
   setStartTime: React.Dispatch<React.SetStateAction<string>>;
   endTime: string;
@@ -15,8 +19,12 @@ interface DateTimeBoxContextType {
 }
 
 const DateTimeBoxContext = createContext<DateTimeBoxContextType>({
-  date: "",
-  setDate: () => {},
+  startDate: "",
+  setStartDate: () => {},
+  endDate: "",
+  setEndDate: () => {},
+  InputValue: "",
+  setInputValue: () => {},
   startTime: "",
   setStartTime: () => {},
   endTime: "",
@@ -45,41 +53,64 @@ const DateTimeBoxMain = ({
   handleClick,
   children,
 }: DateTimeBoxMainProps) => {
-  const [date, setDate] = useState("");
+  const [startDate, setStartDate] = useState("");
+  const [endDate, setEndDate] = useState("");
+
+  const [InputValue, setInputValue] = useState("");
+
   const [startTime, setStartTime] = useState("");
   const [endTime, setEndTime] = useState("");
-  const [schedule, setSchedule] = useState(scheduleValue ? scheduleValue : []);
+
+  const [list, setList] = useState(scheduleValue ? scheduleValue : []);
 
   const handleCreateDate = () => {
-    const newEntry = `${date}/${startTime}~${endTime}`;
+    let newEntry = "";
+    if (startDate && !endDate && InputValue) {
+      //시작날짜 + 인풋
+      newEntry = `${startDate} ${InputValue}`;
+    } else if (startDate && endDate && InputValue) {
+      // 시작 날짜 + 끝난 날짜 + 인풋
+      newEntry = `${startDate}~${endDate} ${InputValue}`;
+    } else if (startDate && startTime && endTime) {
+      // 시작 날짜 + 시작시간~끝난시간
+      newEntry = `${startDate}/${startTime}~${endTime}`;
+    }
 
-    const isDuplicate = schedule.some((entry) => entry === newEntry);
+    const isDuplicate = list.some((entry) => entry === newEntry);
 
     if (!isDuplicate) {
-      handleClick({ value: [...schedule, newEntry], name });
-      setSchedule(() => [...schedule, newEntry]);
+      handleClick({ value: [...list, newEntry], name });
+      setList(() => [...list, newEntry]);
+
+      setStartDate(() => "");
+      setEndDate(() => "");
+      setStartTime(() => "");
+      setEndTime(() => "");
+      setInputValue(() => "");
     }
   };
 
   const handleScheduleDelete = (scheduleToRemove: string) => {
-    const updatedSchedule = schedule.filter(
-      (item) => item !== scheduleToRemove
-    );
+    const updatedSchedule = list.filter((item) => item !== scheduleToRemove);
     handleClick({ value: updatedSchedule, name });
-    setSchedule(() => updatedSchedule);
+    setList(() => updatedSchedule);
   };
 
   return (
     <DateTimeBoxContext.Provider
       value={{
-        date,
-        setDate,
+        startDate,
+        setStartDate,
+        endDate,
+        setEndDate,
+        InputValue,
+        setInputValue,
         startTime,
         setStartTime,
         endTime,
         setEndTime,
-        schedule,
-        setSchedule,
+        schedule: list,
+        setSchedule: setList,
         handleCreateDate,
         handleScheduleDelete,
       }}
@@ -93,29 +124,51 @@ interface DateTimeBoxDateProps {
   value?: string;
   name?: string;
   onChange?: (name: string, type, checked: boolean, newValue) => void;
+  isEndDate?: boolean;
 }
-const DateTimeBoxDate = ({ value, name, onChange }: DateTimeBoxDateProps) => {
-  const { date, setDate } = useContext(DateTimeBoxContext);
+const DateTimeBoxDate = ({
+  value,
+  name,
+  onChange,
+  isEndDate = false,
+}: DateTimeBoxDateProps) => {
+  const { startDate, setStartDate, endDate, setEndDate } =
+    useContext(DateTimeBoxContext);
 
-  const DateTimeBoxDateHandle = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const DateTimeBoxDateHandle = (
+    e: React.ChangeEvent<HTMLInputElement>,
+    DateType: "start" | "end"
+  ) => {
     const { name, value: newValue, type, checked } = e.target;
+
+    //TODO: 날짜만 사용하는 경우, 이 부분은 나중에 분리
     if (onChange) {
       onChange(name, type, checked, newValue);
     } else {
       const value = e.target.value;
-      setDate(() => value);
+
+      DateType === "start"
+        ? setStartDate(() => value)
+        : setEndDate(() => value);
     }
   };
   return (
-    <label>
-      날짜:
+    <>
       <input
         type="date"
         name={name}
-        value={value ? value : date}
-        onChange={DateTimeBoxDateHandle}
+        value={value ? value : startDate}
+        onChange={(e) => DateTimeBoxDateHandle(e, "start")}
       />
-    </label>
+      {isEndDate && (
+        <input
+          type="date"
+          name={name}
+          value={value ? value : endDate}
+          onChange={(e) => DateTimeBoxDateHandle(e, "end")}
+        />
+      )}
+    </>
   );
 };
 
@@ -144,6 +197,17 @@ const DateTimeBoxTime = () => {
   );
 };
 
+const DateTimeBoxInput = () => {
+  const { InputValue, setInputValue } = useContext(DateTimeBoxContext);
+  return (
+    <input
+      type="text"
+      value={InputValue}
+      onChange={(e) => setInputValue(e.target.value)}
+    />
+  );
+};
+
 const DateTimeBoxCreateButton = () => {
   const { handleCreateDate } = useContext(DateTimeBoxContext);
   return (
@@ -169,6 +233,7 @@ const DateTimeBoxScheduleList = () => {
 export const DateTimeBox = Object.assign(DateTimeBoxMain, {
   Date: memo(DateTimeBoxDate),
   Time: memo(DateTimeBoxTime),
+  Input: memo(DateTimeBoxInput),
   CreateButton: memo(DateTimeBoxCreateButton),
-  ScheduleList: memo(DateTimeBoxScheduleList),
+  List: memo(DateTimeBoxScheduleList),
 });
