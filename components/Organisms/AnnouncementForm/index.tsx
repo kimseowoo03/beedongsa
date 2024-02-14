@@ -649,7 +649,7 @@ export const AnnouncementForm = ({
           <DateTimeBox.Date />
           <DateTimeBox.Time />
           <DateTimeBox.CreateButton />
-          <DateTimeBox.ScheduleList />
+          <DateTimeBox.List />
         </DateTimeBox>
         <DateTimeBox>
           <DateTimeBox.Date
