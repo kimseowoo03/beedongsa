@@ -16,7 +16,9 @@ export default function AuthHydrateAtoms({
   email,
   idToken,
 }: AuthHydrateAtomsProps) {
-  useHydrateAtoms([[userAtom, { idToken, email }]]);
+  const userID = email.split("@")[0];
+
+  useHydrateAtoms([[userAtom, { idToken, email, userID }]]);
 
   return <>{children}</>;
 }
