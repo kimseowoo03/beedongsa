@@ -1,4 +1,5 @@
 import { useCallback, useState } from "react";
+import { useMutation } from "@tanstack/react-query";
 
 import { MultipleSelection } from "@/components/Molecules/CheckboxLabel";
 import {
@@ -6,11 +7,15 @@ import {
   ContentActionBar,
 } from "@/components/Molecules/ContentActionBar";
 import { DateTimeBox } from "@/components/Molecules/DateTimeInput";
+import InputLabel from "@/components/Molecules/InputLabel";
 
 import styled from "@emotion/styled";
 
+import { useAtom } from "jotai";
+import { userAtom } from "@/atoms/auth";
+
+import type { TokenType } from "@/types/auth";
 import type { EducatorUser } from "@/types/user";
-import InputLabel from "@/components/Molecules/InputLabel";
 
 const EtcInput = styled.input`
   width: 80px;
@@ -24,16 +29,43 @@ const EtcInput = styled.input`
   }
 `;
 
+interface requestSettingProps {
+  values: EducatorUser;
+  userID: string;
+  token: NonNullable<TokenType>;
+}
+const requestSetting = async ({
+  values,
+  userID,
+  token,
+}: requestSettingProps): Promise<any> => {
+  const response = await fetch(`/api/setting`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+    },
+    body: JSON.stringify({ values, userID }),
+  });
+
+  if (!response.ok) {
+    const errorData = await response.json();
+    throw new Error(errorData.errorMessage);
+  }
+  return response.json();
+};
+
 interface EducatorSettingFormProps {
   userData: EducatorUser;
 }
 export const EducatorSettingForm = ({ userData }: EducatorSettingFormProps) => {
+  const [{ idToken, email, userID }] = useAtom(userAtom);
+
   const initialValues: EducatorUser = {
     type: "educator",
     name: "",
     email: "",
     phoneNumber: undefined,
-    password: "",
     serviceTermsAccepted: true,
     privacyPolicyAgreed: true,
     eventEnabled: false,
@@ -49,6 +81,10 @@ export const EducatorSettingForm = ({ userData }: EducatorSettingFormProps) => {
 
   const [etcCategory, setEtcCategory] = useState("");
   const [values, setValues] = useState(initialValues);
+
+  const mutation = useMutation({
+    mutationFn: requestSetting,
+  });
 
   const onChange = useCallback((name: string, type, checked, newValue) => {
     setValues((prevValues) => {
@@ -83,7 +119,17 @@ export const EducatorSettingForm = ({ userData }: EducatorSettingFormProps) => {
     []
   );
 
-  const submitHandler = () => {};
+  const submitHandler = () => {
+    mutation.mutate(
+      { values, userID, token: idToken },
+      {
+        onSuccess: (response) => {
+          alert(response.message);
+          location.replace(`/${userID}`);
+        },
+      }
+    );
+  };
 
   return (
     <div>
