@@ -16,6 +16,7 @@ import { userAtom } from "@/atoms/auth";
 
 import type { TokenType } from "@/types/auth";
 import type { EducatorUser } from "@/types/user";
+import UploadFile from "@/components/Molecules/UploadFile";
 
 const EtcInput = styled.input`
   width: 80px;
@@ -140,6 +141,7 @@ export const EducatorSettingForm = ({ userData }: EducatorSettingFormProps) => {
           </button>
         </ActionBox>
       </ContentActionBar>
+      <UploadFile token={idToken} />
       <InputLabel
         label="총 경력"
         type="text"
