@@ -1,5 +1,5 @@
 "use client";
-import { ProfileSetting } from "@/components/Templates/[userID]/Setting";
+import { ProfileSetting } from "@/components/Templates/Setting";
 import type { ClientUser, EducatorUser } from "@/types/user";
 
 interface ProfileSettingPageProps {
