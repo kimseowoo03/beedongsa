@@ -1,46 +1,55 @@
-import { transformToFirestoreFormat } from "@/utils/transformFirebaseFormat";
-
 export async function POST(request: Request) {
   const token = request.headers.get("Authorization").split(" ")[1];
   if (!token) {
     throw new Error("유효하지 않은 사용자입니다.");
   }
 
-  const data = await request.formData();
+  const formData = await request.formData();
+  const files: File[] = [];
+  formData.forEach((value, key) => {
+    if (key === "files" && value instanceof File) {
+      files.push(value);
+    }
+  });
 
-  console.log("files ----------------------------------------");
-  console.log(data);
+  const url = `https://firebasestorage.googleapis.com/v1beta/projects/${process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID}/buckets/${process.env.NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET}:addFirebase`;
 
   try {
-    // const firestoreRes = await fetch(
-    //   `https://storage.googleapis.com/upload/storage/v1/b/${process.env.NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET}/o?uploadType=media&name=portfolio`,
-    //   {
-    //     method: 'POST',
-    //     headers: {
-    //       'Authorization': `Bearer ${token}`,
-    //       'Content-Type': 'application/octet-stream',
-    //     },
-    //     body: data,
-    //   }
-    // );
-    // const firestoreUserDataRes = await firestoreRes.json();
-    // console.log("---------Setting-----------");
-    // console.log(firestoreBodyData);
-    // console.log("---------Setting-----------");
-    // if (firestoreUserDataRes.error) {
-    //   throw new Error(firestoreUserDataRes.error.message);
-    // }
-    // return new Response(
-    //   JSON.stringify({
-    //     data: firestoreUserDataRes,
-    //     message: "정보 저장 완료",
-    //   }),
-    //   {
-    //     status: 200,
-    //   }
-    // );
+    const firestoreRes = await fetch(url, {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        name: files[0].name,
+        contentType: files[0].type,
+        file: files[0],
+      }),
+    });
+    const firestoreUserDataRes = await firestoreRes.json();
+    console.log(
+      "------------------------console.log(firestoreRes)console.log(firestoreRes)console.log(firestoreRes)console.log(firestoreRes)"
+    );
+    console.log(firestoreUserDataRes);
+
+    if (firestoreUserDataRes.error) {
+      throw new Error(firestoreUserDataRes.error.message);
+    }
+
+    console.log(firestoreUserDataRes, "<<firestoreUserDataRes");
+
+    return new Response(
+      JSON.stringify({
+        data: "",
+        message: "업로드 완료",
+      }),
+      {
+        status: 200,
+      }
+    );
   } catch (error) {
-    return new Response(JSON.stringify({ errorMessage: error.message }), {
+    return new Response(JSON.stringify({ message: error.message }), {
       status: 500,
     });
   }
