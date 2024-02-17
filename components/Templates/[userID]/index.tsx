@@ -9,6 +9,9 @@ import { Tabs } from "@/components/Molecules/Tabs";
 import LectureList from "@/components/Organisms/LectureList";
 import ProfileDetailInfo from "@/components/Organisms/ProfileDetailInfo";
 
+import { useAtom } from "jotai";
+import { userAtom } from "@/atoms/auth";
+
 import type { ClientUser, EducatorUser } from "@/types/user";
 import type {
   ProfileAnnouncementDatasType,
@@ -20,8 +23,8 @@ interface ProfileProps {
   ProfileDatas: ProfileAnnouncementDatasType[] | ProfileLectureDatasType[];
 }
 export const Profile = ({ userData, ProfileDatas }: ProfileProps) => {
-  const { type, email } = userData;
-  const userID = email.split("@")[0];
+  const { type } = userData;
+  const [{ userID, email, idToken }] = useAtom(userAtom);
 
   return (
     <>
