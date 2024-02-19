@@ -2,16 +2,47 @@ import { TokenType } from "@/types/auth";
 import { HiOutlineXMark } from "react-icons/hi2";
 import React, { useState } from "react";
 import { useMutation } from "@tanstack/react-query";
-
+import Resizer from "react-image-file-resizer";
 interface uploadFileProps {
   files: File[];
   token: NonNullable<TokenType>;
 }
+
+const resizeFile = (file: File): Promise<Blob> =>
+  new Promise((resolve, reject) => {
+    const outputFormat = file.type === "image/png" ? "PNG" : "JPEG";
+
+    Resizer.imageFileResizer(
+      file, // 파일 객체
+      700, // 최대 너비
+      700, // 최대 높이
+      outputFormat, // 변환될 이미지 형식
+      70, // 품질
+      0, // 회전
+      (uri) => {
+        // 'file' 타입으로 반환될 경우, Blob 형식으로 변환
+        if (uri instanceof Blob) {
+          // 이미 Blob이면 그대로 사용
+          resolve(uri);
+        }
+      },
+      "file" // 반환될 파일 형식 (base64, blob, file 중 선택)
+    );
+  });
+
 const uploadFileFn = async ({ files, token }: uploadFileProps) => {
   const formData = new FormData();
 
+  console.log("압축 전", files);
+
   for (const file of files) {
-    formData.append("files", file);
+    try {
+      const resizedImage = await resizeFile(file);
+      console.log("압축후", resizedImage);
+      formData.append("files", resizedImage);
+    } catch (err) {
+      console.error("Resize error:", err);
+    }
   }
 
   const response = await fetch(`/api/setting/portfolio`, {
