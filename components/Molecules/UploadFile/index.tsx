@@ -1,11 +1,18 @@
-import { TokenType } from "@/types/auth";
-import { HiOutlineXMark } from "react-icons/hi2";
 import React, { useState } from "react";
 import { useMutation } from "@tanstack/react-query";
 import Resizer from "react-image-file-resizer";
+
+import { storage } from "@/app/firebaseConfig";
+import { ref, uploadBytes } from "firebase/storage";
+
+import { HiOutlineXMark } from "react-icons/hi2";
+
+import { useAtom } from "jotai";
+import { userAtom } from "@/atoms/auth";
+
 interface uploadFileProps {
   files: File[];
-  token: NonNullable<TokenType>;
+  userID: string;
 }
 
 const resizeFile = (file: File): Promise<Blob> =>
@@ -14,10 +21,10 @@ const resizeFile = (file: File): Promise<Blob> =>
 
     Resizer.imageFileResizer(
       file, // 파일 객체
-      700, // 최대 너비
-      700, // 최대 높이
+      600, // 최대 너비
+      600, // 최대 높이
       outputFormat, // 변환될 이미지 형식
-      70, // 품질
+      60, // 품질
       0, // 회전
       (uri) => {
         // 'file' 타입으로 반환될 경우, Blob 형식으로 변환
@@ -30,40 +37,44 @@ const resizeFile = (file: File): Promise<Blob> =>
     );
   });
 
-const uploadFileFn = async ({ files, token }: uploadFileProps) => {
-  const formData = new FormData();
+const uploadFileFn = async ({
+  files,
+  userID,
+}: uploadFileProps): Promise<{ message: string; uploads: any[] }> => {
+  console.log("실행됨");
 
-  console.log("압축 전", files);
+  const uploadResults = await Promise.all(
+    files.map(async (file) => {
+      const fileRef = ref(storage, `${userID}/${file.name}`);
+      const metadata = { contentType: file.type };
 
-  for (const file of files) {
-    try {
-      const resizedImage = await resizeFile(file);
-      console.log("압축후", resizedImage);
-      formData.append("files", resizedImage);
-    } catch (err) {
-      console.error("Resize error:", err);
-    }
-  }
+      if (file.type === "image/png" || file.type === "image/jpeg") {
+        const resizedImage = await resizeFile(file);
+        file = new File([resizedImage], file.name, {
+          type: file.type,
+        });
+      }
 
-  const response = await fetch(`/api/setting/portfolio`, {
-    method: "POST",
-    headers: {
-      Authorization: `Bearer ${token}`,
-    },
-    body: formData,
-  });
+      const uploadResult = await uploadBytes(fileRef, file, metadata);
+      console.log(
+        `${file.type} file uploaded successfully`,
+        uploadResult.metadata
+      );
 
-  if (!response.ok) {
-    const errorData = await response.json();
-    throw new Error(errorData.errorMessage);
-  }
-  return response.json();
+      return uploadResult.metadata;
+    })
+  );
+
+  // 모든 파일이 업로드되었음을 알리는 메시지와 함께 메타데이터 배열을 반환합니다.
+  return {
+    message: "All files have been uploaded successfully.",
+    uploads: uploadResults,
+  };
 };
 
-interface UploadFileProps {
-  token: NonNullable<TokenType>;
-}
-const UploadFile = ({ token }: UploadFileProps) => {
+const UploadFile = () => {
+  const [{ userID }] = useAtom(userAtom);
+
   const [files, setFiles] = useState<File[]>([]);
 
   const handleFileChange = (event) => {
@@ -76,19 +87,19 @@ const UploadFile = ({ token }: UploadFileProps) => {
   });
 
   const uploadFile = async () => {
-    if (!files) {
+    if (!files.length) {
       alert("파일을 선택해주세요.");
       return;
     }
-    console.log(files[0], "file");
+
     mutation.mutate(
       {
         files,
-        token,
+        userID,
       },
       {
-        onSuccess: (response) => {
-          alert(response.message);
+        onSuccess: (data) => {
+          alert(data.message); // 성공 메시지 출력
         },
       }
     );

@@ -141,7 +141,7 @@ export const EducatorSettingForm = ({ userData }: EducatorSettingFormProps) => {
           </button>
         </ActionBox>
       </ContentActionBar>
-      <UploadFile token={idToken} />
+      <UploadFile />
       <InputLabel
         label="총 경력"
         type="text"
