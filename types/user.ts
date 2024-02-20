@@ -20,6 +20,7 @@ export interface EducatorUser extends User {
   certificate: Array<string>;
   etcRecord: Array<string>;
   education: Array<string>;
+  portfolios: Array<string>;
 }
 
 export interface ClientUser extends User {
