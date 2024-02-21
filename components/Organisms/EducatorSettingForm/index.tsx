@@ -16,14 +16,13 @@ import { userAtom } from "@/atoms/auth";
 
 import type { TokenType } from "@/types/auth";
 import type { EducatorUser } from "@/types/user";
-import UploadFile from "@/components/Molecules/UploadFile";
 
 const EtcInput = styled.input`
   width: 80px;
   box-sizing: border-box;
   padding: 4px;
   border: none;
-  border-bottom: 1px solid var(--gray-sub1);
+  border-bottom: 1px solid var(--gray-03);
 
   &:focus {
     outline: none;
@@ -40,7 +39,7 @@ const requestSetting = async ({
   userID,
   token,
 }: requestSettingProps): Promise<any> => {
-  const response = await fetch(`/api/setting`, {
+  const response = await fetch(`/api/user/setting`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -141,7 +140,6 @@ export const EducatorSettingForm = ({ userData }: EducatorSettingFormProps) => {
           </button>
         </ActionBox>
       </ContentActionBar>
-      <UploadFile />
       <InputLabel
         label="총 경력"
         type="text"
