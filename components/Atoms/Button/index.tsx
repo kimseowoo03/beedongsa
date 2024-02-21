@@ -3,12 +3,12 @@ import styled from "@emotion/styled";
 const ButtonWrap = styled.button`
   box-sizing: border-box;
   width: 100%;
-  padding: 16px 24px;
+  height: 40px;
   border-radius: 10px;
   background: var(--primary-color-y);
   border: none;
 
-  font-size: var(--font-size-xs);
+  font-size: var(--font-size-xxs);
   color: var(--font-color-1);
   font-weight: var(--font-weight-bold);
   cursor: pointer;
