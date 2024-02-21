@@ -7,7 +7,7 @@ const CheckboxWrap = styled.div`
   display: inline-flex;
 
   path {
-    fill: var(--gray-sub1);
+    fill: var(--gray-03);
   }
 
   .checkboxInput {

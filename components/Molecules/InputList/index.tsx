@@ -17,7 +17,7 @@ const Wrap = styled.div`
   input {
     padding: 12px 16px;
     border-radius: var(--border-radius);
-    border: 1px solid var(--gray-sub1);
+    border: 1px solid var(--gray-03);
   }
 
   input:focus {

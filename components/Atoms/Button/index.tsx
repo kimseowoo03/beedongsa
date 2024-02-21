@@ -15,7 +15,7 @@ const ButtonWrap = styled.button`
 
   &:disabled {
     color: #fff;
-    background: var(--gray-sub1);
+    background: var(--gray-03);
     cursor: not-allowed;
   }
 `;

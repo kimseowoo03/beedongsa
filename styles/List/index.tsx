@@ -39,7 +39,7 @@ export const ItemColum = styled.li`
     flex-direction: column;
     gap: 6px;
     font-size: var(--font-size-xxs);
-    color: var(--gray-sub2);
+    color: var(--gray-06);
   }
 `;
 
@@ -57,7 +57,7 @@ export const Item = styled.li`
     flex-direction: column;
     gap: 6px;
     font-size: var(--font-size-xxs);
-    color: var(--gray-sub2);
+    color: var(--gray-06);
   }
 `;
 
@@ -67,7 +67,7 @@ export const DateItem = styled.li`
   > div:first-of-type {
     width: 180px;
     font-size: var(--font-size-xxs);
-    color: var(--gray-sub2);
+    color: var(--gray-06);
   }
   > div:last-of-type {
     display: flex;

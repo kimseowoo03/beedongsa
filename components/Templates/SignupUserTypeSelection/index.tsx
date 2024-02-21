@@ -28,7 +28,7 @@ const TypeCard = styled.div`
   gap: 40px;
   padding: 40px 25px;
   border-radius: var(--border-radius);
-  border: 2px solid var(--gray-sub1);
+  border: 2px solid var(--gray-03);
   background: #fff;
   transition: border 0.2s ease;
 
@@ -48,7 +48,7 @@ const TypeCard = styled.div`
   .typeDescription {
     max-width: 214px;
     width: 100%;
-    color: var(--gray-sub2);
+    color: var(--gray-06);
     text-align: center;
     font-size: var(--font-size-xxx);
     font-weight: var(--font-weight-normal);

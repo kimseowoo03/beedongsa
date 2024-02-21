@@ -9,7 +9,7 @@ const Wrap = styled.div`
   align-items: center;
   height: 50px;
   background-color: #fff;
-  border-bottom: 1px solid var(--gray-sub1);
+  border-bottom: 1px solid var(--gray-03);
 
   //상단 고정
   position: sticky;

@@ -12,7 +12,7 @@ const SelectBoxTitleWrap = styled.div`
 
   padding: 12px 16px;
   border-radius: var(--border-radius);
-  border: 1px solid var(--gray-sub1);
+  border: 1px solid var(--gray-03);
   font-size: var(--font-size-xxs);
   color: var(--font-color-1);
 
@@ -32,7 +32,7 @@ const SelectBoxSelectWrap = styled.ul`
   color: var(--font-color-1);
   margin-top: 4px;
   border-radius: var(--border-radius);
-  border: 1px solid var(--gray-sub1);
+  border: 1px solid var(--gray-03);
 
   height: 180px;
   overflow-y: scroll;

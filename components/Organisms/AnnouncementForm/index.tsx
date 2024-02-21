@@ -294,7 +294,7 @@ const EtcInput = styled.input`
   box-sizing: border-box;
   padding: 4px;
   border: none;
-  border-bottom: 1px solid var(--gray-sub1);
+  border-bottom: 1px solid var(--gray-03);
 
   &:focus {
     outline: none;

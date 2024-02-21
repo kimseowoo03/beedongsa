@@ -51,7 +51,7 @@ const ResetPasswordSectionWrap = styled.section`
   }
   .description {
     text-align: center;
-    color: var(--gray-sub2);
+    color: var(--gray-06);
     font-size: var(--font-size-xs);
   }
 `;

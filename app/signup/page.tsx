@@ -34,7 +34,7 @@ const SignupSectionWrap = styled.section`
     }
     .description {
       text-align: center;
-      color: var(--gray-sub2);
+      color: var(--gray-06);
       font-size: var(--font-size-xs);
       font-weight: var(--font-weight-regular);
       margin: 10px 0 40px 0;
