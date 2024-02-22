@@ -1,3 +1,5 @@
+import Link from "next/link";
+
 import {
   DateItem,
   Item,
@@ -6,15 +8,23 @@ import {
   ListTitle,
   ListWrap,
 } from "@/styles/List";
+
+import UploadFile from "@/components/Molecules/UploadFile";
+
 import type { EducatorUser } from "@/types/user";
-import Link from "next/link";
 
 interface ProfileDetailInfoProps {
   userData: EducatorUser;
 }
 const ProfileDetailInfo = ({ userData }: ProfileDetailInfoProps) => {
-  const { experience, experienceRecord, certificate, etcRecord, education } =
-    userData;
+  const {
+    experience,
+    experienceRecord,
+    certificate,
+    etcRecord,
+    education,
+    portfolios,
+  } = userData;
   return (
     <>
       <ListHeader>
@@ -72,6 +82,8 @@ const ProfileDetailInfo = ({ userData }: ProfileDetailInfoProps) => {
           })}
         </List>
       </ListWrap>
+
+      <UploadFile userFiles={portfolios} />
     </>
   );
 };

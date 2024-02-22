@@ -5,11 +5,165 @@ import Resizer from "react-image-file-resizer";
 import { storage } from "@/app/firebaseConfig";
 import { ref, uploadBytes } from "firebase/storage";
 
+import Button from "@/components/Atoms/Button";
+
+import styled from "@emotion/styled";
 import { HiOutlineXMark } from "react-icons/hi2";
+import { GoFile } from "react-icons/go";
+import { Hr } from "@/styles/htmlStyles";
 
 import { useAtom } from "jotai";
 import { userAtom } from "@/atoms/auth";
-import { TokenType } from "@/types/auth";
+
+import type { TokenType } from "@/types/auth";
+
+const UploadModalWrap = styled.div`
+  width: 500px;
+  height: 400px;
+
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  z-index: 110;
+  padding: 40px;
+  border-radius: 16px;
+  box-sizing: border-box;
+  letter-spacing: -1px;
+  background-color: var(--white);
+  box-shadow: 0 0 5px 0 rgba(0, 0, 0, 0.15);
+  transform: translateY(-50%) translateX(-50%) translateZ(0);
+
+  .title {
+    color: var(--font-color-1);
+    font-size: var(--font-size-s);
+    margin-bottom: var(--gap-02);
+  }
+  .explanation {
+    color: var(--gray-08);
+    font-size: var(--font-size-xxs);
+    margin-bottom: var(--gap);
+  }
+`;
+
+const FileSelectBox = styled.div`
+  display: flex;
+  height: 40px;
+  gap: var(--gap-02);
+
+  .selectedFile {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    gap: var(--gap-02);
+
+    padding: 0 12px;
+    width: 100%;
+
+    background-color: var(--gray-02);
+    border: 1px solid var(--gray-03);
+    border-radius: var(--radius);
+
+    color: var(--gray-06);
+    font-size: var(--font-size-xxs);
+  }
+  .fileSelectBox {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    width: 100%;
+    height: 100%;
+    padding: 10px;
+
+    font-size: var(--font-size-xxs);
+    white-space: nowrap;
+
+    background-color: var(--gray-01);
+    border: 1px solid var(--gray-11);
+    border-radius: var(--radius);
+
+    cursor: pointer;
+  }
+  input {
+    display: none;
+  }
+`;
+
+const CancelButton = styled.button`
+  width: 100%;
+  height: 40px;
+  background-color: var(--gray-02);
+  border-radius: var(--border-radius);
+  border: none;
+
+  color: var(--font-color-1);
+  font-size: var(--font-size-xxs);
+  font-weight: var(--font-weight-bold);
+
+  cursor: pointer;
+`;
+
+const Buttons = styled.div`
+  display: flex;
+  gap: var(--gap-02);
+  position: fixed;
+  bottom: 40px;
+  width: calc(100% - 80px);
+  left: 50%;
+  transform: translateX(-50%);
+`;
+
+const FilesBox = styled.ul`
+  list-style: none;
+  color: var(--font-color-1);
+
+  li {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    width: 100%;
+    height: 40px;
+
+    font-size: var(--font-size-xxs);
+    white-space: nowrap;
+
+    padding: 0 12px;
+    margin-bottom: var(--gap-02);
+    border: 1px solid var(--gray-08);
+    border-radius: var(--radius);
+
+    > div {
+      display: flex;
+      align-items: center;
+      justify-content: flex-start;
+      gap: var(--gap-01);
+    }
+  }
+  svg {
+    cursor: pointer;
+  }
+`;
+
+const FileSizeBox = styled.div`
+  padding: 1px 4px;
+  border-radius: 2px;
+  background-color: var(--gray-02);
+
+  color: var(--font-color-1);
+  font-size: var(--font-size-xxs);
+`;
+
+const BackgroundModal = styled.div`
+  overflow: auto;
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 105;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+`;
 
 const resizeFile = (file: File): Promise<Blob> =>
   new Promise((resolve, reject) => {
@@ -59,7 +213,7 @@ const uploadFileFn = async ({
 
       //1. storage에 업로드
       const uploadResult = await uploadBytes(fileRef, file, metadata);
-      value.push(file.name);
+      value.push(`${file.name}/${file.size}`);
 
       return uploadResult.metadata;
     })
@@ -88,7 +242,11 @@ const uploadFileFn = async ({
 
 const MAX_FILE_SIZE = 50 * 1024 * 1024; // 50MB
 
-const UploadFile = () => {
+interface UploadFile {
+  userFiles: string[];
+}
+const UploadFile = ({ userFiles }: UploadFile) => {
+  const [isUploadFileModal, setIsUploadFileModal] = useState(false);
   const [{ userID, idToken: token }] = useAtom(userAtom);
 
   //파일 명
@@ -143,25 +301,106 @@ const UploadFile = () => {
   };
 
   const removeFile = (fileName: string) => {
+    //1. storage에서 제거
+    //2. firestore에서 제거
+  };
+
+  const uploadRemoveFile = (fileName: string) => {
     setFiles(files.filter((file) => file.name !== fileName));
   };
 
   return (
-    <div>
-      <input type="file" onChange={handleFileChange} multiple />
-      <button onClick={uploadFile}>업로드</button>
+    <>
+      <div>
+        <button onClick={() => setIsUploadFileModal(true)}>
+          파일 추가하기
+        </button>
 
-      <ul>
-        {files.map((file) => {
-          return (
-            <li key={file.name}>
-              {file.name}
-              <HiOutlineXMark onClick={() => removeFile(file.name)} />
-            </li>
-          );
-        })}
-      </ul>
-    </div>
+        <FilesBox>
+          {userFiles.map((fileInfo) => {
+            const [name, size] = fileInfo.split("/");
+            const fileSize =
+              +size >= 1024 * 1024
+                ? `${(+size / (1024 * 1024)).toFixed(2)} MB`
+                : `${(+size / 1024).toFixed(1)} KB`;
+            return (
+              <li key={name}>
+                <div>
+                  <GoFile />
+                  <span>{name}</span>
+                  <FileSizeBox>{fileSize}</FileSizeBox>
+                </div>
+                <HiOutlineXMark onClick={() => removeFile(name)} />
+              </li>
+            );
+          })}
+        </FilesBox>
+      </div>
+
+      {isUploadFileModal && (
+        <>
+          <UploadModalWrap>
+            <p className="title">파일 첨부</p>
+            <p className="explanation">
+              파일(PDF, PNG, JPG, JPEG, GIP)은 최대 50MB까지 가능합니다.
+            </p>
+            <FileSelectBox>
+              <div className="selectedFile">
+                <GoFile />
+                {files.length > 0
+                  ? files[files.length - 1].name
+                  : "선택한 파일이 없습니다."}
+              </div>
+              <label htmlFor="file">
+                <div className="fileSelectBox">파일 선택</div>
+              </label>
+              <input
+                type="file"
+                name="file"
+                id="file"
+                onChange={handleFileChange}
+                accept=".pdf, .png, .jpg, .jpeg, .gif"
+                autoComplete="off"
+              />
+            </FileSelectBox>
+            <Hr />
+            <FilesBox>
+              {files.map((file) => {
+                const size =
+                  file.size >= 1024 * 1024
+                    ? `${(file.size / (1024 * 1024)).toFixed(2)} MB`
+                    : `${(file.size / 1024).toFixed(1)} KB`;
+
+                return (
+                  <li key={file.name}>
+                    <div>
+                      <GoFile />
+                      <span>{file.name}</span>
+                      <FileSizeBox>{size}</FileSizeBox>
+                    </div>
+                    <HiOutlineXMark
+                      onClick={() => uploadRemoveFile(file.name)}
+                    />
+                  </li>
+                );
+              })}
+            </FilesBox>
+            <Buttons>
+              <CancelButton onClick={() => setIsUploadFileModal(false)}>
+                취소
+              </CancelButton>
+              <Button
+                type="button"
+                disabled={files.length === 0}
+                text="등록"
+                onClick={uploadFile}
+              />
+            </Buttons>
+          </UploadModalWrap>
+          <BackgroundModal />
+        </>
+      )}
+    </>
   );
 };
 
