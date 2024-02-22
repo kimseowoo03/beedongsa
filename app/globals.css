@@ -16,8 +16,11 @@ a {
 
 :root {
   --gap: 24px;
+  --gap-01: 12px;
+  --gap-02: 6px;
 
   --border-radius: 10px;
+  --radius: 5px;
 
   --primary-color-y: #FFCE33;
   --primary-color-y10: #FFFAEB;
@@ -27,18 +30,18 @@ a {
   --font-color-1: #1b1b1b;
   --font-color-2: #303030;
 
-  --gray-01: #FAFAFA;
-  --gray-02: #E6E6E6;
-  --gray-03: #D1D1D1;
-  --gray-04: #BFBFBF;
-  --gray-05: #ABABAB;
-  --gray-06: #969696;
-  --gray-07: #828282;
-  --gray-08: #6E6E6E;
-  --gray-09: #595959;
-  --gray-10: #454545;
-  --gray-11: #303030;
-  --gray-12: #2B2B2B;
+  --gray-01: #FFFFFF;
+  --gray-02: #F1F1F3;
+  --gray-03: #E4E4E7;
+  --gray-04: #D7D7DB;
+  --gray-05: #C9C9CF;
+  --gray-06: #AFAFB6;
+  --gray-07: #94949E;
+  --gray-08: #797986;
+  --gray-09: #61616B;
+  --gray-10: #494950;
+  --gray-11: #303036;
+  --gray-12: #18191B;
 
   --font-size-xxl: 40px;
   --font-size-xl: 36px;
