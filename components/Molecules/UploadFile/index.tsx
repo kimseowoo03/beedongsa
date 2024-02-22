@@ -3,7 +3,7 @@ import { useMutation } from "@tanstack/react-query";
 import Resizer from "react-image-file-resizer";
 
 import { storage } from "@/app/firebaseConfig";
-import { ref, uploadBytes } from "firebase/storage";
+import { ref, uploadBytes, deleteObject } from "firebase/storage";
 
 import Button from "@/components/Atoms/Button";
 
@@ -188,69 +188,118 @@ const resizeFile = (file: File): Promise<Blob> =>
   });
 
 interface uploadFileProps {
-  files: File[];
+  registeredFiles: string[];
+  attachments: File[];
   token: NonNullable<TokenType>;
   userID: string;
 }
 const uploadFileFn = async ({
-  files,
+  registeredFiles,
+  attachments,
   token,
   userID,
 }: uploadFileProps): Promise<{ message: string; uploads: any[] }> => {
-  let value: string[] = [];
+  let value: string[] = [...registeredFiles];
 
-  const uploadResults = await Promise.all(
-    files.map(async (file) => {
-      const fileRef = ref(storage, `${userID}/${file.name}`);
-      const metadata = { contentType: file.type };
+  try {
+    await Promise.all(
+      attachments.map(async (file) => {
+        const fileRef = ref(storage, `${userID}/${file.name}`);
+        const metadata = { contentType: file.type };
 
-      if (file.type === "image/png" || file.type === "image/jpeg") {
-        const resizedImage = await resizeFile(file);
-        file = new File([resizedImage], file.name, {
-          type: file.type,
-        });
-      }
+        if (file.type === "image/png" || file.type === "image/jpeg") {
+          const resizedImage = await resizeFile(file);
+          file = new File([resizedImage], file.name, {
+            type: file.type,
+          });
+        }
 
-      //1. storage에 업로드
-      const uploadResult = await uploadBytes(fileRef, file, metadata);
-      value.push(`${file.name}/${file.size}`);
+        //1. storage에 업로드
+        const uploadResult = await uploadBytes(fileRef, file, metadata);
+        value.push(`${file.name}/${file.size}`);
 
-      return uploadResult.metadata;
-    })
-  );
+        return uploadResult.metadata;
+      })
+    );
 
-  // 모든 파일이 업로드되었음을 알리는 메시지와 함께 메타데이터 배열을 반환합니다.
-  const response = await fetch("/api/user/portfolios", {
-    method: "PATCH",
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: `Bearer ${token}`,
-    },
-    body: JSON.stringify({ userID, value }),
-  });
+    // 모든 파일이 업로드되었음을 알리는 메시지와 함께 메타데이터 배열을 반환합니다.
+    const response = await fetch("/api/user/portfolios", {
+      method: "PATCH",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify({ userID, value }),
+    });
 
-  if (!response.ok) {
-    const errorData = await response.json();
-    throw new Error(errorData.errorMessage);
+    if (!response.ok) {
+      const errorData = await response.json();
+      throw new Error(errorData.errorMessage);
+    }
+
+    return {
+      message: "All files have been uploaded successfully.",
+      uploads: value,
+    };
+  } catch (error) {
+    throw error;
   }
+};
 
-  return {
-    message: "All files have been uploaded successfully.",
-    uploads: uploadResults,
-  };
+interface removeFileProps {
+  value: string[];
+  fileName: string;
+  token: NonNullable<TokenType>;
+  userID: string;
+}
+const removeFileFn = async ({
+  value,
+  fileName,
+  token,
+  userID,
+}: removeFileProps): Promise<{ message: string; removeData: any[] }> => {
+  try {
+    const fileRef = ref(storage, `${userID}/${fileName}`);
+    // Storage에서 파일 삭제
+    await deleteObject(fileRef);
+    console.log("Storage에서 파일이 삭제되었습니다.");
+
+    // Firestore에서 파일 참조 삭제
+    const response = await fetch("/api/user/portfolios", {
+      method: "PATCH",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify({ userID, value }),
+    });
+
+    if (!response.ok) {
+      const errorData = await response.json();
+      throw new Error(errorData.errorMessage);
+    }
+
+    return {
+      message: `${fileName} 파일이 삭제되었습니다.`,
+      removeData: [],
+    };
+  } catch (error) {
+    throw error;
+  }
 };
 
 const MAX_FILE_SIZE = 50 * 1024 * 1024; // 50MB
 
 interface UploadFile {
-  userFiles: string[];
+  userFiles: string[] | undefined;
 }
 const UploadFile = ({ userFiles }: UploadFile) => {
-  const [isUploadFileModal, setIsUploadFileModal] = useState(false);
   const [{ userID, idToken: token }] = useAtom(userAtom);
 
-  //파일 명
-  const [files, setFiles] = useState<File[]>([]);
+  const [attachments, setAttachments] = useState<File[]>([]);
+  const [isUploadFileModal, setIsUploadFileModal] = useState(false);
+
+  const [registeredFiles, setRegisteredFiles] = useState(userFiles ?? []);
 
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const selectedFiles = event.target.files;
@@ -260,7 +309,7 @@ const UploadFile = ({ userFiles }: UploadFile) => {
       for (let i = 0; i < selectedFiles.length; i++) {
         const file = selectedFiles[i];
         if (file.size <= MAX_FILE_SIZE) {
-          setFiles((prev) => [...prev, file]);
+          setAttachments((prev) => [...prev, file]);
         } else {
           alert(`${file.name} 파일의 크기가 50MB를 초과하여 제외되었습니다.`);
         }
@@ -271,7 +320,7 @@ const UploadFile = ({ userFiles }: UploadFile) => {
       if (file.size > MAX_FILE_SIZE) {
         alert(`${file.name} 파일의 크기가 50MB를 초과하여 제외되었습니다.`);
       } else {
-        setFiles((prev) => [...prev, file]);
+        setAttachments((prev) => [...prev, file]);
       }
     }
   };
@@ -281,32 +330,64 @@ const UploadFile = ({ userFiles }: UploadFile) => {
   });
 
   const uploadFile = async () => {
-    if (!files.length) {
+    if (!attachments.length) {
       alert("파일을 선택해주세요.");
       return;
     }
 
     mutation.mutate(
       {
-        files,
+        registeredFiles,
+        attachments,
         token,
         userID,
       },
       {
         onSuccess: (data) => {
+          setAttachments(() => []);
+          setRegisteredFiles(() => data.uploads);
+          setIsUploadFileModal(() => false);
           alert(data.message); // 성공 메시지 출력
         },
       }
     );
   };
 
+  const removeMutation = useMutation({
+    mutationFn: removeFileFn,
+  });
+
   const removeFile = (fileName: string) => {
-    //1. storage에서 제거
-    //2. firestore에서 제거
+    if (window.confirm(`${fileName} 해당 파일을 삭제하시겠습니까?`)) {
+      const value = registeredFiles.filter((file) => {
+        const [name, size] = file.split("/");
+        return name !== fileName;
+      });
+
+      removeMutation.mutate(
+        {
+          value,
+          fileName,
+          token,
+          userID,
+        },
+        {
+          onSuccess: (data) => {
+            setRegisteredFiles(() => value);
+            alert(data.message);
+          },
+        }
+      );
+    }
+  };
+
+  const cancelHandler = () => {
+    setIsUploadFileModal(() => false);
+    setAttachments(() => []);
   };
 
   const uploadRemoveFile = (fileName: string) => {
-    setFiles(files.filter((file) => file.name !== fileName));
+    setAttachments(attachments.filter((file) => file.name !== fileName));
   };
 
   return (
@@ -317,7 +398,7 @@ const UploadFile = ({ userFiles }: UploadFile) => {
         </button>
 
         <FilesBox>
-          {userFiles.map((fileInfo) => {
+          {registeredFiles.map((fileInfo) => {
             const [name, size] = fileInfo.split("/");
             const fileSize =
               +size >= 1024 * 1024
@@ -347,8 +428,8 @@ const UploadFile = ({ userFiles }: UploadFile) => {
             <FileSelectBox>
               <div className="selectedFile">
                 <GoFile />
-                {files.length > 0
-                  ? files[files.length - 1].name
+                {attachments.length > 0
+                  ? attachments[attachments.length - 1].name
                   : "선택한 파일이 없습니다."}
               </div>
               <label htmlFor="file">
@@ -365,7 +446,7 @@ const UploadFile = ({ userFiles }: UploadFile) => {
             </FileSelectBox>
             <Hr />
             <FilesBox>
-              {files.map((file) => {
+              {attachments.map((file) => {
                 const size =
                   file.size >= 1024 * 1024
                     ? `${(file.size / (1024 * 1024)).toFixed(2)} MB`
@@ -386,12 +467,10 @@ const UploadFile = ({ userFiles }: UploadFile) => {
               })}
             </FilesBox>
             <Buttons>
-              <CancelButton onClick={() => setIsUploadFileModal(false)}>
-                취소
-              </CancelButton>
+              <CancelButton onClick={cancelHandler}>취소</CancelButton>
               <Button
                 type="button"
-                disabled={files.length === 0}
+                disabled={attachments.length === 0}
                 text="등록"
                 onClick={uploadFile}
               />
