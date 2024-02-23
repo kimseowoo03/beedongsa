@@ -27,11 +27,6 @@ const ProfileDetailInfo = ({ userData }: ProfileDetailInfoProps) => {
   } = userData;
   return (
     <>
-      <ListHeader>
-        <h2>상세정보</h2>
-        <Link href={`/setting`}>편집</Link>
-      </ListHeader>
-
       <ListWrap>
         <List>
           <ListTitle>총 경력 - {experience}년</ListTitle>

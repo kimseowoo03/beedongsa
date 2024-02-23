@@ -17,6 +17,7 @@ import type {
   ProfileAnnouncementDatasType,
   ProfileLectureDatasType,
 } from "@/types/profile";
+import { ListHeader, ListHeaderActions } from "@/styles/List";
 
 interface ProfileProps {
   userData: EducatorUser | ClientUser;
@@ -73,12 +74,20 @@ export const Profile = ({ userData, ProfileDatas }: ProfileProps) => {
               <Tabs.Trigger value="강의목록" text="강의목록" />
             </Tabs.List>
             <Tabs.Panel value="상세정보">
+              <ListHeader>
+                <h2>상세정보</h2>
+                <Link href={`/setting`}>편집</Link>
+              </ListHeader>
               <ProfileDetailInfo userData={userData} />
             </Tabs.Panel>
             <Tabs.Panel value="강의목록">
-              <Link href={`/${userID}/lecture-create`}>
-                임시 강의 등록 버튼
-              </Link>
+              <ListHeader>
+                <h2>강의 목록</h2>
+                <ListHeaderActions>
+                  <Link href={`/${userID}/temporarystorage`}>임시저장목록</Link>
+                  <Link href={`/${userID}/lecture-create`}>추가</Link>
+                </ListHeaderActions>
+              </ListHeader>
               {ProfileDatas.map((ProfileData) => {
                 return (
                   <LectureList key={ProfileData.id} ProfileData={ProfileData} />
