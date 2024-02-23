@@ -10,7 +10,13 @@ import { userAtom } from "@/atoms/auth";
 import ToggleIcon from "@/components/Atoms/ToggleIcon";
 
 /**styles */
-import { ItemColum, List, ListHeader, Item } from "@/styles/List";
+import {
+  ItemColum,
+  List,
+  ListHeader,
+  ListHeaderActions,
+  Item,
+} from "@/styles/List";
 
 /**types */
 import type { ProfileLectureDatasType } from "@/types/profile";
@@ -39,11 +45,12 @@ const LectureList = ({ ProfileData }: LectureListProps) => {
   return (
     <div>
       <ListHeader onClick={() => setShowList((prev) => !prev)}>
-        <h2> {data.title}</h2>
-        <div>
+        <h3> {data.title}</h3>
+        <ListHeaderActions>
+          <div>{data.administratorApproval ? "승인완료" : "검토중"}</div>
           <Link href={`/${userID}/lecture-edit/${id}`}>수정</Link>
           <ToggleIcon isClicked={showList} />
-        </div>
+        </ListHeaderActions>
       </ListHeader>
       {showList && (
         <>
