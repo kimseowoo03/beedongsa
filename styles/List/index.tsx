@@ -13,6 +13,11 @@ export const ListHeader = styled.div`
   color: var(--font-color-1);
 `;
 
+export const ListHeaderActions = styled.div`
+  display: flex;
+  flex-direction: row;
+`;
+
 export const ListTitle = styled.p`
   font-size: var(--font-size-s);
   font-weight: var(--font-weight-bold);
