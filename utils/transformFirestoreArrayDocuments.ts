@@ -1,24 +1,36 @@
 import { transformFirestoreDocument } from "./transformFirebaseDocument";
 
+interface Document {
+  name: string;
+  fields: object;
+  createTime: string;
+  updateTime: string;
+}
+
 /**
- * Firestore에서 받은 1개 이상의 문서 데이터를 변환하여 새로운 배열을 만듭니다.
+ * Firestore에서 데이터들을 받아올 때 변환하여 새로운 배열을 만듭니다.
  *
- * @param documents Firestore에서 응답받은 문서 데이터 배열
+ * @param resData Firestore에서 여러개 조회한 후 응답받은 데이터
  * @returns 각 문서에 대한 객체 배열. 각 객체는 다음을 포함합니다:
  *          id - 문서의 고유 ID
  *          data - 변환된 데이터 객체, T 타입
  */
-export const transformFirestoreArrayDocuments = <T>(
-  documents: any[]
-): { id: string; data: T; createTime: string }[] => {
-  return documents.map((doc) => {
-    const docData = doc.document;
-    const transformedObject = transformFirestoreDocument<T>(docData.fields);
-    const docId = docData.name.split("/").pop();
+export const transformFirestoreArrayDocuments = <T>(resData: {
+  documents: Document[];
+}): { id: string; data: T; createTime: string }[] | null => {
+  if (!resData.documents) {
+    return null;
+  }
 
-    const formattedDate: string = docData.createTime
+  return resData.documents.map((doc) => {
+    const docData = doc.fields;
+    const transformedObject = transformFirestoreDocument<T>(docData);
+    const docId = doc.name.split("/").pop();
+
+    const formattedDate: string = doc.createTime
       .replace("T", " ")
       .replace(/\.\d+Z$/, "");
+
     return {
       id: docId,
       data: transformedObject,
