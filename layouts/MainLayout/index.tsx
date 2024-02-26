@@ -7,8 +7,7 @@ import { userAtom } from "@/atoms/auth";
 
 export default function MainLayout({ children }) {
   const pathname = usePathname();
-  const [{ email }] = useAtom(userAtom);
-  const userID = email.split("@")[0];
+  const [{ email, userID }] = useAtom(userAtom);
 
   const isActionHeader =
     pathname.startsWith(`/${userID}/client/announcement-create`) ||
