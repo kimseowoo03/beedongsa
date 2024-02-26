@@ -1,11 +1,11 @@
 import { ContentActionBar } from "@/components/Molecules/ContentActionBar";
 import { TemporaryStorageList } from "@/components/Organisms/TemporaryStorageList";
-import { ProfileAnnouncementDatasType } from "@/types/profile";
+import { AnnouncementDatasType } from "@/types/profile";
 import type { ClientUser, EducatorUser } from "@/types/user";
 
 interface TemporaryStorageProps {
   userData: EducatorUser | ClientUser;
-  TemporaryStorageDatas: ProfileAnnouncementDatasType[];
+  TemporaryStorageDatas: AnnouncementDatasType[];
 }
 export const TemporaryStorage = ({
   userData,

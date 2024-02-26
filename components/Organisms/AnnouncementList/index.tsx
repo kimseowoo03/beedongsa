@@ -15,7 +15,7 @@ import { List, ListHeader, Item } from "@/styles/List";
 
 /**types */
 import type { TokenType } from "@/types/auth";
-import type { ProfileAnnouncementDatasType } from "@/types/profile";
+import type { AnnouncementDatasType } from "@/types/profile";
 
 const announcementClose = async ({
   id,
@@ -41,7 +41,7 @@ const announcementClose = async ({
 };
 
 interface AnnouncementListProps {
-  ProfileData: ProfileAnnouncementDatasType;
+  ProfileData: AnnouncementDatasType;
 }
 const AnnouncementList = ({ ProfileData }: AnnouncementListProps) => {
   const [{ email, idToken }] = useAtom(userAtom);

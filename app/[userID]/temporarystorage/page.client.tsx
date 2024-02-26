@@ -1,10 +1,10 @@
 import { TemporaryStorage } from "@/components/Templates/[userID]/temporarystorage";
-import type { ProfileAnnouncementDatasType } from "@/types/profile";
+import type { AnnouncementDatasType } from "@/types/profile";
 import type { ClientUser, EducatorUser } from "@/types/user";
 
 interface TemporaryStoragePageProps {
   userData: EducatorUser | ClientUser;
-  TemporaryStorageDatas: ProfileAnnouncementDatasType[];
+  TemporaryStorageDatas: AnnouncementDatasType[];
 }
 
 export default function TemporaryStoragePage({

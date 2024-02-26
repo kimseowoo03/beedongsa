@@ -19,10 +19,10 @@ import {
 } from "@/styles/List";
 
 /**types */
-import type { ProfileLectureDatasType } from "@/types/profile";
+import type { LectureDatasType } from "@/types/profile";
 
 interface LectureListProps {
-  ProfileData: ProfileLectureDatasType;
+  ProfileData: LectureDatasType;
 }
 const LectureList = ({ ProfileData }: LectureListProps) => {
   const [{ email }] = useAtom(userAtom);

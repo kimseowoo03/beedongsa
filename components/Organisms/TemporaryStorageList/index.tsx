@@ -1,10 +1,10 @@
-import type { ProfileAnnouncementDatasType } from "@/types/profile";
+import type { AnnouncementDatasType } from "@/types/profile";
 import type { ClientUser, EducatorUser } from "@/types/user";
 import Link from "next/link";
 
 interface TemporaryStorageListProps {
   userData: EducatorUser | ClientUser;
-  TemporaryStorageDatas: ProfileAnnouncementDatasType[];
+  TemporaryStorageDatas: AnnouncementDatasType[];
 }
 export const TemporaryStorageList = ({
   userData,

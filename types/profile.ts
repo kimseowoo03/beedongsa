@@ -1,13 +1,13 @@
 import type { Announcement } from "./announcement";
 import type { Lecture } from "./lecture";
 
-export interface ProfileAnnouncementDatasType {
+export interface AnnouncementDatasType {
   id: string;
   data: Announcement;
   createTime: string;
 }
 
-export interface ProfileLectureDatasType {
+export interface LectureDatasType {
   id: string;
   data: Lecture;
   createTime: string;

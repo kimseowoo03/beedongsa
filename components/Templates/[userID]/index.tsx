@@ -13,15 +13,12 @@ import { useAtom } from "jotai";
 import { userAtom } from "@/atoms/auth";
 
 import type { ClientUser, EducatorUser } from "@/types/user";
-import type {
-  ProfileAnnouncementDatasType,
-  ProfileLectureDatasType,
-} from "@/types/profile";
+import type { AnnouncementDatasType, LectureDatasType } from "@/types/profile";
 import { ListHeader, ListHeaderActions } from "@/styles/List";
 
 interface ProfileProps {
   userData: EducatorUser | ClientUser;
-  ProfileDatas: ProfileAnnouncementDatasType[] | ProfileLectureDatasType[];
+  ProfileDatas: AnnouncementDatasType[] | LectureDatasType[];
 }
 export const Profile = ({ userData, ProfileDatas }: ProfileProps) => {
   const { type } = userData;
