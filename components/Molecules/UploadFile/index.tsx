@@ -8,6 +8,7 @@ import { ref, uploadBytes, deleteObject } from "firebase/storage";
 import Button from "@/components/Atoms/Button";
 
 import styled from "@emotion/styled";
+import { ModalWrap, BackgroundModal } from "@/styles/Modal";
 import { HiOutlineXMark } from "react-icons/hi2";
 import { GoFile } from "react-icons/go";
 import { Hr } from "@/styles/htmlStyles";
@@ -17,21 +18,9 @@ import { userAtom } from "@/atoms/auth";
 
 import type { TokenType } from "@/types/auth";
 
-const UploadModalWrap = styled.div`
+const UploadModalWrap = styled(ModalWrap)`
   width: 500px;
   height: 400px;
-
-  position: fixed;
-  top: 50%;
-  left: 50%;
-  z-index: 110;
-  padding: 40px;
-  border-radius: 16px;
-  box-sizing: border-box;
-  letter-spacing: -1px;
-  background-color: var(--white);
-  box-shadow: 0 0 5px 0 rgba(0, 0, 0, 0.15);
-  transform: translateY(-50%) translateX(-50%) translateZ(0);
 
   .title {
     color: var(--font-color-1);
@@ -152,17 +141,6 @@ const FileSizeBox = styled.div`
 
   color: var(--font-color-1);
   font-size: var(--font-size-xxs);
-`;
-
-const BackgroundModal = styled.div`
-  overflow: auto;
-  position: fixed;
-  top: 0;
-  left: 0;
-  z-index: 105;
-  width: 100%;
-  height: 100%;
-  background: rgba(0, 0, 0, 0.5);
 `;
 
 const resizeFile = (file: File): Promise<Blob> =>
