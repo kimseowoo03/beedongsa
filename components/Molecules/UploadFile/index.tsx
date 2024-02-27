@@ -6,9 +6,10 @@ import { storage } from "@/app/firebaseConfig";
 import { ref, uploadBytes, deleteObject } from "firebase/storage";
 
 import Button from "@/components/Atoms/Button";
+import { CancelButton } from "@/components/Atoms/CancelButton";
 
 import styled from "@emotion/styled";
-import { ModalWrap, BackgroundModal } from "@/styles/Modal";
+import { ModalWrap, BackgroundModal, Buttons } from "@/styles/Modal";
 import { HiOutlineXMark } from "react-icons/hi2";
 import { GoFile } from "react-icons/go";
 import { Hr } from "@/styles/htmlStyles";
@@ -76,30 +77,6 @@ const FileSelectBox = styled.div`
   input {
     display: none;
   }
-`;
-
-const CancelButton = styled.button`
-  width: 100%;
-  height: 40px;
-  background-color: var(--gray-02);
-  border-radius: var(--border-radius);
-  border: none;
-
-  color: var(--font-color-1);
-  font-size: var(--font-size-xxs);
-  font-weight: var(--font-weight-bold);
-
-  cursor: pointer;
-`;
-
-const Buttons = styled.div`
-  display: flex;
-  gap: var(--gap-02);
-  position: fixed;
-  bottom: 40px;
-  width: calc(100% - 80px);
-  left: 50%;
-  transform: translateX(-50%);
 `;
 
 const FilesBox = styled.ul`
@@ -445,7 +422,7 @@ const UploadFile = ({ userFiles }: UploadFile) => {
               })}
             </FilesBox>
             <Buttons>
-              <CancelButton onClick={cancelHandler}>취소</CancelButton>
+              <CancelButton cancelHandler={cancelHandler} />
               <Button
                 type="button"
                 disabled={attachments.length === 0}
