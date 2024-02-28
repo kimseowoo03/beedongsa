@@ -1,12 +1,5 @@
 import { transformFirestoreDocument } from "./transformFirebaseDocument";
-
-interface Document {
-  name: string;
-  fields: object;
-  createTime: string;
-  updateTime: string;
-}
-
+import type { FirebaseDocument } from "@/types/firebaseType";
 /**
  * Firestore에서 데이터들을 받아올 때 변환하여 새로운 배열을 만듭니다.
  *
@@ -16,7 +9,7 @@ interface Document {
  *          data - 변환된 데이터 객체, T 타입
  */
 export const transformFirestoreArrayDocuments = <T>(resData: {
-  documents: Document[];
+  documents: FirebaseDocument[];
 }): { id: string; data: T; createTime: string }[] | null => {
   if (!resData.documents) {
     return null;

@@ -13,6 +13,7 @@ import AuthHydrateAtoms from "@/configs/AuthHydrateAtoms";
 /**type */
 import type { ClientUser, EducatorUser } from "@/types/user";
 import type { Announcement } from "@/types/announcement";
+import { FirebaseDocument } from "@/types/firebaseType";
 
 async function getBasicUserData({
   idToken,
@@ -42,8 +43,7 @@ async function getBasicUserData({
 }
 
 interface ProfileDataArray {
-  document?: {}; // document가 옵셔널 필드임을 나타냄
-  readTime: string;
+  documents: FirebaseDocument[];
 }
 async function getQueryProfileData({
   collectionId,
@@ -53,7 +53,7 @@ async function getQueryProfileData({
   collectionId: "Announcements" | "Lectures";
   idToken: string;
   email: string;
-}): Promise<ProfileDataArray[]> {
+}): Promise<ProfileDataArray> {
   const projectId = process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID;
   const url = `https://firestore.googleapis.com/v1beta1/projects/${projectId}/databases/(default)/documents:runQuery`;
   //해당 이메일과 임시저장이 이닌 조건
@@ -133,9 +133,8 @@ export default async function Page({ params }) {
     email,
   });
 
-  const ProfileDatas = ProfileDataArray[0].document
-    ? transformFirestoreArrayDocuments<Announcement>(ProfileDataArray)
-    : [];
+  const ProfileDatas =
+    transformFirestoreArrayDocuments<Announcement>(ProfileDataArray);
 
   return (
     <AuthHydrateAtoms email={email} idToken={idToken}>
