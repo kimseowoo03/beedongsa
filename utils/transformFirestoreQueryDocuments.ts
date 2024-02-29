@@ -1,3 +1,4 @@
+import { FirebaseDocument } from "@/types/firebaseType";
 import { transformFirestoreDocument } from "./transformFirebaseDocument";
 
 export interface FirestoreDocument {
@@ -20,7 +21,9 @@ export interface FirestoreDocument {
  *          createTime - 문서의 생성 시간
  */
 export const transformFirestoreQueryDocuments = <T>(
-  queryResponse: FirestoreDocument[]
+  queryResponse: {
+    document: FirebaseDocument;
+  }[]
 ): { id: string; data: T; createTime: string }[] | null => {
   if (!queryResponse[0].document) {
     return null;
