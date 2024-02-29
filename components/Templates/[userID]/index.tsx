@@ -42,14 +42,15 @@ export const Profile = ({ userData, ProfileDatas }: ProfileProps) => {
               <Link href={`/${userID}/announcement-create`}>
                 임시 공고 등록 버튼
               </Link>
-              {ProfileDatas.map((ProfileData) => {
-                return (
-                  <AnnouncementList
-                    key={ProfileData.id}
-                    ProfileData={ProfileData}
-                  />
-                );
-              })}
+              {ProfileDatas &&
+                ProfileDatas.map((ProfileData) => {
+                  return (
+                    <AnnouncementList
+                      key={ProfileData.id}
+                      ProfileData={ProfileData}
+                    />
+                  );
+                })}
             </Tabs.Panel>
             <Tabs.Panel value="지원관리">
               <div>지원관리</div>
@@ -85,11 +86,15 @@ export const Profile = ({ userData, ProfileDatas }: ProfileProps) => {
                   <Link href={`/${userID}/lecture-create`}>추가</Link>
                 </ListHeaderActions>
               </ListHeader>
-              {ProfileDatas.map((ProfileData) => {
-                return (
-                  <LectureList key={ProfileData.id} ProfileData={ProfileData} />
-                );
-              })}
+              {ProfileDatas &&
+                ProfileDatas.map((ProfileData) => {
+                  return (
+                    <LectureList
+                      key={ProfileData.id}
+                      ProfileData={ProfileData}
+                    />
+                  );
+                })}
             </Tabs.Panel>
           </Tabs>
         </>
