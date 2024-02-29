@@ -24,3 +24,13 @@ export const ModalWrap = styled.div`
   box-shadow: 0 0 5px 0 rgba(0, 0, 0, 0.15);
   transform: translateY(-50%) translateX(-50%) translateZ(0);
 `;
+
+export const Buttons = styled.div`
+  display: flex;
+  gap: var(--gap-02);
+  position: fixed;
+  bottom: 40px;
+  width: calc(100% - 80px);
+  left: 50%;
+  transform: translateX(-50%);
+`;
