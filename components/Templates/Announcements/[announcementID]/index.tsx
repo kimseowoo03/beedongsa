@@ -31,7 +31,6 @@ export const AnnouncementDetail = ({
       </div>
 
       <InquiriesModal
-        inquiriesUserType="questioner"
         inquiryPostTitle={announcementData.title}
         inquiryPostId={announcementID}
         responderId={announcementData.registeredEmail.split("@")[0]}

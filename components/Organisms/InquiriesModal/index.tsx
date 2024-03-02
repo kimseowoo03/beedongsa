@@ -45,43 +45,36 @@ const createInquiries = async ({
 };
 
 interface InquiriesModalProps {
-  inquiriesData?: Inquiries;
   inquiryPostTitle: string;
   inquiryPostId: string;
   responderId: string;
-  inquiriesUserType: "questioner" | "responder";
 }
 export const InquiriesModal = ({
-  inquiriesUserType,
   inquiryPostTitle,
   inquiryPostId,
   responderId,
-  inquiriesData,
 }: InquiriesModalProps) => {
   const [{ idToken, email, userID }] = useAtom(userAtom);
   const [isInquiriesModal, setIsInquiriesModal] = useAtom(inquiriesModalAtom);
   const MAXLENGTH = 10000;
 
+  // 날짜와 시간을 문자열로 변환
+  const currentDate = new Date();
+  const year = currentDate.getFullYear(); // 연도
+  const month = (currentDate.getMonth() + 1).toString().padStart(2, "0"); // 월
+  const day = currentDate.getDate().toString().padStart(2, "0"); // 일
+  const dateOfInquiry = `${year}년 ${month}월 ${day}일`;
+
   //questioner의 경우 초기 데이터가 필요하지 않습니다.
-  const initialValues: Inquiries =
-    inquiriesUserType === "questioner"
-      ? {
-          questionerId: userID,
-          responderId,
-          inquiryPostId,
-          inquiryPostTitle,
-          questionContent: "",
-          answerContent: "",
-        }
-      : {
-          questionerId: "",
-          responderId: "",
-          inquiryPostId: "",
-          inquiryPostTitle: "",
-          questionContent: "",
-          answerContent: "",
-          ...inquiriesData,
-        };
+  const initialValues: Inquiries = {
+    dateOfInquiry,
+    questionerId: userID,
+    responderId,
+    inquiryPostId,
+    inquiryPostTitle,
+    questionContent: "",
+    answerContent: "",
+  };
 
   const [values, setValues] = useState(initialValues);
 
@@ -109,15 +102,13 @@ export const InquiriesModal = ({
   };
 
   const InquiriesHandler = () => {
-    if (inquiriesUserType === "questioner") {
-      mutation.mutate(mutateData, {
-        onSuccess: (response) => {
-          alert(response.message);
-          setIsInquiriesModal(() => false);
-          setValues(() => initialValues);
-        },
-      });
-    }
+    mutation.mutate(mutateData, {
+      onSuccess: (response) => {
+        alert(response.message);
+        setIsInquiriesModal(() => false);
+        setValues(() => initialValues);
+      },
+    });
   };
 
   if (!isInquiriesModal) {
@@ -129,38 +120,19 @@ export const InquiriesModal = ({
       <Wrap>
         <h2>문의하기</h2>
         <p>상세 페이지 제목</p>
-
-        {inquiriesUserType === "questioner" && (
-          <div>
-            <span>To. {values.questionerId}</span>
-            <textarea
-              autoComplete="off"
-              maxLength={MAXLENGTH}
-              value={values.questionContent}
-              onChange={handleTextareaChange}
-              name="questionContent"
-            />
-            <span>
-              {values.questionContent.length}/{MAXLENGTH}
-            </span>
-          </div>
-        )}
-
-        {inquiriesUserType === "responder" && (
-          <div>
-            <span>From. {values.responderId}</span>
-            <textarea
-              autoComplete="off"
-              maxLength={MAXLENGTH}
-              value={values.answerContent}
-              onChange={handleTextareaChange}
-              name="answerContent"
-            />
-            <span>
-              {values.answerContent.length}/{MAXLENGTH}
-            </span>
-          </div>
-        )}
+        <div>
+          <span>To. {values.questionerId}</span>
+          <textarea
+            autoComplete="off"
+            maxLength={MAXLENGTH}
+            value={values.questionContent}
+            onChange={handleTextareaChange}
+            name="questionContent"
+          />
+          <span>
+            {values.questionContent.length}/{MAXLENGTH}
+          </span>
+        </div>
 
         <Buttons>
           <CancelButton cancelHandler={() => setIsInquiriesModal(false)} />
