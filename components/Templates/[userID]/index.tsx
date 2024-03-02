@@ -1,4 +1,3 @@
-"use client";
 import Link from "next/link";
 
 import { ProfileClientHeader } from "@/components/Organisms/ProfileClientHeader";
@@ -8,19 +7,29 @@ import AnnouncementList from "@/components/Organisms/AnnouncementList";
 import { Tabs } from "@/components/Molecules/Tabs";
 import LectureList from "@/components/Organisms/LectureList";
 import ProfileDetailInfo from "@/components/Organisms/ProfileDetailInfo";
+import InquiriesList from "@/components/Organisms/InquiriesList";
+
+import { ListHeader, ListHeaderActions } from "@/styles/List";
 
 import { useAtom } from "jotai";
 import { userAtom } from "@/atoms/auth";
 
+import type { InquiriesQuery } from "@/types/inquiries";
 import type { ClientUser, EducatorUser } from "@/types/user";
 import type { AnnouncementDatasType, LectureDatasType } from "@/types/profile";
-import { ListHeader, ListHeaderActions } from "@/styles/List";
 
 interface ProfileProps {
   userData: EducatorUser | ClientUser;
   ProfileDatas: AnnouncementDatasType[] | LectureDatasType[];
+  outgoingInquiriesQuery: InquiriesQuery;
+  receivingInquiriesQuery: InquiriesQuery;
 }
-export const Profile = ({ userData, ProfileDatas }: ProfileProps) => {
+export const Profile = ({
+  userData,
+  ProfileDatas,
+  outgoingInquiriesQuery,
+  receivingInquiriesQuery,
+}: ProfileProps) => {
   const { type } = userData;
   const [{ userID, email, idToken }] = useAtom(userAtom);
 
@@ -70,6 +79,7 @@ export const Profile = ({ userData, ProfileDatas }: ProfileProps) => {
             <Tabs.List>
               <Tabs.Trigger value="상세정보" text="상세정보" />
               <Tabs.Trigger value="강의목록" text="강의목록" />
+              <Tabs.Trigger value="문의내역" text="문의내역" />
             </Tabs.List>
             <Tabs.Panel value="상세정보">
               <ListHeader>
@@ -95,6 +105,12 @@ export const Profile = ({ userData, ProfileDatas }: ProfileProps) => {
                     />
                   );
                 })}
+            </Tabs.Panel>
+            <Tabs.Panel value="문의내역">
+              <InquiriesList
+                outgoingInquiriesQuery={outgoingInquiriesQuery}
+                receivingInquiriesQuery={receivingInquiriesQuery}
+              />
             </Tabs.Panel>
           </Tabs>
         </>
