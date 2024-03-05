@@ -45,7 +45,7 @@ export const Profile = ({
           <Tabs defaultValue="공고목록">
             <Tabs.List>
               <Tabs.Trigger value="공고목록" text="공고목록" />
-              <Tabs.Trigger value="지원관리" text="지원관리" />
+              <Tabs.Trigger value="문의내역" text="문의내역" />
             </Tabs.List>
             <Tabs.Panel value="공고목록">
               <Link href={`/${userID}/announcement-create`}>
@@ -61,8 +61,11 @@ export const Profile = ({
                   );
                 })}
             </Tabs.Panel>
-            <Tabs.Panel value="지원관리">
-              <div>지원관리</div>
+            <Tabs.Panel value="문의내역">
+              <InquiriesList
+                outgoingInquiriesQuery={outgoingInquiriesQuery}
+                receivingInquiriesQuery={receivingInquiriesQuery}
+              />
             </Tabs.Panel>
           </Tabs>
         </>

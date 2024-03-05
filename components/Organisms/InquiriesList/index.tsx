@@ -40,7 +40,7 @@ const InquiriesList = ({
   const renderInquiries = (data) => {
     return data ? (
       data.map(({ id, data }, index) => (
-        <InquiriesListItem key={id + String(index)} {...data} />
+        <InquiriesListItem key={id + String(index)} {...data} id={id} />
       ))
     ) : (
       <div>데이터가 없습니다.</div>

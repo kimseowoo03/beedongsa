@@ -1,15 +1,22 @@
-import { memo, useState } from "react";
+import { memo, useMemo, useState } from "react";
 import Link from "next/link";
 
 import styled from "@emotion/styled";
 import { HiChevronUp, HiChevronDown } from "react-icons/hi";
 
 import type { Inquiries } from "@/types/inquiries";
+import { useAtom } from "jotai";
+import { userAtom } from "@/atoms/auth";
+import Button from "@/components/Atoms/Button";
+import { TokenType } from "@/types/auth";
+import { useMutation } from "@tanstack/react-query";
 
 export const ListItem = styled.li`
   display: flex;
   align-items: center;
   flex-direction: row;
+
+  position: relative;
 
   p:nth-of-type(1) {
     flex: 0.6;
@@ -24,7 +31,7 @@ export const ListItem = styled.li`
     flex: 1;
   }
   p:nth-of-type(5) {
-    flex: 0.2;
+    flex: 0.3;
   }
 `;
 
@@ -49,6 +56,40 @@ const InquiriesBox = styled.div`
   }
 `;
 
+const DropDownBox = styled.div`
+  position: absolute;
+  right: 0;
+`;
+
+interface InquiriesAnswerProps {
+  id: string;
+  answerContent: string;
+  token: NonNullable<TokenType>;
+}
+const InquiriesAnswer = async ({
+  id,
+  answerContent,
+  token,
+}: InquiriesAnswerProps): Promise<any> => {
+  const response = await fetch(`/api/inquiries/${id}/answer`, {
+    method: "PATCH",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+    },
+    body: JSON.stringify(answerContent),
+  });
+
+  if (!response.ok) {
+    const errorData = await response.json();
+    throw new Error(errorData.errorMessage);
+  }
+  return response.json();
+};
+
+interface InquiriesListItemProps extends Inquiries {
+  id: string;
+}
 const InquiriesListItem = ({
   dateOfInquiry,
   questionerId,
@@ -56,10 +97,49 @@ const InquiriesListItem = ({
   inquiryPostId,
   inquiryPostTitle,
   questionContent,
-  answerContent,
-}: Inquiries) => {
+  answerContent: initialAnswerContent,
+  id,
+}: InquiriesListItemProps) => {
+  const [{ userID, idToken }] = useAtom(userAtom);
+  const [respondValue, setRespondValue] = useState("");
   const [isInquiriesDetailClick, setIsInquiriesDetailClick] = useState(false);
 
+  const [answerContent, setAnswerContent] = useState(initialAnswerContent);
+
+  const RESPONDAUTHORITY = useMemo(() => userID === responderId, []);
+  const MAXLENGTH = 10000;
+
+  const handleTextareaChange = (
+    event: React.ChangeEvent<HTMLTextAreaElement>
+  ) => {
+    const { value } = event.target;
+
+    // 최대 글자 수 제한
+    if (value.length <= MAXLENGTH) {
+      setRespondValue(() => value);
+    }
+  };
+
+  const mutation = useMutation({
+    mutationFn: InquiriesAnswer,
+  });
+
+  const mutateData: InquiriesAnswerProps = {
+    id,
+    answerContent: respondValue,
+    token: idToken,
+  };
+
+  const InquiriesHandler = () => {
+    mutation.mutate(mutateData, {
+      onSuccess: (response) => {
+        alert(response.message);
+        setAnswerContent(() => respondValue);
+      },
+    });
+  };
+
+  console.log(answerContent);
   return (
     <>
       <ListItem>
@@ -72,9 +152,9 @@ const InquiriesListItem = ({
         </p>
         <p>{questionerId}</p>
         <p>{answerContent ? "답변완료" : "미응답"}</p>
-        <div onClick={() => setIsInquiriesDetailClick((prev) => !prev)}>
+        <DropDownBox onClick={() => setIsInquiriesDetailClick((prev) => !prev)}>
           {isInquiriesDetailClick ? <HiChevronUp /> : <HiChevronDown />}
-        </div>
+        </DropDownBox>
       </ListItem>
 
       {isInquiriesDetailClick && (
@@ -85,9 +165,36 @@ const InquiriesListItem = ({
           </div>
           <div className="answerBox">
             <div className="answerIcon">A</div>
-            <p className="answer">
-              {answerContent ? answerContent : "아직 답변이 없습니다."}
-            </p>
+
+            {!RESPONDAUTHORITY && (
+              <p className="answer">
+                {answerContent ? answerContent : "아직 답변이 없습니다."}
+              </p>
+            )}
+
+            {RESPONDAUTHORITY && answerContent && (
+              <p className="answer">{answerContent}</p>
+            )}
+
+            {RESPONDAUTHORITY && !answerContent && (
+              <div>
+                <textarea
+                  autoComplete="off"
+                  maxLength={MAXLENGTH}
+                  value={respondValue}
+                  onChange={handleTextareaChange}
+                  name="answerContent"
+                />
+                <span>
+                  {respondValue.length}/{MAXLENGTH}
+                </span>
+                <Button
+                  type="button"
+                  text="답변하기"
+                  onClick={InquiriesHandler}
+                />
+              </div>
+            )}
           </div>
         </InquiriesBox>
       )}
