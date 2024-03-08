@@ -121,7 +121,7 @@ export const InquiriesModal = ({
         <h2>문의하기</h2>
         <p>상세 페이지 제목</p>
         <div>
-          <span>To. {values.questionerId}</span>
+          <span>보내는 사람 ID : {values.questionerId}</span>
           <textarea
             autoComplete="off"
             maxLength={MAXLENGTH}
