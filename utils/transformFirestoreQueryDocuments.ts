@@ -1,4 +1,7 @@
-import { FirebaseDocument } from "@/types/firebaseType";
+import {
+  FirebaseDocument,
+  firestoreQueryDocumentResData,
+} from "@/types/firebaseType";
 import { transformFirestoreDocument } from "./transformFirebaseDocument";
 
 export interface FirestoreDocument {
@@ -24,7 +27,7 @@ export const transformFirestoreQueryDocuments = <T>(
   queryResponse: {
     document: FirebaseDocument;
   }[]
-): { id: string; data: T; createTime: string }[] | null => {
+): firestoreQueryDocumentResData<T>[] | null => {
   if (!queryResponse[0].document) {
     return null;
   }

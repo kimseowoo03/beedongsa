@@ -4,3 +4,9 @@ export interface FirebaseDocument {
   createTime: string;
   updateTime: string;
 }
+
+export interface firestoreQueryDocumentResData<T> {
+  id: string;
+  data: T;
+  createTime: string;
+}
