@@ -16,6 +16,7 @@ export async function POST(request: Request) {
       eventEnabled,
     } = data;
 
+    //1. 이메일, 비밀번호 가입
     const firebaseSignupRes = await fetch(
       `https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=${process.env.NEXT_PUBLIC_FIREBASE_API_KEY}`,
       {
@@ -38,8 +39,29 @@ export async function POST(request: Request) {
       throw new Error(firebaseAuthData.error.message);
     }
 
-    //TODO: 회원가입 유저 생성 실패 실패시 return
+    //2. 유저이름 auth에 업데이트
+    const userNameUpdateRes = await fetch(
+      `https://identitytoolkit.googleapis.com/v1/accounts:update?key=${process.env.NEXT_PUBLIC_FIREBASE_API_KEY}`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          idToken,
+          displayName: name,
+          returnSecureToken: true,
+        }),
+      }
+    );
 
+    const userNameUpdate = await userNameUpdateRes.json();
+
+    if (userNameUpdate.error) {
+      throw new Error(userNameUpdate.error.message);
+    }
+
+    //3. 유저정보 Firestore에 업데이트
     const firestoreClientData =
       type === "educator"
         ? {
