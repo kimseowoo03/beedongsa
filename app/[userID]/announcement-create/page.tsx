@@ -3,7 +3,7 @@ import AnnouncementCreatePage from "./page.client";
 import AuthHydrateAtoms from "@/configs/AuthHydrateAtoms";
 
 export default async function Page() {
-  const { idToken, email } = (await refreshTokenFetch()) ?? {
+  const { idToken, email, name } = (await refreshTokenFetch()) ?? {
     idToken: null,
   };
 
@@ -13,7 +13,7 @@ export default async function Page() {
   // }
 
   return (
-    <AuthHydrateAtoms email={email} idToken={idToken}>
+    <AuthHydrateAtoms email={email} idToken={idToken} name={name}>
       <AnnouncementCreatePage />
     </AuthHydrateAtoms>
   );

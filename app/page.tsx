@@ -4,13 +4,14 @@ import HomePage from "./page.client";
 import AuthHydrateAtoms from "@/configs/AuthHydrateAtoms";
 
 export default async function Page() {
-  const { idToken, email } = (await refreshTokenFetch()) ?? {
+  const { idToken, email, name } = (await refreshTokenFetch()) ?? {
     idToken: null,
     email: null,
+    name: null,
   };
 
   return (
-    <AuthHydrateAtoms email={email} idToken={idToken}>
+    <AuthHydrateAtoms email={email} idToken={idToken} name={name}>
       <HomePage />
     </AuthHydrateAtoms>
   );

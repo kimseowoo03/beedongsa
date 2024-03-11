@@ -34,7 +34,7 @@ async function getQueryAnnouncementData({
 export default async function Page({ params }) {
   const { announcementID } = params;
 
-  const { idToken, email } = (await refreshTokenFetch()) ?? {
+  const { idToken, email, name } = (await refreshTokenFetch()) ?? {
     idToken: null,
   };
 
@@ -48,7 +48,7 @@ export default async function Page({ params }) {
   console.log(announcementID, "<<<announcementID");
 
   return (
-    <AuthHydrateAtoms email={email} idToken={idToken}>
+    <AuthHydrateAtoms email={email} idToken={idToken} name={name}>
       <AnnouncementEditPage
         announcementID={announcementID}
         announcementData={announcementData}

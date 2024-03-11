@@ -34,7 +34,7 @@ async function getQueryLectureData({
 export default async function Page({ params }) {
   const { lectureID } = params;
 
-  const { idToken, email } = (await refreshTokenFetch()) ?? {
+  const { idToken, email, name } = (await refreshTokenFetch()) ?? {
     idToken: null,
   };
 
@@ -42,13 +42,11 @@ export default async function Page({ params }) {
     idToken,
     lectureID,
   });
-  console.log(fields, "<<<<fields");
+
   const lectureData = transformFirestoreDocument<Lecture>(fields);
 
-  console.log(lectureData, "<<<announcementID");
-
   return (
-    <AuthHydrateAtoms email={email} idToken={idToken}>
+    <AuthHydrateAtoms email={email} idToken={idToken} name={name}>
       <LectureEditPage lectureID={lectureID} lectureData={lectureData} />
     </AuthHydrateAtoms>
   );

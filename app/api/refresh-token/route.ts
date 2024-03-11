@@ -42,10 +42,15 @@ export async function POST(request: Request) {
     );
 
     const accountInfoData = await accountInfoResponse.json();
-    const email = accountInfoData.users[0].email;
+    const { email, displayName } = accountInfoData.users[0];
 
     return new Response(
-      JSON.stringify({ idToken, email, message: "idToken 재발급 성공" }),
+      JSON.stringify({
+        idToken,
+        email,
+        name: displayName,
+        message: "idToken 재발급 성공",
+      }),
       {
         status: 200,
         headers: {
