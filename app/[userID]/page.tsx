@@ -15,33 +15,7 @@ import type { ClientUser, EducatorUser } from "@/types/user";
 import type { Announcement } from "@/types/announcement";
 import { FirebaseDocument } from "@/types/firebaseType";
 import { transformFirestoreQueryDocuments } from "@/utils/transformFirestoreQueryDocuments";
-
-async function getBasicUserData({
-  idToken,
-  userID,
-}: {
-  idToken: string;
-  userID: string;
-}) {
-  const projectId = process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID;
-  const url = `https://firestore.googleapis.com/v1beta1/projects/${projectId}/databases/(default)/documents/Users/${userID}`;
-
-  try {
-    const response = await fetch(url, {
-      method: "GET",
-      headers: {
-        Authorization: `Bearer ${idToken}`,
-      },
-    });
-
-    const userDocument = await response.json();
-
-    return userDocument;
-  } catch (error) {
-    console.error("Error fetching user document:", error);
-    return null;
-  }
-}
+import { getBasicUserData } from "@/utils/userData";
 
 interface ProfileDataArray {
   document: FirebaseDocument;
@@ -107,7 +81,7 @@ async function getQueryProfileData({
 export default async function Page({ params }) {
   const { userID } = params;
 
-  const { idToken, email } = (await refreshTokenFetch()) ?? {
+  const { idToken, email, name } = (await refreshTokenFetch()) ?? {
     idToken: null,
   };
 
@@ -138,7 +112,7 @@ export default async function Page({ params }) {
     transformFirestoreQueryDocuments<Announcement>(ProfileDataArray);
 
   return (
-    <AuthHydrateAtoms email={email} idToken={idToken}>
+    <AuthHydrateAtoms email={email} idToken={idToken} name={name}>
       <ProfilePage userData={userData} ProfileDatas={ProfileDatas} />
     </AuthHydrateAtoms>
   );
