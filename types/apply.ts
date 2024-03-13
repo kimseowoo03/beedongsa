@@ -1,9 +1,11 @@
 export interface Apply {
-  sentStatus: string;
-  responseStatus: string;
-  matchConfirmationStatus: string;
+  sentStatus: boolean;
+  responseStatus: boolean;
+  matchConfirmationStatus: boolean;
   educatorID: string;
   educatorName: string;
+  educatorPhoneNumber: string;
+  educatorEmail: string;
   lectureID: string;
   attachedFileName: string;
   managerName: string;
@@ -13,4 +15,6 @@ export interface Apply {
   announcementID: string;
   announcementTitle: string;
   announcementSchedule: Array<string>;
+  recruitmentDeadline: string;
+  dateOfInquiry: string;
 }
