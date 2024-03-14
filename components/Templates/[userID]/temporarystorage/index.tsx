@@ -14,12 +14,14 @@ export const TemporaryStorage = ({
   return (
     <>
       <ContentActionBar>
-        <p>총 {TemporaryStorageDatas.length}개</p>
+        <p>총 {TemporaryStorageDatas ? TemporaryStorageDatas.length : 0}개</p>
       </ContentActionBar>
-      <TemporaryStorageList
-        userData={userData}
-        TemporaryStorageDatas={TemporaryStorageDatas}
-      />
+      {TemporaryStorageDatas && (
+        <TemporaryStorageList
+          userData={userData}
+          TemporaryStorageDatas={TemporaryStorageDatas}
+        />
+      )}
     </>
   );
 };
