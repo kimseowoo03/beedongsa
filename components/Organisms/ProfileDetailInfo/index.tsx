@@ -54,15 +54,16 @@ const ProfileDetailInfo = ({ userData }: ProfileDetailInfoProps) => {
         </List>
         <List>
           <ListTitle>학력</ListTitle>
-          {education.map((item) => {
-            const [dateRange, title] = item.split(/\s+(.+)/);
-            return (
-              <DateItem key={item}>
-                <div>{dateRange}</div>
-                <div>{title}</div>
-              </DateItem>
-            );
-          })}
+          {education &&
+            education.map((item) => {
+              const [dateRange, title] = item.split(/\s+(.+)/);
+              return (
+                <DateItem key={item}>
+                  <div>{dateRange}</div>
+                  <div>{title}</div>
+                </DateItem>
+              );
+            })}
         </List>
         <List>
           <ListTitle>기타 이력</ListTitle>
