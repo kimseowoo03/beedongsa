@@ -29,7 +29,7 @@ const resizeFile = (file: File): Promise<Blob> =>
  *
  * @param {File[]} attachments - 업로드할 파일 배열
  * @param {string} userID - 사용자 ID, 파일 경로 구성에 사용
- * @returns {Promise<string[]>} 업로드된 파일의 이름만 담긴 배열
+ * @returns {Promise<string[]>} 업로드된 파일의 이름과 사이즈가 담긴 배열 "fileName/fileSize"
  */
 export async function uploadFiles(attachments: File[], userID: string) {
   try {
@@ -46,11 +46,11 @@ export async function uploadFiles(attachments: File[], userID: string) {
 
       await uploadBytes(fileRef, file, metadata);
 
-      return file.name;
+      return `${file.name}/${file.size}`;
     });
 
-    const fileNames = await Promise.all(uploadPromises);
-    return fileNames;
+    const uploadedFileList = await Promise.all(uploadPromises);
+    return uploadedFileList;
   } catch (error) {
     console.error("File upload error:", error);
     throw error;
