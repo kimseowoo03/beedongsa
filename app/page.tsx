@@ -14,12 +14,17 @@ export default async function Page() {
     name: null,
   };
 
-  const userID = email.split("@")[0];
-  const { fields } = await getBasicUserData({ idToken, userID });
+  let type = null;
+  // 로그인한 유저인 경우에 실행할 로직
+  if (idToken) {
+    const userID = email.split("@")[0];
+    const { fields } = await getBasicUserData({ idToken, userID });
 
-  const { type } = transformFirestoreDocument<EducatorUser | ClientUser>(
-    fields
-  );
+    const transformedData = transformFirestoreDocument<
+      EducatorUser | ClientUser
+    >(fields);
+    type = transformedData.type;
+  }
 
   return (
     <AuthHydrateAtoms email={email} idToken={idToken} name={name} type={type}>
