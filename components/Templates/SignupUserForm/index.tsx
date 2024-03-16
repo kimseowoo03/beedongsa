@@ -1,6 +1,7 @@
 /**react, next */
 import { useCallback, useMemo, useState } from "react";
 import { useMutation } from "@tanstack/react-query";
+import { useRouter } from "next/navigation";
 
 /**type */
 import type { ClientUser, EducatorUser, UserType } from "@/types/user";
@@ -45,6 +46,7 @@ export const SignupUserForm = ({ type }: UserFormProps) => {
   const [allAgreed, setAllAgreed] = useState(false);
 
   const [etcLectureTopic, setEtcLectureTopic] = useState("");
+  const router = useRouter();
 
   /**
    * 선택된 사용자 타입에 따라 초기값을 설정합니다.
@@ -95,7 +97,12 @@ export const SignupUserForm = ({ type }: UserFormProps) => {
 
   const submitHandler = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    mutation.mutate(values as EducatorUser | ClientUser);
+    mutation.mutate(values as EducatorUser | ClientUser, {
+      onSuccess: (data) => {
+        alert(data.message);
+        router.push("/signin");
+      },
+    });
   };
 
   if (mutation.isError) {
