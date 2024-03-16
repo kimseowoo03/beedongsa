@@ -9,9 +9,9 @@ interface UserAtom {
   type: UserType | null;
 }
 export const userAtom = atom<UserAtom>({
-  idToken: null,
-  email: null,
-  userID: null,
-  name: null,
-  type: null,
+  idToken: undefined,
+  email: undefined,
+  userID: undefined,
+  name: undefined,
+  type: undefined,
 });
