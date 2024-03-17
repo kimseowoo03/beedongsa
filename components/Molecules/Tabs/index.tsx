@@ -49,16 +49,15 @@ const TabList = ({ children }: TabListProps) => {
 };
 
 interface TabTriggerProps {
-  text: string;
   value: string;
 }
-const TabTrigger = ({ value, text }: TabTriggerProps) => {
+const TabTrigger = ({ value }: TabTriggerProps) => {
   const { activeTab, setActiveTab } = useContext(TabsContext);
 
   return (
     <TabTriggerWrap isCurrent={value === activeTab}>
       <button type="button" onClick={() => setActiveTab(value)}>
-        {text}
+        {value}
       </button>
     </TabTriggerWrap>
   );

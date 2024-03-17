@@ -44,8 +44,8 @@ export const Profile = ({
           </NoticeBar>
           <Tabs defaultValue="공고목록">
             <Tabs.List>
-              <Tabs.Trigger value="공고목록" text="공고목록" />
-              <Tabs.Trigger value="문의내역" text="문의내역" />
+              <Tabs.Trigger value="공고목록" />
+              <Tabs.Trigger value="문의내역" />
             </Tabs.List>
             <Tabs.Panel value="공고목록">
               <Link href={`/${userID}/announcement-create`}>
@@ -80,9 +80,9 @@ export const Profile = ({
           </NoticeBar>
           <Tabs defaultValue="상세정보">
             <Tabs.List>
-              <Tabs.Trigger value="상세정보" text="상세정보" />
-              <Tabs.Trigger value="강의목록" text="강의목록" />
-              <Tabs.Trigger value="문의내역" text="문의내역" />
+              <Tabs.Trigger value="상세정보" />
+              <Tabs.Trigger value="강의목록" />
+              <Tabs.Trigger value="문의내역" />
             </Tabs.List>
             <Tabs.Panel value="상세정보">
               <ListHeader>
