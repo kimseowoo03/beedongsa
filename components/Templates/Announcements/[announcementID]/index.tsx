@@ -61,6 +61,7 @@ export const AnnouncementDetail = ({
       <ApplyModal
         recruitmentDeadline={announcementData.recruitmentDeadline}
         clientID={announcementData.registeredEmail.split("@")[0]}
+        clientName={announcementData.clientName}
         announcementID={announcementID}
         announcementTitle={announcementData.title}
         announcementSchedule={announcementData.schedule}

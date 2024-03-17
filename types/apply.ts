@@ -13,6 +13,7 @@ export interface Apply {
   managerPhoneNumber: number;
   managerEmail: string;
   clientID: string;
+  clientName: string;
   announcementID: string;
   announcementTitle: string;
   announcementSchedule: Array<string>;

@@ -64,6 +64,7 @@ interface ApplyModalProps {
   managerPhoneNumber?: number;
   managerEmail?: string;
   clientID: string;
+  clientName: string;
   announcementID: string;
   announcementTitle: string;
   announcementSchedule: string[];
@@ -75,6 +76,7 @@ export const ApplyModal = ({
   managerPhoneNumber,
   managerEmail,
   clientID,
+  clientName,
   announcementID,
   announcementTitle,
   announcementSchedule,
@@ -109,6 +111,7 @@ export const ApplyModal = ({
     managerPhoneNumber,
     managerEmail,
     clientID,
+    clientName,
     announcementID,
     announcementTitle,
     announcementSchedule,
