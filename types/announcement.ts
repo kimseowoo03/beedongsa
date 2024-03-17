@@ -1,5 +1,6 @@
 export interface Announcement {
   registeredEmail: string;
+  clientName: string;
   title: string;
   category: Array<string>;
   metropolitanCity: string;

@@ -345,11 +345,12 @@ export const AnnouncementForm = ({
   announcementID: id,
   announcementData,
 }: AnnouncementFormProps) => {
-  const [{ idToken, email: registeredEmail }] = useAtom(userAtom);
+  const [{ idToken, email: registeredEmail, name }] = useAtom(userAtom);
 
   const userID = registeredEmail.split("@")[0];
   const initialValues: Announcement = {
     registeredEmail,
+    clientName: name,
     title: "",
     category: [],
     metropolitanCity: "시/도",
