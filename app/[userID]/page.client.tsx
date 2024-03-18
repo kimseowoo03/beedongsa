@@ -13,9 +13,9 @@ import { transformFirestoreQueryDocuments } from "@/utils/transformFirestoreQuer
 import type { Inquiries } from "@/types/inquiries";
 import type { ClientUser, EducatorUser } from "@/types/user";
 import type { AnnouncementDatasType, LectureDatasType } from "@/types/profile";
+import type { Apply } from "@/types/apply";
 
-//TODO: 커스텀 훅 useSomeDataQuery 으로 나중에 옮기기
-function useInquiriesData(
+function useQueryData<T>(
   collectionId: string,
   fieldPath: string,
   value: string
@@ -26,13 +26,13 @@ function useInquiriesData(
     value,
   });
 
-  const inquiriesData = useMemo(() => {
+  const queryData = useMemo(() => {
     if (isSuccess) {
-      return transformFirestoreQueryDocuments<Inquiries[]>(data);
+      return transformFirestoreQueryDocuments<T>(data);
     }
   }, [data, isSuccess]);
 
-  return { data: inquiriesData, isLoading, refetch };
+  return { data: queryData, isLoading, refetch };
 }
 
 interface ProfilePageProps {
@@ -43,16 +43,22 @@ export default function ProfilePage({
   userData,
   ProfileDatas,
 }: ProfilePageProps) {
-  const [{ userID }] = useAtom(userAtom);
+  const [{ userID, type }] = useAtom(userAtom);
 
-  const outgoingInquiriesQuery = useInquiriesData(
+  const outgoingInquiriesQuery = useQueryData<Inquiries>(
     "Inquiries",
     "questionerId",
     userID
   );
-  const receivingInquiriesQuery = useInquiriesData(
+  const receivingInquiriesQuery = useQueryData<Inquiries>(
     "Inquiries",
     "responderId",
+    userID
+  );
+
+  const applyQuery = useQueryData<Apply>(
+    "Apply",
+    type === "client" ? "clientID" : "educatorID",
     userID
   );
 
@@ -62,6 +68,7 @@ export default function ProfilePage({
       ProfileDatas={ProfileDatas}
       outgoingInquiriesQuery={outgoingInquiriesQuery}
       receivingInquiriesQuery={receivingInquiriesQuery}
+      applyQuery={applyQuery}
     />
   );
 }

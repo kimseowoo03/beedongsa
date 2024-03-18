@@ -1,3 +1,5 @@
+import { QueryObserverResult } from "@tanstack/react-query";
+
 export interface Apply {
   sentStatus: boolean;
   responseStatus: boolean;
@@ -19,4 +21,14 @@ export interface Apply {
   announcementSchedule: Array<string>;
   recruitmentDeadline: string;
   dateOfInquiry: string;
+}
+
+export interface ApplyQuery {
+  data: {
+    createTime: string;
+    data: Apply;
+    id: string;
+  }[];
+  isLoading: boolean;
+  refetch: () => Promise<QueryObserverResult<Apply[], Error>>;
 }

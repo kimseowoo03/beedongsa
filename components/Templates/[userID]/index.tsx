@@ -17,22 +17,27 @@ import { userAtom } from "@/atoms/auth";
 import type { InquiriesQuery } from "@/types/inquiries";
 import type { ClientUser, EducatorUser } from "@/types/user";
 import type { AnnouncementDatasType, LectureDatasType } from "@/types/profile";
+import type { ApplyQuery } from "@/types/apply";
+import { ApplyList } from "@/components/Organisms/ApplyList";
 
 interface ProfileProps {
   userData: EducatorUser | ClientUser;
   ProfileDatas: AnnouncementDatasType[] | LectureDatasType[];
   outgoingInquiriesQuery: InquiriesQuery;
   receivingInquiriesQuery: InquiriesQuery;
+  applyQuery: ApplyQuery | null;
 }
 export const Profile = ({
   userData,
   ProfileDatas,
   outgoingInquiriesQuery,
   receivingInquiriesQuery,
+  applyQuery,
 }: ProfileProps) => {
   const { type } = userData;
   const [{ userID, email, idToken }] = useAtom(userAtom);
 
+  console.log(applyQuery, "<<<<<applyQuery");
   return (
     <>
       {type === "client" && (
@@ -83,6 +88,7 @@ export const Profile = ({
               <Tabs.Trigger value="상세정보" />
               <Tabs.Trigger value="강의목록" />
               <Tabs.Trigger value="문의내역" />
+              <Tabs.Trigger value="지원내역" />
             </Tabs.List>
             <Tabs.Panel value="상세정보">
               <ListHeader>
@@ -114,6 +120,9 @@ export const Profile = ({
                 outgoingInquiriesQuery={outgoingInquiriesQuery}
                 receivingInquiriesQuery={receivingInquiriesQuery}
               />
+            </Tabs.Panel>
+            <Tabs.Panel value="지원내역">
+              <ApplyList {...applyQuery} />
             </Tabs.Panel>
           </Tabs>
         </>
