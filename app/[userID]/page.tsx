@@ -94,7 +94,6 @@ export default async function Page({ params }) {
 
   const { fields } = await getBasicUserData({ idToken, userID });
 
-  console.log(fields, "<<<<<<<<<<< [userID] = fields");
   const userData = transformFirestoreDocument<EducatorUser | ClientUser>(
     fields ? fields : {}
   );
@@ -112,7 +111,12 @@ export default async function Page({ params }) {
     transformFirestoreQueryDocuments<Announcement>(ProfileDataArray);
 
   return (
-    <AuthHydrateAtoms email={email} idToken={idToken} name={name}>
+    <AuthHydrateAtoms
+      email={email}
+      idToken={idToken}
+      name={name}
+      type={userData.type}
+    >
       <ProfilePage userData={userData} ProfileDatas={ProfileDatas} />
     </AuthHydrateAtoms>
   );
