@@ -13,7 +13,7 @@ export interface Inquiries {
 export interface InquiriesQuery {
   data: {
     createTime: string;
-    data: Inquiries[];
+    data: Inquiries;
     id: string;
   }[];
   isLoading: boolean;

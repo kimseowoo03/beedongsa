@@ -58,7 +58,7 @@ export const useSomeDataQuery = ({
   value,
 }: FetchSomeDataProps) => {
   return useQuery({
-    queryKey: ["someData", fieldPath],
+    queryKey: ["someData", `${fieldPath}_${value}`],
     queryFn: () =>
       fetchSomeData({
         collectionId,
