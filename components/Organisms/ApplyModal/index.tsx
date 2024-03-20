@@ -106,6 +106,7 @@ export const ApplyModal = ({
     educatorPhoneNumber: undefined,
     educatorEmail: undefined,
     lectureID: undefined,
+    lectureTitle: undefined,
     attachedFileName: undefined,
     managerName,
     managerPhoneNumber,
@@ -131,6 +132,12 @@ export const ApplyModal = ({
     let mutateData: createApplyProps;
 
     if (selection === "registeredProfile") {
+      const filteredProfile = ProfileDatas.filter(
+        (data) => data.id === values.lectureID
+      );
+
+      const lectureTitle = filteredProfile[0].data.title;
+
       // 프로필 지원인 경우 , 파일첨부 키는 제거
       mutateData = {
         inquiriesData: {
@@ -138,6 +145,7 @@ export const ApplyModal = ({
           sentStatus: true,
           applyType: "registeredProfile",
           attachedFileName: undefined,
+          lectureTitle,
         },
         token,
       };

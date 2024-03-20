@@ -10,6 +10,7 @@ export interface Apply {
   educatorPhoneNumber: string;
   educatorEmail: string;
   lectureID: string;
+  lectureTitle: string;
   attachedFileName: Array<string>;
   managerName: string;
   managerPhoneNumber: number;
