@@ -8,6 +8,8 @@ import { Tabs } from "@/components/Molecules/Tabs";
 import LectureList from "@/components/Organisms/LectureList";
 import ProfileDetailInfo from "@/components/Organisms/ProfileDetailInfo";
 import InquiriesList from "@/components/Organisms/InquiriesList";
+import { ApplyList } from "@/components/Organisms/ApplyList";
+import { ApplyStatusModal } from "@/components/Organisms/ApplyStatusModal";
 
 import { ListHeader, ListHeaderActions } from "@/styles/List";
 
@@ -18,7 +20,6 @@ import type { InquiriesQuery } from "@/types/inquiries";
 import type { ClientUser, EducatorUser } from "@/types/user";
 import type { AnnouncementDatasType, LectureDatasType } from "@/types/profile";
 import type { ApplyQuery } from "@/types/apply";
-import { ApplyList } from "@/components/Organisms/ApplyList";
 
 interface ProfileProps {
   userData: EducatorUser | ClientUser;
@@ -127,6 +128,8 @@ export const Profile = ({
           </Tabs>
         </>
       )}
+
+      <ApplyStatusModal />
     </>
   );
 };
