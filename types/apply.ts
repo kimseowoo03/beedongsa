@@ -1,4 +1,5 @@
 import { QueryObserverResult } from "@tanstack/react-query";
+import type { firestoreQueryDocumentResData } from "./firebaseType";
 
 export interface Apply {
   sentStatus: boolean;
@@ -25,11 +26,7 @@ export interface Apply {
 }
 
 export interface ApplyQuery {
-  data: {
-    createTime: string;
-    data: Apply;
-    id: string;
-  }[];
+  data: firestoreQueryDocumentResData<Apply>[];
   isLoading: boolean;
   refetch: () => Promise<QueryObserverResult<Apply[], Error>>;
 }
