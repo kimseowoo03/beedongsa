@@ -2,7 +2,7 @@ import styled from "@emotion/styled";
 import { BackgroundModal, ModalWrap } from "@/styles/Modal";
 
 import { useAtom, useAtomValue } from "jotai";
-import { applyStatusAtom, applyStatusModalAtom } from "@/atoms/modal";
+import { applyStatusAtom, applyStatusModalAtom } from "@/atoms/apply";
 
 const Wrap = styled(ModalWrap)`
   width: 320px;

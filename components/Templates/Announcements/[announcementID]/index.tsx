@@ -1,5 +1,5 @@
 import { useAtom } from "jotai";
-import { applyModalAtom, inquiriesModalAtom } from "@/atoms/modal";
+import { inquiriesModalAtom } from "@/atoms/modal";
 
 import { Announcement } from "@/types/announcement";
 import { InquiriesModal } from "@/components/Organisms/InquiriesModal";
@@ -7,6 +7,7 @@ import { ApplyModal } from "@/components/Organisms/ApplyModal";
 import { firestoreQueryDocumentResData } from "@/types/firebaseType";
 import { Lecture } from "@/types/lecture";
 import { userAtom } from "@/atoms/auth";
+import { applyInitialValuesAtom, applyModalAtom } from "@/atoms/apply";
 
 interface AnnouncementDetailProps {
   announcementID: string;
@@ -23,6 +24,9 @@ export const AnnouncementDetail = ({
   const [{ idToken, name, userID, type }] = useAtom(userAtom);
   const [isInquiriesModal, setIsInquiriesModal] = useAtom(inquiriesModalAtom);
   const [isApplyModalOpen, setIsApplyModalOpen] = useAtom(applyModalAtom);
+  const [applyInitialValues, setApplyInitialValues] = useAtom(
+    applyInitialValuesAtom
+  );
 
   if (isLoading) {
     return <p>로딩중입니다</p>;
@@ -33,10 +37,17 @@ export const AnnouncementDetail = ({
       alert("로그인한 유저만 사용이 가능합니다.");
       return;
     }
-    setIsApplyModalOpen(true);
+    setApplyInitialValues((prevValues) => ({
+      ...prevValues,
+      recruitmentDeadline: announcementData.recruitmentDeadline,
+      clientID: announcementData.registeredEmail.split("@")[0],
+      clientName: announcementData.clientName,
+      announcementID: announcementID,
+      announcementTitle: announcementData.title,
+      announcementSchedule: announcementData.schedule,
+    }));
+    setIsApplyModalOpen(() => true);
   };
-
-  //TODO: 스켈레톤 컴포넌트로 랜더링 구성
 
   return (
     <>
@@ -58,15 +69,7 @@ export const AnnouncementDetail = ({
         responderId={announcementData.registeredEmail.split("@")[0]}
       />
       {/**강사만 접근할 수 있는 모달 */}
-      <ApplyModal
-        recruitmentDeadline={announcementData.recruitmentDeadline}
-        clientID={announcementData.registeredEmail.split("@")[0]}
-        clientName={announcementData.clientName}
-        announcementID={announcementID}
-        announcementTitle={announcementData.title}
-        announcementSchedule={announcementData.schedule}
-        ProfileDatas={ProfileDatas}
-      />
+      <ApplyModal ProfileDatas={ProfileDatas} />
     </>
   );
 };

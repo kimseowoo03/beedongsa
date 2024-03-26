@@ -6,7 +6,7 @@ import { AnnouncementDetail } from "@/components/Templates/Announcements/[announ
 
 import { useAtom } from "jotai";
 import { userAtom } from "@/atoms/auth";
-import { applyModalAtom } from "@/atoms/modal";
+import { applyModalAtom } from "@/atoms/apply";
 
 import { transformFirestoreQueryDocuments } from "@/utils/transformFirestoreQueryDocuments";
 import { transformFirestoreDocument } from "@/utils/transformFirebaseDocument";
