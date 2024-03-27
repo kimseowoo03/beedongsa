@@ -68,8 +68,6 @@ export const AnnouncementDetail = ({
         inquiryPostId={announcementID}
         responderId={announcementData.registeredEmail.split("@")[0]}
       />
-      {/**강사만 접근할 수 있는 모달 */}
-      <ApplyModal ProfileDatas={ProfileDatas} />
     </>
   );
 };
