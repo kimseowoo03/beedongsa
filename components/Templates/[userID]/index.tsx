@@ -2,14 +2,14 @@ import Link from "next/link";
 
 import { ProfileClientHeader } from "@/components/Organisms/ProfileClientHeader";
 import { ProfileEducatorHeader } from "@/components/Organisms/ProfileEducatorHeader";
-import NoticeBar from "@/components/Atoms/NoticeBar";
-import AnnouncementList from "@/components/Organisms/AnnouncementList";
 import { Tabs } from "@/components/Molecules/Tabs";
+import { ApplyList } from "@/components/Organisms/ApplyList";
+import { ApplyStatusModal } from "@/components/Organisms/ApplyStatusModal";
 import LectureList from "@/components/Organisms/LectureList";
 import ProfileDetailInfo from "@/components/Organisms/ProfileDetailInfo";
 import InquiriesList from "@/components/Organisms/InquiriesList";
-import { ApplyList } from "@/components/Organisms/ApplyList";
-import { ApplyStatusModal } from "@/components/Organisms/ApplyStatusModal";
+import NoticeBar from "@/components/Atoms/NoticeBar";
+import AnnouncementList from "@/components/Organisms/AnnouncementList";
 
 import { ListHeader, ListHeaderActions } from "@/styles/List";
 
@@ -20,13 +20,16 @@ import type { InquiriesQuery } from "@/types/inquiries";
 import type { ClientUser, EducatorUser } from "@/types/user";
 import type { AnnouncementDatasType, LectureDatasType } from "@/types/profile";
 import type { ApplyQuery } from "@/types/apply";
+import { ApplicantList } from "@/components/Organisms/ApplicantList";
+import { ApplyModal } from "@/components/Organisms/ApplyModal";
 
 interface ProfileProps {
   userData: EducatorUser | ClientUser;
   ProfileDatas: AnnouncementDatasType[] | LectureDatasType[];
   outgoingInquiriesQuery: InquiriesQuery;
   receivingInquiriesQuery: InquiriesQuery;
-  applyQuery: ApplyQuery | null;
+  applyQuery: ApplyQuery;
+  applicantQuery: ApplyQuery;
 }
 export const Profile = ({
   userData,
@@ -34,11 +37,11 @@ export const Profile = ({
   outgoingInquiriesQuery,
   receivingInquiriesQuery,
   applyQuery,
+  applicantQuery,
 }: ProfileProps) => {
   const { type } = userData;
   const [{ userID, email, idToken }] = useAtom(userAtom);
 
-  console.log(applyQuery, "<<<<<applyQuery");
   return (
     <>
       {type === "client" && (
@@ -51,6 +54,7 @@ export const Profile = ({
           <Tabs defaultValue="공고목록">
             <Tabs.List>
               <Tabs.Trigger value="공고목록" />
+              <Tabs.Trigger value="지원자목록" />
               <Tabs.Trigger value="문의내역" />
             </Tabs.List>
             <Tabs.Panel value="공고목록">
@@ -66,6 +70,12 @@ export const Profile = ({
                     />
                   );
                 })}
+            </Tabs.Panel>
+            <Tabs.Panel value="지원자목록">
+              <ApplicantList
+                applicantQuery={applicantQuery}
+                ProfileDatas={ProfileDatas as AnnouncementDatasType[]}
+              />
             </Tabs.Panel>
             <Tabs.Panel value="문의내역">
               <InquiriesList
@@ -129,6 +139,7 @@ export const Profile = ({
         </>
       )}
 
+      <ApplyModal ProfileDatas={ProfileDatas as LectureDatasType[]} />
       <ApplyStatusModal />
     </>
   );
