@@ -62,6 +62,8 @@ export default function ProfilePage({
     userID
   );
 
+  const applicantQuery = useQueryData<Apply>("Apply", "clientID", userID);
+
   return (
     <Profile
       userData={userData}
@@ -69,6 +71,7 @@ export default function ProfilePage({
       outgoingInquiriesQuery={outgoingInquiriesQuery}
       receivingInquiriesQuery={receivingInquiriesQuery}
       applyQuery={applyQuery}
+      applicantQuery={applicantQuery}
     />
   );
 }
