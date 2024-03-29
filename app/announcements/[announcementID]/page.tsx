@@ -12,13 +12,14 @@ export default async function Page({ params }) {
     idToken: null,
   };
 
-  const userID = email.split("@")[0];
+  let type = undefined;
+  let userID = email ? email.split("@")[0] : null;
 
-  const { fields } = await getBasicUserData({ idToken, userID });
+  if (idToken) {
+    const { fields } = await getBasicUserData({ idToken, userID });
 
-  const { type } = transformFirestoreDocument<EducatorUser | ClientUser>(
-    fields
-  );
+    type = transformFirestoreDocument<EducatorUser | ClientUser>(fields).type;
+  }
 
   return (
     <AuthHydrateAtoms email={email} idToken={idToken} name={name} type={type}>
