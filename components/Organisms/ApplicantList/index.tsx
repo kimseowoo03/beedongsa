@@ -35,12 +35,16 @@ export const ApplicantList = ({
     const selectedAnnouncementTitle = event.target.value;
     setSelectedValue(() => selectedAnnouncementTitle);
 
-    const updatedApplicantDatas =
-      selectedAnnouncementTitle === "전체"
-        ? initialFirestoreQueryDocumentResData
-        : initialFirestoreQueryDocumentResData.filter(
-            ({ data }) => data.announcementTitle === selectedAnnouncementTitle
-          );
+    let updatedApplicantDatas = [];
+
+    if (initialFirestoreQueryDocumentResData) {
+      updatedApplicantDatas =
+        selectedAnnouncementTitle === "전체"
+          ? initialFirestoreQueryDocumentResData
+          : initialFirestoreQueryDocumentResData.filter(
+              ({ data }) => data.announcementTitle === selectedAnnouncementTitle
+            );
+    }
 
     setApplicantDatas(() => updatedApplicantDatas);
   };
