@@ -2,13 +2,14 @@ import { cookies } from "next/headers";
 
 export async function refreshTokenFetch() {
   try {
-    const cookieStore = cookies();
-    const refreshToken = cookieStore.get("refreshToken").value;
+    const cookieJar = cookies();
+    const refreshTokenCookie = cookieJar.get("refreshToken");
 
-    if (!refreshToken) {
-      // 리프레시 토큰이 없는 경우
-      return null;
+    if (!refreshTokenCookie) {
+      return;
     }
+
+    const refreshToken = refreshTokenCookie.value;
 
     //TODO: 로컬, 배포 url에 따라 설정
     const response = await fetch("http://localhost:3000/api/refresh-token", {
