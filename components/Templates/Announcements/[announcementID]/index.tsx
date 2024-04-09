@@ -21,7 +21,7 @@ export const AnnouncementDetail = ({
   isLoading,
   ProfileDatas,
 }: AnnouncementDetailProps) => {
-  const [{ idToken, name, userID, type }] = useAtom(userAtom);
+  const [{ idToken, type }] = useAtom(userAtom);
   const [isInquiriesModal, setIsInquiriesModal] = useAtom(inquiriesModalAtom);
   const [isApplyModalOpen, setIsApplyModalOpen] = useAtom(applyModalAtom);
   const [applyInitialValues, setApplyInitialValues] = useAtom(
@@ -68,6 +68,8 @@ export const AnnouncementDetail = ({
         inquiryPostId={announcementID}
         responderId={announcementData.registeredEmail.split("@")[0]}
       />
+
+      <ApplyModal ProfileDatas={ProfileDatas} />
     </>
   );
 };
