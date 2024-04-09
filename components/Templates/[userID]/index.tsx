@@ -3,8 +3,9 @@ import Link from "next/link";
 import { ProfileClientHeader } from "@/components/Organisms/ProfileClientHeader";
 import { ProfileEducatorHeader } from "@/components/Organisms/ProfileEducatorHeader";
 import { Tabs } from "@/components/Molecules/Tabs";
+import { ApplicantList } from "@/components/Organisms/ApplicantList";
+import { ApplyModal } from "@/components/Organisms/ApplyModal";
 import { ApplyList } from "@/components/Organisms/ApplyList";
-import { ApplyStatusModal } from "@/components/Organisms/ApplyStatusModal";
 import LectureList from "@/components/Organisms/LectureList";
 import ProfileDetailInfo from "@/components/Organisms/ProfileDetailInfo";
 import InquiriesList from "@/components/Organisms/InquiriesList";
@@ -16,31 +17,16 @@ import { ListHeader, ListHeaderActions } from "@/styles/List";
 import { useAtom } from "jotai";
 import { userAtom } from "@/atoms/auth";
 
-import type { InquiriesQuery } from "@/types/inquiries";
 import type { ClientUser, EducatorUser } from "@/types/user";
 import type { AnnouncementDatasType, LectureDatasType } from "@/types/profile";
-import type { ApplyQuery } from "@/types/apply";
-import { ApplicantList } from "@/components/Organisms/ApplicantList";
-import { ApplyModal } from "@/components/Organisms/ApplyModal";
 
 interface ProfileProps {
   userData: EducatorUser | ClientUser;
   ProfileDatas: AnnouncementDatasType[] | LectureDatasType[];
-  outgoingInquiriesQuery: InquiriesQuery;
-  receivingInquiriesQuery: InquiriesQuery;
-  applyQuery: ApplyQuery;
-  applicantQuery: ApplyQuery;
 }
-export const Profile = ({
-  userData,
-  ProfileDatas,
-  outgoingInquiriesQuery,
-  receivingInquiriesQuery,
-  applyQuery,
-  applicantQuery,
-}: ProfileProps) => {
+export const Profile = ({ userData, ProfileDatas }: ProfileProps) => {
   const { type } = userData;
-  const [{ userID, email, idToken }] = useAtom(userAtom);
+  const [{ userID }] = useAtom(userAtom);
 
   return (
     <>
@@ -73,15 +59,11 @@ export const Profile = ({
             </Tabs.Panel>
             <Tabs.Panel value="지원자목록">
               <ApplicantList
-                applicantQuery={applicantQuery}
                 ProfileDatas={ProfileDatas as AnnouncementDatasType[]}
               />
             </Tabs.Panel>
             <Tabs.Panel value="문의내역">
-              <InquiriesList
-                outgoingInquiriesQuery={outgoingInquiriesQuery}
-                receivingInquiriesQuery={receivingInquiriesQuery}
-              />
+              <InquiriesList />
             </Tabs.Panel>
           </Tabs>
         </>
@@ -127,20 +109,16 @@ export const Profile = ({
                 })}
             </Tabs.Panel>
             <Tabs.Panel value="문의내역">
-              <InquiriesList
-                outgoingInquiriesQuery={outgoingInquiriesQuery}
-                receivingInquiriesQuery={receivingInquiriesQuery}
-              />
+              <InquiriesList />
             </Tabs.Panel>
             <Tabs.Panel value="지원내역">
-              <ApplyList {...applyQuery} />
+              <ApplyList />
             </Tabs.Panel>
           </Tabs>
         </>
       )}
 
       <ApplyModal ProfileDatas={ProfileDatas as LectureDatasType[]} />
-      <ApplyStatusModal />
     </>
   );
 };
