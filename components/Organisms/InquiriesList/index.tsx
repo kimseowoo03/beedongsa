@@ -6,7 +6,10 @@ import InquiriesListItem, {
   ListItem,
 } from "@/components/Molecules/InquiriesListItem";
 
-import type { InquiriesQuery } from "@/types/inquiries";
+import {
+  useOutgoingInquiriesQuery,
+  useReceivingInquiriesQuery,
+} from "@/hooks/[userID]/useInquiryQueries";
 
 const List = styled.ul`
   list-style: none;
@@ -14,15 +17,11 @@ const List = styled.ul`
 
 type TabType = "outgoing" | "incoming";
 
-interface InquiriesListProps {
-  outgoingInquiriesQuery: InquiriesQuery;
-  receivingInquiriesQuery: InquiriesQuery;
-}
-const InquiriesList = ({
-  outgoingInquiriesQuery,
-  receivingInquiriesQuery,
-}: InquiriesListProps) => {
+const InquiriesList = () => {
   const [selectedTab, setSelectedTab] = useState<TabType>("outgoing");
+
+  const outgoingInquiriesQuery = useOutgoingInquiriesQuery();
+  const receivingInquiriesQuery = useReceivingInquiriesQuery();
 
   const {
     isLoading,
