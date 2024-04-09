@@ -1,4 +1,4 @@
-import { Apply } from "@/types/apply";
+import { ApplyWithID } from "@/types/apply";
 import { atom } from "jotai";
 
 export const applyModalAtom = atom(false);
@@ -12,6 +12,7 @@ export const applyStatusAtom = atom({
 });
 
 export const applyInitialValues = {
+  applyID: undefined,
   sentStatus: false,
   responseStatus: false,
   matchConfirmationStatus: false,
@@ -35,4 +36,4 @@ export const applyInitialValues = {
   dateOfInquiry: undefined,
 };
 
-export const applyInitialValuesAtom = atom<Apply>(applyInitialValues);
+export const applyInitialValuesAtom = atom<ApplyWithID>(applyInitialValues);

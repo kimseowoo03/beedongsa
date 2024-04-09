@@ -25,6 +25,9 @@ export interface Apply {
   dateOfInquiry: string;
 }
 
+export interface ApplyWithID extends Apply {
+  applyID?: string;
+}
 export interface ApplyQuery {
   data: firestoreQueryDocumentResData<Apply>[];
   isLoading: boolean;
