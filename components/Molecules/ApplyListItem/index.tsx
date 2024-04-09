@@ -1,47 +1,53 @@
-import { applyStatusAtom, applyStatusModalAtom } from "@/atoms/apply";
+import {
+  applyInitialValuesAtom,
+  applyModalAtom,
+  applyStatusAtom,
+  applyStatusModalAtom,
+} from "@/atoms/apply";
 import { Apply } from "@/types/apply";
-import { useSetAtom } from "jotai";
+import { useAtom, useSetAtom } from "jotai";
 import Link from "next/link";
 import { useState } from "react";
 
 interface ApplyListItemProps extends Apply {
   id: string;
 }
-export const ApplyListItem = ({
-  id,
-  sentStatus,
-  responseStatus,
-  matchConfirmationStatus,
-  applyType,
-  educatorID,
-  educatorName,
-  educatorPhoneNumber,
-  educatorEmail,
-  lectureID,
-  lectureTitle,
-  attachedFileName,
-  managerName,
-  managerPhoneNumber,
-  managerEmail,
-  clientID,
-  clientName,
-  announcementID,
-  announcementTitle,
-  announcementSchedule,
-  recruitmentDeadline,
-  dateOfInquiry,
-}: ApplyListItemProps) => {
-  const setApplyStatusModal = useSetAtom(applyStatusModalAtom);
-  const setApplyStatus = useSetAtom(applyStatusAtom);
+export const ApplyListItem = (applyListItem: ApplyListItemProps) => {
+  const {
+    id,
+    sentStatus,
+    responseStatus,
+    matchConfirmationStatus,
+    applyType,
+    educatorID,
+    educatorName,
+    educatorPhoneNumber,
+    educatorEmail,
+    lectureID,
+    lectureTitle,
+    attachedFileName,
+    managerName,
+    managerPhoneNumber,
+    managerEmail,
+    clientID,
+    clientName,
+    announcementID,
+    announcementTitle,
+    announcementSchedule,
+    recruitmentDeadline,
+    dateOfInquiry,
+  } = applyListItem;
+
+  const [isApplyModalOpen, setIsApplyModalOpen] = useAtom(applyModalAtom);
+  const [applyInitialValues, setApplyInitialValues] = useAtom(
+    applyInitialValuesAtom
+  );
 
   const handleCheckApplyStatus = () => {
-    console.log("클릭");
-    setApplyStatus({
-      sentStatus,
-      responseStatus,
-      matchConfirmationStatus,
-    });
-    setApplyStatusModal(() => true);
+    console.log(applyInitialValues, "<<<applyInitialValues");
+    setApplyInitialValues(() => applyInitialValues);
+
+    setIsApplyModalOpen(() => true);
   };
 
   return (
@@ -70,6 +76,7 @@ export const ApplyListItem = ({
     </li>
   );
 };
+
 const ApplyTypeDetail = ({
   applyType,
   lectureID,
