@@ -5,17 +5,11 @@ export const applyModalAtom = atom(false);
 
 export const applyStatusModalAtom = atom(false);
 
-export const applyStatusAtom = atom({
-  sentStatus: false,
-  responseStatus: false,
-  matchConfirmationStatus: false,
-});
-
 export const applyInitialValues = {
   applyID: undefined,
-  sentStatus: false,
-  responseStatus: false,
-  matchConfirmationStatus: false,
+  isApplicationStatus: false,
+  isApplicationConfirmationStatus: false,
+  isFinalMatchedStatus: false,
   applyType: undefined,
   educatorID: undefined,
   educatorName: undefined,
@@ -36,4 +30,4 @@ export const applyInitialValues = {
   dateOfInquiry: undefined,
 };
 
-export const applyInitialValuesAtom = atom<ApplyWithID>(applyInitialValues);
+export const applyValuesAtom = atom<ApplyWithID>(applyInitialValues);
