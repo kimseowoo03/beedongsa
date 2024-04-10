@@ -15,9 +15,9 @@ interface ApplyListItemProps extends Apply {
 export const ApplyListItem = (applyListItem: ApplyListItemProps) => {
   const {
     id,
-    sentStatus,
-    responseStatus,
-    matchConfirmationStatus,
+    isApplicationStatus,
+    isApplicationConfirmationStatus,
+    isFinalMatchedStatus,
     applyType,
     educatorID,
     educatorName,

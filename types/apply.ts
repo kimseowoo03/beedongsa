@@ -2,9 +2,9 @@ import { QueryObserverResult } from "@tanstack/react-query";
 import type { firestoreQueryDocumentResData } from "./firebaseType";
 
 export interface Apply {
-  sentStatus: boolean;
-  responseStatus: boolean;
-  matchConfirmationStatus: boolean;
+  isApplicationStatus: boolean;
+  isApplicationConfirmationStatus: boolean;
+  isFinalMatchedStatus: boolean;
   applyType: "registeredProfile" | "attachments";
   educatorID: string;
   educatorName: string;
