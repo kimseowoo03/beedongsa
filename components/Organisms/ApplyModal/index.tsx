@@ -109,7 +109,7 @@ const ApplyStepOne = ({ ProfileDatas }: ApplyStepOneProps) => {
   ] = useAtom(userAtom);
 
   const [isApplyModal, setIsApplyModal] = useAtom(applyModalAtom);
-  const [applyInitialValues, setApplyInitialValues] = useAtom(applyValuesAtom);
+  const [applyValues, setApplyValues] = useAtom(applyValuesAtom);
 
   // 날짜와 시간을 문자열로 변환
   const currentDate = new Date();
@@ -133,7 +133,7 @@ const ApplyStepOne = ({ ProfileDatas }: ApplyStepOneProps) => {
 
     if (selection === "registeredProfile") {
       const filteredProfile = ProfileDatas.filter(
-        (data) => data.id === applyInitialValues.lectureID
+        (data) => data.id === applyValues.lectureID
       );
 
       const lectureTitle = filteredProfile[0].data.title;
@@ -141,7 +141,7 @@ const ApplyStepOne = ({ ProfileDatas }: ApplyStepOneProps) => {
       // 프로필 지원인 경우 , 파일첨부 키는 제거
       mutateData = {
         inquiriesData: {
-          ...applyInitialValues,
+          ...applyValues,
           educatorEmail,
           educatorID,
           educatorName,
@@ -158,7 +158,7 @@ const ApplyStepOne = ({ ProfileDatas }: ApplyStepOneProps) => {
         onSuccess: (response) => {
           alert(response.message);
           setIsApplyModal(() => false);
-          setApplyInitialValues(() => applyInitialValues);
+          setApplyValues(() => applyValues);
         },
       });
     } else {
@@ -169,7 +169,7 @@ const ApplyStepOne = ({ ProfileDatas }: ApplyStepOneProps) => {
         // 파일첨부 지원인 경우 , 강의 ID 키는 제거
         mutateData = {
           inquiriesData: {
-            ...applyInitialValues,
+            ...applyValues,
             educatorEmail,
             educatorID,
             educatorName,
@@ -187,7 +187,7 @@ const ApplyStepOne = ({ ProfileDatas }: ApplyStepOneProps) => {
           onSuccess: (response) => {
             alert(response.message);
             setIsApplyModal(() => false);
-            setApplyInitialValues(() => applyInitialValues);
+            setApplyValues(() => applyValues);
           },
         });
       } catch (error) {
@@ -198,14 +198,14 @@ const ApplyStepOne = ({ ProfileDatas }: ApplyStepOneProps) => {
 
   const onChange = useCallback(
     (name: string, type: string, checked: boolean, newValue: string) => {
-      setApplyInitialValues((prevValues) => {
+      setApplyValues((prevValues) => {
         return {
           ...prevValues,
           [name]: checked ? newValue : "",
         };
       });
     },
-    [setApplyInitialValues]
+    [setApplyValues]
   );
 
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -262,7 +262,7 @@ const ApplyStepOne = ({ ProfileDatas }: ApplyStepOneProps) => {
       {selection === "registeredProfile" ? (
         <div>
           {ProfileDatas ? (
-            <MultipleSelection values={applyInitialValues.lectureID}>
+            <MultipleSelection values={applyValues.lectureID}>
               {ProfileDatas.map((lecture) => {
                 return (
                   <MultipleSelection.CheckboxLabel
@@ -273,7 +273,7 @@ const ApplyStepOne = ({ ProfileDatas }: ApplyStepOneProps) => {
                     id={lecture.data.title}
                     value={lecture.id}
                     onChange={onChange}
-                    checked={applyInitialValues.lectureID === lecture.id}
+                    checked={applyValues.lectureID === lecture.id}
                   />
                 );
               })}
@@ -463,7 +463,7 @@ const ApplyStepThree = ({
 }: ApplyStepThreeProps) => {
   const { isFinalMatchedStatus } = applyInitialValues;
 
-  const [_applyInitialValues, setApplyInitialValues] = useAtom(applyValuesAtom);
+  const [_applyValues, setApplyValues] = useAtom(applyValuesAtom);
 
   const mutation = useMutation({
     mutationFn: updateApply,
@@ -480,7 +480,7 @@ const ApplyStepThree = ({
       },
       {
         onSuccess: (response) => {
-          setApplyInitialValues(() => response.data);
+          setApplyValues(() => response.data);
         },
       }
     );
@@ -582,7 +582,7 @@ interface ApplyModalProps {
 export const ApplyModal = ({ ProfileDatas }: ApplyModalProps) => {
   const [{ type, idToken }] = useAtom(userAtom);
 
-  const [applyInitialValues, setApplyInitialValues] = useAtom(applyValuesAtom);
+  const [applyValues, _setApplyValues] = useAtom(applyValuesAtom);
 
   const [isApplyModal, setIsApplyModal] = useAtom(applyModalAtom);
   const applyModalClose = () => setIsApplyModal(() => false);
@@ -591,8 +591,7 @@ export const ApplyModal = ({ ProfileDatas }: ApplyModalProps) => {
     return;
   }
 
-  const { isApplicationStatus, isApplicationConfirmationStatus } =
-    applyInitialValues;
+  const { isApplicationStatus, isApplicationConfirmationStatus } = applyValues;
 
   return (
     <>
@@ -605,7 +604,7 @@ export const ApplyModal = ({ ProfileDatas }: ApplyModalProps) => {
               <ApplyStepTwo applyModalClose={applyModalClose} />
             ) : (
               <ApplyStatusModal
-                applyInitialValues={applyInitialValues}
+                applyInitialValues={applyValues}
                 applyModalClose={applyModalClose}
               />
             )}
@@ -620,7 +619,7 @@ export const ApplyModal = ({ ProfileDatas }: ApplyModalProps) => {
             {/** 2단계 - 지원 대기 (클라이언트 확인이 안된 상태) */}
             {isApplicationStatus && !isApplicationConfirmationStatus && (
               <ApplyStatusModal
-                applyInitialValues={applyInitialValues}
+                applyInitialValues={applyValues}
                 applyModalClose={applyModalClose}
               />
             )}
@@ -630,7 +629,7 @@ export const ApplyModal = ({ ProfileDatas }: ApplyModalProps) => {
         {/** 3단계 - 최종 매칭  */}
         {isApplicationConfirmationStatus && (
           <ApplyStepThree
-            applyInitialValues={applyInitialValues}
+            applyInitialValues={applyValues}
             token={idToken}
             applyModalClose={applyModalClose}
             userType={type}

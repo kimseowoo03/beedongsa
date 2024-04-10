@@ -7,7 +7,7 @@ import { ApplyModal } from "@/components/Organisms/ApplyModal";
 import { firestoreQueryDocumentResData } from "@/types/firebaseType";
 import { Lecture } from "@/types/lecture";
 import { userAtom } from "@/atoms/auth";
-import { applyInitialValuesAtom, applyModalAtom } from "@/atoms/apply";
+import { applyValuesAtom, applyModalAtom } from "@/atoms/apply";
 
 interface AnnouncementDetailProps {
   announcementID: string;
@@ -22,11 +22,9 @@ export const AnnouncementDetail = ({
   ProfileDatas,
 }: AnnouncementDetailProps) => {
   const [{ idToken, type }] = useAtom(userAtom);
-  const [isInquiriesModal, setIsInquiriesModal] = useAtom(inquiriesModalAtom);
-  const [isApplyModalOpen, setIsApplyModalOpen] = useAtom(applyModalAtom);
-  const [applyInitialValues, setApplyInitialValues] = useAtom(
-    applyInitialValuesAtom
-  );
+  const [_isInquiriesModal, setIsInquiriesModal] = useAtom(inquiriesModalAtom);
+  const [_isApplyModalOpen, setIsApplyModalOpen] = useAtom(applyModalAtom);
+  const [_applyValues, setApplyValues] = useAtom(applyValuesAtom);
 
   if (isLoading) {
     return <p>로딩중입니다</p>;
@@ -37,7 +35,7 @@ export const AnnouncementDetail = ({
       alert("로그인한 유저만 사용이 가능합니다.");
       return;
     }
-    setApplyInitialValues((prevValues) => ({
+    setApplyValues((prevValues) => ({
       ...prevValues,
       recruitmentDeadline: announcementData.recruitmentDeadline,
       clientID: announcementData.registeredEmail.split("@")[0],

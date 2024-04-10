@@ -33,11 +33,11 @@ export const ApplyListItem = (applyListItem: ApplyListItemProps) => {
     dateOfInquiry,
   } = applyListItem;
 
-  const [isApplyModalOpen, setIsApplyModalOpen] = useAtom(applyModalAtom);
-  const [applyInitialValues, setApplyInitialValues] = useAtom(applyValuesAtom);
+  const [_isApplyModalOpen, setIsApplyModalOpen] = useAtom(applyModalAtom);
+  const [_applyIValues, setApplyValues] = useAtom(applyValuesAtom);
 
   const handleCheckApplyStatus = () => {
-    setApplyInitialValues(() => ({ ...applyListItem, applyID }));
+    setApplyValues(() => ({ ...applyListItem, applyID }));
 
     setIsApplyModalOpen(() => true);
   };
