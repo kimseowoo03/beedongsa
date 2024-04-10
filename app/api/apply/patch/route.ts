@@ -1,4 +1,5 @@
-import { ApplyWithID } from "@/types/apply";
+import { Apply, ApplyWithID } from "@/types/apply";
+import { transformFirestoreDocument } from "@/utils/transformFirebaseDocument";
 import { transformToFirestoreFormat } from "@/utils/transformFirebaseFormat";
 
 export async function PATCH(request: Request) {
@@ -31,9 +32,13 @@ export async function PATCH(request: Request) {
       throw new Error(firestoreApplyPatchData.error.message);
     }
 
+    const applyPatchData = transformFirestoreDocument<Apply>(
+      firestoreApplyPatchData.fields
+    );
+
     return new Response(
       JSON.stringify({
-        data: firestoreApplyPatchData,
+        data: applyPatchData,
         message: "최종매칭 확인",
       }),
       {

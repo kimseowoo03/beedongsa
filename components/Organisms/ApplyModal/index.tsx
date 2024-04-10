@@ -1,19 +1,21 @@
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useState } from "react";
 import { useMutation } from "@tanstack/react-query";
+import Link from "next/link";
 
 import Button from "@/components/Atoms/Button";
 import { CancelButton } from "@/components/Atoms/CancelButton";
 import { MultipleSelection } from "@/components/Molecules/CheckboxLabel";
 
 import { useAtom, useAtomValue } from "jotai";
-
 import { userAtom } from "@/atoms/auth";
+import { applyValuesAtom, applyModalAtom } from "@/atoms/apply";
 
 import styled from "@emotion/styled";
 import { BackgroundModal, Buttons, ModalWrap } from "@/styles/Modal";
 import { GoFile } from "react-icons/go";
 import { HiOutlineXMark } from "react-icons/hi2";
 import { Hr } from "@/styles/htmlStyles";
+
 import {
   FileSelectBox,
   FileSizeBox,
@@ -21,18 +23,18 @@ import {
 } from "@/components/Molecules/UploadFile";
 
 import type { TokenType } from "@/types/auth";
-import type { Apply } from "@/types/apply";
+import type { Apply, ApplyWithID } from "@/types/apply";
 import type { firestoreQueryDocumentResData } from "@/types/firebaseType";
 import type { Lecture } from "@/types/lecture";
+import type { UserType } from "@/types/user";
 
 import { formatFileSize } from "@/utils/formatFileSize";
 import { uploadFiles } from "@/utils/uploadFiles";
-import {
-  applyInitialValues,
-  applyInitialValuesAtom,
-  applyModalAtom,
-  applyStatusAtom,
-} from "@/atoms/apply";
+
+import { getDownloadURL, getStorage, ref } from "firebase/storage";
+
+import { useApplyQuery } from "@/hooks/[userID]/useApplyQuery";
+import { transformFirestoreDocument } from "@/utils/transformFirebaseDocument";
 
 const MAX_FILE_SIZE = 5 * 1024 * 1024; // 50MB
 
@@ -65,15 +67,49 @@ const createApply = async ({
   return response.json();
 };
 
+interface checkApplyProps {
+  data: ApplyWithID;
+  token: NonNullable<TokenType>;
+}
+const updateApply = async ({ data, token }: checkApplyProps): Promise<any> => {
+  const response = await fetch("/api/apply/patch", {
+    method: "PATCH",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+    },
+    body: JSON.stringify({ ...data }),
+  });
+
+  if (!response.ok) {
+    const errorData = await response.json();
+    throw new Error(errorData.errorMessage);
+  }
+  return response.json();
+};
+
+// Firebase에서 파일 URL을 가져오는 함수
+async function fetchFileURL(fileName, fileUserID) {
+  const storage = getStorage();
+  const fileRef = ref(storage, `/${fileUserID}/${fileName}`);
+  return getDownloadURL(fileRef);
+}
+
 interface ApplyStepOneProps {
   ProfileDatas: firestoreQueryDocumentResData<Lecture>[];
 }
 const ApplyStepOne = ({ ProfileDatas }: ApplyStepOneProps) => {
-  const [{ idToken: token, name: educatorName, userID: educatorID }] =
-    useAtom(userAtom);
+  const [
+    {
+      idToken: token,
+      email: educatorEmail,
+      name: educatorName,
+      userID: educatorID,
+    },
+  ] = useAtom(userAtom);
 
   const [isApplyModal, setIsApplyModal] = useAtom(applyModalAtom);
-  const [values, setValues] = useAtom(applyInitialValuesAtom);
+  const [applyInitialValues, setApplyInitialValues] = useAtom(applyValuesAtom);
 
   // 날짜와 시간을 문자열로 변환
   const currentDate = new Date();
@@ -97,7 +133,7 @@ const ApplyStepOne = ({ ProfileDatas }: ApplyStepOneProps) => {
 
     if (selection === "registeredProfile") {
       const filteredProfile = ProfileDatas.filter(
-        (data) => data.id === values.lectureID
+        (data) => data.id === applyInitialValues.lectureID
       );
 
       const lectureTitle = filteredProfile[0].data.title;
@@ -105,8 +141,11 @@ const ApplyStepOne = ({ ProfileDatas }: ApplyStepOneProps) => {
       // 프로필 지원인 경우 , 파일첨부 키는 제거
       mutateData = {
         inquiriesData: {
-          ...values,
-          sentStatus: true,
+          ...applyInitialValues,
+          educatorEmail,
+          educatorID,
+          educatorName,
+          isApplicationStatus: true,
           applyType: "registeredProfile",
           attachedFileName: undefined,
           lectureTitle,
@@ -119,7 +158,7 @@ const ApplyStepOne = ({ ProfileDatas }: ApplyStepOneProps) => {
         onSuccess: (response) => {
           alert(response.message);
           setIsApplyModal(() => false);
-          setValues(() => applyInitialValues);
+          setApplyInitialValues(() => applyInitialValues);
         },
       });
     } else {
@@ -130,8 +169,11 @@ const ApplyStepOne = ({ ProfileDatas }: ApplyStepOneProps) => {
         // 파일첨부 지원인 경우 , 강의 ID 키는 제거
         mutateData = {
           inquiriesData: {
-            ...values,
-            sentStatus: true,
+            ...applyInitialValues,
+            educatorEmail,
+            educatorID,
+            educatorName,
+            isApplicationStatus: true,
             applyType: "attachments",
             lectureID: undefined,
             attachedFileName: fileNames,
@@ -145,7 +187,7 @@ const ApplyStepOne = ({ ProfileDatas }: ApplyStepOneProps) => {
           onSuccess: (response) => {
             alert(response.message);
             setIsApplyModal(() => false);
-            setValues(() => applyInitialValues);
+            setApplyInitialValues(() => applyInitialValues);
           },
         });
       } catch (error) {
@@ -156,14 +198,14 @@ const ApplyStepOne = ({ ProfileDatas }: ApplyStepOneProps) => {
 
   const onChange = useCallback(
     (name: string, type: string, checked: boolean, newValue: string) => {
-      setValues((prevValues) => {
+      setApplyInitialValues((prevValues) => {
         return {
           ...prevValues,
           [name]: checked ? newValue : "",
         };
       });
     },
-    [setValues]
+    [setApplyInitialValues]
   );
 
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -197,6 +239,7 @@ const ApplyStepOne = ({ ProfileDatas }: ApplyStepOneProps) => {
   };
   return (
     <>
+      <h2>지원하기</h2>
       <label>
         <input
           type="radio"
@@ -219,7 +262,7 @@ const ApplyStepOne = ({ ProfileDatas }: ApplyStepOneProps) => {
       {selection === "registeredProfile" ? (
         <div>
           {ProfileDatas ? (
-            <MultipleSelection values={values.lectureID}>
+            <MultipleSelection values={applyInitialValues.lectureID}>
               {ProfileDatas.map((lecture) => {
                 return (
                   <MultipleSelection.CheckboxLabel
@@ -230,7 +273,7 @@ const ApplyStepOne = ({ ProfileDatas }: ApplyStepOneProps) => {
                     id={lecture.data.title}
                     value={lecture.id}
                     onChange={onChange}
-                    checked={values.lectureID === lecture.id}
+                    checked={applyInitialValues.lectureID === lecture.id}
                   />
                 );
               })}
@@ -294,34 +337,308 @@ const ApplyStepOne = ({ ProfileDatas }: ApplyStepOneProps) => {
   );
 };
 
-const ApplyStepTwo = () => {
-  return <>지원확인</>;
+interface ApplyStepTwoProps {
+  applyModalClose: () => void;
+}
+const ApplyStepTwo = ({ applyModalClose }: ApplyStepTwoProps) => {
+  const [{ idToken: token }] = useAtom(userAtom);
+  const { data, isLoading, refetch } = useApplyQuery();
+
+  const [applyInitialValues, setApplyInitialValues] = useAtom(applyValuesAtom);
+  const { attachedFileName, applyType, lectureID, lectureTitle, educatorID } =
+    applyInitialValues;
+
+  // 파일 다운로드 함수
+  const downloadFile = async (fileName) => {
+    try {
+      const fileUrl = await fetchFileURL(fileName, educatorID);
+      const response = await fetch(fileUrl);
+      const blob = await response.blob(); // 파일의 Blob 가져오기
+
+      const downloadUrl = window.URL.createObjectURL(blob); // Blob을 위한 로컬 URL 생성
+      const a = document.createElement("a");
+      a.style.display = "none";
+      a.href = downloadUrl;
+      a.download = fileName; // 다운로드될 파일의 이름 설정
+      document.body.appendChild(a);
+      a.click(); // 링크 클릭
+
+      window.URL.revokeObjectURL(downloadUrl); // 사용한 URL 해제
+      document.body.removeChild(a); // 생성한 a 태그 제거
+    } catch (error) {
+      alert("파일을 다운로드하는 데 실패했습니다.");
+    }
+  };
+
+  // 전체 파일 다운로드 함수
+  const downloadAllFiles = async () => {
+    for (let fileInfo of attachedFileName) {
+      const [name] = fileInfo.split("/");
+      await downloadFile(name); // 파일 이름을 이용하여 다운로드
+      await new Promise((resolve) => setTimeout(resolve, 1000)); // 각 파일 다운로드 사이에 딜레이
+    }
+  };
+
+  const mutation = useMutation({
+    mutationFn: updateApply,
+  });
+
+  const applyCheckHandler = () => {
+    const isConfirmed = window.confirm("최종매칭을 수락하겠습니까?");
+
+    if (isConfirmed) {
+      mutation.mutate(
+        {
+          data: {
+            ...applyInitialValues,
+            isApplicationConfirmationStatus: true,
+          },
+          token,
+        },
+        {
+          onSuccess: async (response) => {
+            alert(response.message);
+
+            //기존 값을 제거하고 새로운 데이터 호출
+            refetch();
+          },
+        }
+      );
+    }
+  };
+
+  return (
+    <>
+      <h2>지원확인</h2>
+      <div>
+        {applyType === "registeredProfile" ? (
+          <>
+            <p>지원한 프로필 확인</p>
+            <Link href={`/lectures/${lectureID}`}>{lectureTitle}</Link>
+          </>
+        ) : (
+          <>
+            <p>지원한 첨부파일</p>
+            <FilesBox>
+              {attachedFileName.map((fileInfo) => {
+                const [name] = fileInfo.split("/");
+                return (
+                  <li key={name}>
+                    <div>
+                      <GoFile />
+                      <span>{name}</span>
+                      <button onClick={() => downloadFile(name)}>
+                        다운로드
+                      </button>
+                    </div>
+                  </li>
+                );
+              })}
+            </FilesBox>
+
+            <button onClick={downloadAllFiles}>전체다운로드</button>
+          </>
+        )}
+
+        <p>최종 매칭되면 연락처 확인이 가능합니다.</p>
+        <p>최종 매칭은 1명만 가능하니 신중하게 결정해주세요.</p>
+      </div>
+
+      <Buttons>
+        <CancelButton cancelHandler={applyModalClose} />
+        <Button type="button" text="최종매칭" onClick={applyCheckHandler} />
+      </Buttons>
+    </>
+  );
 };
 
-const ApplyStepThree = () => {
-  return <></>;
+interface ApplyStepThreeProps {
+  applyInitialValues: ApplyWithID;
+  token: TokenType;
+  applyModalClose: () => void;
+  userType: UserType;
+}
+const ApplyStepThree = ({
+  applyInitialValues,
+  token,
+  applyModalClose,
+  userType,
+}: ApplyStepThreeProps) => {
+  const { isFinalMatchedStatus } = applyInitialValues;
+
+  const [_applyInitialValues, setApplyInitialValues] = useAtom(applyValuesAtom);
+
+  const mutation = useMutation({
+    mutationFn: updateApply,
+  });
+
+  const matchCofirmationHandler = () => {
+    mutation.mutate(
+      {
+        data: {
+          ...applyInitialValues,
+          isFinalMatchedStatus: true,
+        },
+        token,
+      },
+      {
+        onSuccess: (response) => {
+          setApplyInitialValues(() => response.data);
+        },
+      }
+    );
+  };
+
+  return (
+    <>
+      <h2>최종매칭</h2>
+      {!isFinalMatchedStatus && (
+        <div>
+          <p>
+            클라이언트의 지원 검토가 완료되었습니다. 최종 매칭을 선택하시면
+            클라이언트와의 매칭이 확정됩니다. 매칭이 확정되면, 관련 담당자의
+            연락처 정보를 확인하실 수 있습니다.
+          </p>
+
+          <Buttons>
+            <CancelButton cancelHandler={applyModalClose} />
+            <Button
+              type="button"
+              text="확인"
+              onClick={matchCofirmationHandler}
+            />
+          </Buttons>
+        </div>
+      )}
+
+      {isFinalMatchedStatus && (
+        <ul>
+          {userType === "client" ? (
+            <>
+              <li>
+                <span>담당자명:</span>
+                <span>{applyInitialValues.managerName}</span>
+              </li>
+              <li>
+                <span>담당자 이메일:</span>
+                <span>{applyInitialValues.managerEmail}</span>
+              </li>
+              <li>
+                <span>담당자 전화번호:</span>
+                <span>{applyInitialValues.managerPhoneNumber}</span>
+              </li>
+            </>
+          ) : (
+            <>
+              <li>
+                <span>강사명:</span>
+                <span>{applyInitialValues.educatorName}</span>
+              </li>
+              <li>
+                <span>강사 이메일:</span>
+                <span>{applyInitialValues.educatorEmail}</span>
+              </li>
+              <li>
+                <span>강사 전화번호:</span>
+                <span>{applyInitialValues.educatorPhoneNumber}</span>
+              </li>
+            </>
+          )}
+        </ul>
+      )}
+    </>
+  );
+};
+
+interface ApplyStatusModalProps {
+  applyInitialValues: ApplyWithID;
+  applyModalClose: () => void;
+}
+const ApplyStatusModal = ({
+  applyInitialValues,
+  applyModalClose,
+}: ApplyStatusModalProps) => {
+  const {
+    isApplicationStatus,
+    isApplicationConfirmationStatus,
+    isFinalMatchedStatus,
+  } = applyInitialValues;
+
+  return (
+    <>
+      <Wrap>
+        <p>지원하기 : {isApplicationStatus ? "O" : "X"}</p>
+        <p>지원확인 : {isApplicationConfirmationStatus ? "O" : "X"}</p>
+        <p>최종매칭 : {isFinalMatchedStatus ? "O" : "X"}</p>
+        <button type="button" onClick={applyModalClose}>
+          확인
+        </button>
+      </Wrap>
+      <BackgroundModal />
+    </>
+  );
 };
 
 interface ApplyModalProps {
   ProfileDatas: firestoreQueryDocumentResData<Lecture>[];
 }
 export const ApplyModal = ({ ProfileDatas }: ApplyModalProps) => {
-  const { sentStatus, responseStatus, matchConfirmationStatus } =
-    useAtomValue(applyStatusAtom);
+  const [{ type, idToken }] = useAtom(userAtom);
+
+  const [applyInitialValues, setApplyInitialValues] = useAtom(applyValuesAtom);
 
   const [isApplyModal, setIsApplyModal] = useAtom(applyModalAtom);
+  const applyModalClose = () => setIsApplyModal(() => false);
 
   if (!isApplyModal) {
     return;
   }
 
+  const { isApplicationStatus, isApplicationConfirmationStatus } =
+    applyInitialValues;
+
   return (
     <>
       <Wrap>
-        <h2>지원하기</h2>
-        {!sentStatus && <ApplyStepOne ProfileDatas={ProfileDatas} />}
-        {sentStatus && !responseStatus && <ApplyStepTwo />}
-        {responseStatus && !matchConfirmationStatus && <ApplyStepThree />}
+        {type === "client" ? (
+          <>
+            {/** 1단계 - 지원하기 (지원하기 단계는 강사만 해당됩니다.)   */}
+            {/** 2단계 - 지원확인  */}
+            {isApplicationStatus && !isApplicationConfirmationStatus ? (
+              <ApplyStepTwo applyModalClose={applyModalClose} />
+            ) : (
+              <ApplyStatusModal
+                applyInitialValues={applyInitialValues}
+                applyModalClose={applyModalClose}
+              />
+            )}
+          </>
+        ) : (
+          <>
+            {/** 1단계 - 지원하기  */}
+            {!isApplicationStatus && (
+              <ApplyStepOne ProfileDatas={ProfileDatas} />
+            )}
+
+            {/** 2단계 - 지원 대기 (클라이언트 확인이 안된 상태) */}
+            {isApplicationStatus && !isApplicationConfirmationStatus && (
+              <ApplyStatusModal
+                applyInitialValues={applyInitialValues}
+                applyModalClose={applyModalClose}
+              />
+            )}
+          </>
+        )}
+
+        {/** 3단계 - 최종 매칭  */}
+        {isApplicationConfirmationStatus && (
+          <ApplyStepThree
+            applyInitialValues={applyInitialValues}
+            token={idToken}
+            applyModalClose={applyModalClose}
+            userType={type}
+          />
+        )}
       </Wrap>
       <BackgroundModal />
     </>

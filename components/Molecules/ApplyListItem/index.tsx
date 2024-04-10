@@ -1,9 +1,4 @@
-import {
-  applyInitialValuesAtom,
-  applyModalAtom,
-  applyStatusAtom,
-  applyStatusModalAtom,
-} from "@/atoms/apply";
+import { applyValuesAtom, applyModalAtom } from "@/atoms/apply";
 import { Apply } from "@/types/apply";
 import { useAtom, useSetAtom } from "jotai";
 import Link from "next/link";
@@ -14,7 +9,7 @@ interface ApplyListItemProps extends Apply {
 }
 export const ApplyListItem = (applyListItem: ApplyListItemProps) => {
   const {
-    id,
+    id: applyID,
     isApplicationStatus,
     isApplicationConfirmationStatus,
     isFinalMatchedStatus,
@@ -39,13 +34,10 @@ export const ApplyListItem = (applyListItem: ApplyListItemProps) => {
   } = applyListItem;
 
   const [isApplyModalOpen, setIsApplyModalOpen] = useAtom(applyModalAtom);
-  const [applyInitialValues, setApplyInitialValues] = useAtom(
-    applyInitialValuesAtom
-  );
+  const [applyInitialValues, setApplyInitialValues] = useAtom(applyValuesAtom);
 
   const handleCheckApplyStatus = () => {
-    console.log(applyInitialValues, "<<<applyInitialValues");
-    setApplyInitialValues(() => applyInitialValues);
+    setApplyInitialValues(() => ({ ...applyListItem, applyID }));
 
     setIsApplyModalOpen(() => true);
   };
