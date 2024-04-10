@@ -342,11 +342,10 @@ interface ApplyStepTwoProps {
 }
 const ApplyStepTwo = ({ applyModalClose }: ApplyStepTwoProps) => {
   const [{ idToken: token }] = useAtom(userAtom);
-  const { data, isLoading, refetch } = useApplyQuery();
 
-  const [applyInitialValues, setApplyInitialValues] = useAtom(applyValuesAtom);
+  const [applyValues, setApplyValues] = useAtom(applyValuesAtom);
   const { attachedFileName, applyType, lectureID, lectureTitle, educatorID } =
-    applyInitialValues;
+    applyValues;
 
   // 파일 다운로드 함수
   const downloadFile = async (fileName) => {
@@ -390,7 +389,7 @@ const ApplyStepTwo = ({ applyModalClose }: ApplyStepTwoProps) => {
       mutation.mutate(
         {
           data: {
-            ...applyInitialValues,
+            ...applyValues,
             isApplicationConfirmationStatus: true,
           },
           token,
@@ -398,9 +397,7 @@ const ApplyStepTwo = ({ applyModalClose }: ApplyStepTwoProps) => {
         {
           onSuccess: async (response) => {
             alert(response.message);
-
-            //기존 값을 제거하고 새로운 데이터 호출
-            refetch();
+            setApplyValues(() => response.data);
           },
         }
       );

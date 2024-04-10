@@ -1,7 +1,11 @@
 import { useMemo, useState } from "react";
 
 import { useAtom } from "jotai";
-import { applyInitialValuesAtom, applyModalAtom } from "@/atoms/apply";
+import {
+  applyInitialValues,
+  applyValuesAtom,
+  applyModalAtom,
+} from "@/atoms/apply";
 
 import { useApplyQuery } from "@/hooks/[userID]/useApplyQuery";
 
@@ -16,7 +20,7 @@ export const ApplicantList = ({ ProfileDatas }: ApplicantListProps) => {
   const { data, isLoading } = useApplyQuery();
   const [selectedValue, setSelectedValue] = useState("전체");
 
-  const [, setApplyInitialValues] = useAtom(applyInitialValuesAtom);
+  const [applyValues, setApplyValues] = useAtom(applyValuesAtom);
   const [, setIsApplyModalOpen] = useAtom(applyModalAtom);
 
   // 사용자가 선택한 공고에 따라 필터링된 지원자 데이터
@@ -32,7 +36,10 @@ export const ApplicantList = ({ ProfileDatas }: ApplicantListProps) => {
   };
 
   const handleApplyCheck = (data: Apply, applyID: string) => {
-    setApplyInitialValues({ ...data, applyID });
+    if (applyValues === applyInitialValues) {
+      setApplyValues(() => ({ ...data, applyID }));
+    }
+
     setIsApplyModalOpen(true);
   };
 
