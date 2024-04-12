@@ -37,7 +37,13 @@ export const ApplyListItem = (applyListItem: ApplyListItemProps) => {
   const [_applyIValues, setApplyValues] = useAtom(applyValuesAtom);
 
   const handleCheckApplyStatus = () => {
-    setApplyValues(() => ({ ...applyListItem, applyID }));
+    setApplyValues(() => ({
+      ...applyListItem,
+      applyID,
+      managerName,
+      managerPhoneNumber,
+      managerEmail,
+    }));
 
     setIsApplyModalOpen(() => true);
   };
