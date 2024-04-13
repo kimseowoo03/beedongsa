@@ -14,6 +14,17 @@ a {
   text-decoration: none;
 }
 
+::-webkit-scrollbar {
+  width: 5px;
+  height: 6px;
+  background: rgba(0, 0, 0, 0.05)
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(0, 0, 0, 0.1);
+  border-radius: 3px;
+}
+
 :root {
   --gap: 24px;
   --gap-01: 12px;
