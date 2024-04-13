@@ -4,9 +4,14 @@
  * @returns {string} - 변환된 파일 크기 문자열 (예: "2.55 MB" 또는 "40 KB")
  */
 export function formatFileSize(fileSizeInBytes: number) {
+  let sizeStr = "";
+
   if (fileSizeInBytes >= 1024 * 1024) {
-    return `${(fileSizeInBytes / (1024 * 1024)).toFixed(2)} MB`;
+    sizeStr =
+      (fileSizeInBytes / (1024 * 1024)).toFixed(2).replace(/\.00$/, "") + " MB";
   } else {
-    return `${(fileSizeInBytes / 1024).toFixed(1)} KB`;
+    sizeStr = (fileSizeInBytes / 1024).toFixed(1).replace(/\.0$/, "") + " KB";
   }
+
+  return sizeStr;
 }
