@@ -24,17 +24,18 @@ import { formatFileSize } from "@/utils/formatFileSize";
 const UploadModalWrap = styled(ModalWrap)`
   width: 500px;
   height: 400px;
+`;
 
-  .title {
-    color: var(--font-color-1);
-    font-size: var(--font-size-s);
-    margin-bottom: var(--gap-02);
-  }
-  .explanation {
-    color: var(--gray-08);
-    font-size: var(--font-size-xxs);
-    margin-bottom: var(--gap);
-  }
+export const FileTitle = styled.p`
+  color: var(--font-color-1);
+  font-size: var(--font-size-s);
+  margin-bottom: var(--gap-02);
+`;
+
+export const FIleExplanation = styled.p`
+  color: var(--gray-08);
+  font-size: var(--font-size-xxs);
+  margin-bottom: var(--gap-01);
 `;
 
 export const FileSelectBox = styled.div`
@@ -84,6 +85,8 @@ export const FileSelectBox = styled.div`
 export const FilesBox = styled.ul`
   list-style: none;
   color: var(--font-color-1);
+  height: 150px;
+  overflow-y: auto;
 
   li {
     display: flex;
@@ -110,6 +113,10 @@ export const FilesBox = styled.ul`
   }
   svg {
     cursor: pointer;
+  }
+
+  @media (max-width: 640px) {
+    height: calc(100vh - 360px);
   }
 `;
 
@@ -335,10 +342,10 @@ const UploadFile = ({ userFiles }: UploadFile) => {
       {isUploadFileModal && (
         <>
           <UploadModalWrap>
-            <p className="title">파일 첨부</p>
-            <p className="explanation">
+            <FileTitle>파일 첨부</FileTitle>
+            <FIleExplanation>
               파일(PDF, PNG, JPG, JPEG, GIP)은 최대 50MB까지 가능합니다.
-            </p>
+            </FIleExplanation>
             <FileSelectBox>
               <div className="selectedFile">
                 <GoFile />

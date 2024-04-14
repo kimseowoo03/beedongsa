@@ -6,17 +6,23 @@ import Button from "@/components/Atoms/Button";
 import { CancelButton } from "@/components/Atoms/CancelButton";
 import { MultipleSelection } from "@/components/Molecules/CheckboxLabel";
 
-import { useAtom, useAtomValue } from "jotai";
+import { useAtom } from "jotai";
 import { userAtom } from "@/atoms/auth";
 import { applyValuesAtom, applyModalAtom } from "@/atoms/apply";
 
 import styled from "@emotion/styled";
-import { BackgroundModal, Buttons, ModalWrap } from "@/styles/Modal";
+import {
+  BackgroundModal,
+  Buttons,
+  ModalWrap,
+  CloseButton,
+} from "@/styles/Modal";
 import { GoFile } from "react-icons/go";
 import { HiOutlineXMark } from "react-icons/hi2";
 import { Hr } from "@/styles/htmlStyles";
 
 import {
+  FIleExplanation,
   FileSelectBox,
   FileSizeBox,
   FilesBox,
@@ -33,14 +39,53 @@ import { uploadFiles } from "@/utils/uploadFiles";
 
 import { getDownloadURL, getStorage, ref } from "firebase/storage";
 
-import { useApplyQuery } from "@/hooks/[userID]/useApplyQuery";
-import { transformFirestoreDocument } from "@/utils/transformFirebaseDocument";
-
 const MAX_FILE_SIZE = 5 * 1024 * 1024; // 50MB
 
 const Wrap = styled(ModalWrap)`
-  width: 400px;
-  height: 500px;
+  width: 520px;
+  height: 480px;
+`;
+
+const RadioLablWrap = styled.div`
+  display: flex;
+  gap: var(--gap-01);
+
+  margin: var(--gap-01) 0;
+`;
+
+const RadioLable = styled.label`
+  display: flex;
+  align-items: center;
+  gap: var(--gap-02);
+
+  > input[type="radio"] {
+    appearance: none;
+    background: white;
+    border-radius: 50%;
+    width: 1.2rem;
+    height: 1.2rem;
+    border: 0.1em solid gray;
+    border: 5px solid var(--gray-04);
+
+    &:hover {
+      cursor: pointer;
+    }
+  }
+
+  > input[type="radio"],
+  span {
+    &:hover {
+      cursor: pointer;
+    }
+  }
+
+  > input[type="radio"]:checked {
+    border: 5px solid var(--primary-color-y);
+  }
+`;
+
+const MaxFileSIze = styled.p`
+  text-align: right;
 `;
 
 interface createApplyProps {
@@ -240,24 +285,27 @@ const ApplyStepOne = ({ ProfileDatas }: ApplyStepOneProps) => {
   return (
     <>
       <h2>지원하기</h2>
-      <label>
-        <input
-          type="radio"
-          value="registeredProfile"
-          checked={selection === "registeredProfile"}
-          onChange={() => setSelection("registeredProfile")}
-        />
-        등록된 프로필 선택
-      </label>
-      <label>
-        <input
-          type="radio"
-          value="attachments"
-          checked={selection === "attachments"}
-          onChange={() => setSelection("attachments")}
-        />
-        파일첨부
-      </label>
+
+      <RadioLablWrap>
+        <RadioLable>
+          <input
+            type="radio"
+            value="registeredProfile"
+            checked={selection === "registeredProfile"}
+            onChange={() => setSelection("registeredProfile")}
+          />
+          <span>등록된 프로필 선택</span>
+        </RadioLable>
+        <RadioLable>
+          <input
+            type="radio"
+            value="attachments"
+            checked={selection === "attachments"}
+            onChange={() => setSelection("attachments")}
+          />
+          <span>파일첨부</span>
+        </RadioLable>
+      </RadioLablWrap>
 
       {selection === "registeredProfile" ? (
         <div>
@@ -266,6 +314,7 @@ const ApplyStepOne = ({ ProfileDatas }: ApplyStepOneProps) => {
               {ProfileDatas.map((lecture) => {
                 return (
                   <MultipleSelection.CheckboxLabel
+                    display="flex"
                     key={lecture.id}
                     label={lecture.data.title}
                     type="checkbox"
@@ -283,16 +332,18 @@ const ApplyStepOne = ({ ProfileDatas }: ApplyStepOneProps) => {
           )}
         </div>
       ) : (
-        <div>
-          <p className="title">파일 첨부</p>
-          <p className="explanation">
+        <>
+          <FIleExplanation>
             첨부된 파일(PDF, PNG, JPG, JPEG, GIP)들은 총 5MB까지 가능합니다.
-          </p>
+          </FIleExplanation>
           <FileSelectBox>
             <div className="selectedFile">
               <GoFile />
               {attachments.length > 0
-                ? attachments[attachments.length - 1].name
+                ? attachments[attachments.length - 1].name.length > 20
+                  ? attachments[attachments.length - 1].name.slice(0, 20) +
+                    "..."
+                  : attachments[attachments.length - 1].name
                 : "선택한 파일이 없습니다."}
             </div>
             <label htmlFor="file">
@@ -315,7 +366,11 @@ const ApplyStepOne = ({ ProfileDatas }: ApplyStepOneProps) => {
                 <li key={file.name}>
                   <div>
                     <GoFile />
-                    <span>{file.name}</span>
+                    <span>
+                      {file.name.length > 20
+                        ? file.name.slice(0, 20) + "..."
+                        : file.name}
+                    </span>
                     <FileSizeBox>{size}</FileSizeBox>
                   </div>
                   <HiOutlineXMark
@@ -325,8 +380,10 @@ const ApplyStepOne = ({ ProfileDatas }: ApplyStepOneProps) => {
               );
             })}
           </FilesBox>
-          <p>{formatFileSize(totalMaxFileSize)}</p>
-        </div>
+          <MaxFileSIze>
+            {formatFileSize(totalMaxFileSize)} / {formatFileSize(MAX_FILE_SIZE)}
+          </MaxFileSIze>
+        </>
       )}
 
       <Buttons>
@@ -510,7 +567,7 @@ const ApplyStepThree = ({
 
       {isFinalMatchedStatus && (
         <ul>
-          {userType === "client" ? (
+          {userType === "educator" ? (
             <>
               <li>
                 <span>담당자명:</span>
@@ -596,6 +653,7 @@ export const ApplyModal = ({ ProfileDatas }: ApplyModalProps) => {
   return (
     <>
       <Wrap>
+        <CloseButton onClick={applyModalClose} />
         {type === "client" ? (
           <>
             {/** 1단계 - 지원하기 (지원하기 단계는 강사만 해당됩니다.)   */}

@@ -29,6 +29,7 @@ export const ModalWrap = styled.div`
     width: 100%;
     height: 100%;
     border-radius: 0px;
+    padding: 30px;
   }
 `;
 
