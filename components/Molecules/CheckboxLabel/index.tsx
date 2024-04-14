@@ -3,8 +3,8 @@ import React, { memo } from "react";
 import styled from "@emotion/styled";
 import CheckIcon from "@/public/icon/check.svg";
 
-const CheckboxWrap = styled.div`
-  display: inline-flex;
+const CheckboxWrap = styled.div<{ display: "flex" | "inline-flex" }>`
+  display: ${({ display }) => display};
 
   path {
     fill: var(--gray-03);
@@ -20,10 +20,11 @@ const CheckboxWrap = styled.div`
 
   label {
     display: inline-flex;
-    gap: 6px;
+    gap: var(--gap-02);
     align-items: center;
-    font-size: var(--font-size-xxs);
+    font-size: var(--font-size-xs);
     margin-right: 20px;
+    margin-bottom: var(--gap-02);
     cursor: pointer;
   }
 
@@ -70,6 +71,7 @@ function MultipleSelectionMain({ children, values }: MultipleSelectionProps) {
 }
 
 interface CheckboxLabelProps {
+  display?: "flex" | "inline-flex";
   label?: string;
   name: string;
   type: React.HTMLInputTypeAttribute;
@@ -81,6 +83,7 @@ interface CheckboxLabelProps {
   children?: React.ReactNode;
 }
 function CheckboxLabel({
+  display = "inline-flex",
   label,
   name,
   value,
@@ -95,7 +98,7 @@ function CheckboxLabel({
   };
 
   return (
-    <CheckboxWrap>
+    <CheckboxWrap display={display}>
       <input
         className="checkboxInput"
         type="checkbox"
